@@ -283,6 +283,8 @@ A: Approaches for improvement
 
 
 
+
+
 ---
 
 ## Multi-Objective Optimization
@@ -299,11 +301,15 @@ A: Approaches for improvement
 
 >  multi-objective simulated annealing 多目标模拟退火算法
 
+To date, there are several widely used MOSA algorithms such as SMOSA, UMOSA, PSA, WMOSA, and PDMOSA. They are all able to deliver respectable performance under different conditions.
 
 
 
+##### KBAMOSA
 
-
+> knowledge-based archive multi-objective simulated annealing
+>
+> 《A knowledge-based archive multi-objective simulated annealing algorithm to optimize series–parallel system with choice of redundancy strategies》
 
 
 
@@ -346,11 +352,11 @@ $$ P^1 = \{G_1^1, G_2^1, ..., G_\Omega^1\}$$
 
 for i = 1 to M do
 
-​	在$$G_i^1$$中随机选择两个边$$e_{kl}, e_{mn}$$(k,l,m,n互异), 且$$e_{km}, e_{ln}\notin G_i^1$$
-
-​	移除$$e_{kl}, e_{mn}$$, 增加$$e_{km}, e_{ln}$$
-
-​	if( $$G_i^1$$ is not connected ): 撤销前两步操作，恢复原来的$$G_i^1$$; end if
+	在$$G_i^1$$中随机选择两个边$$e_{kl}, e_{mn}$$(k,l,m,n互异), 且$$e_{km}, e_{ln}\notin G_i^1$$
+	
+	移除$$e_{kl}, e_{mn}$$, 增加$$e_{km}, e_{ln}$$
+	
+	if( $$G_i^1$$ is not connected ): 撤销前两步操作，恢复原来的$$G_i^1$$; end if
 
 end for
 $$
@@ -429,7 +435,7 @@ Algorithm 1: $$R^D_n$$-Sampling Phase 取样
 
 
 
-
+Capacity:
 
 $$
 L(i) = \sum_{s\ne t \in V_h}\frac{\sigma_{st}(i)}{\sum_{j\in V} \sigma_{st}(j)}; V_h: \text{hosts set}, V: \text{all nodes}\\
@@ -439,5 +445,13 @@ C_r(j)=(1+\alpha_r)L(j)\\
 C(i) = \frac{k(i)^{\alpha}}{\sum_{j\in V}k(j)^{\alpha}}; k(i): \text{degree of node i}\\
 ---\\
 L_0 = \min_{i\in V}(\frac{R(i)}{U(i)(1+\alpha)})\\
-R = \frac{N_{host}^{lcc}}{N_{host}}\\
 $$
+
+Robustness:
+
+$$
+R = \frac{N_{host}^{lcc}}{N_{host}}\\
+R = \frac{1}{N}\sum_{Q=1}^{N}s(Q)\\
+s(Q) = \text{host count of the connected component with the most host / original host count}
+$$
+

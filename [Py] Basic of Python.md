@@ -387,7 +387,7 @@ l3 = list() #创建空list
 l4 = [1/(1+x**2) for x in range(-5,6)]#默认step为1
 
 b = [1,2,3] #list
-b = np.array(b)#这句实际上可要可不要，l5生成的list是一样的
+b = np.array(b)#实际上可要可不要，l5生成的list是一样的
 l5 = [math.log(x)for x in b]
 
 prcs_ist_x = [float(5 * sp.cos((2*x-1)/(2*11) * sp.pi)) for x in range(11, 0, -1)]
@@ -526,7 +526,7 @@ s1 | s2 # 集合运算: 并集
 
 
 
-frozenset 
+##### frozenset 
 
 -   不可变集合 frozenset 冻结的集合
 -   不可变，存在哈希值，可以作为字典的key，可以作为其它集合的元素

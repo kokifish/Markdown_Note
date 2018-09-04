@@ -113,6 +113,39 @@ print( np.linalg.solve(A, b) ) # 解矩阵方程式 Ax = b #[1. 2. 3.]
 
 
 
+##### tolist
+
+- `ndarray.tolist()`
+
+- Parameters: none; Returns: list
+
+```python
+a = np.array([[1, 2], [3, 4]])#<class 'numpy.ndarray'>
+a = a.tolist() #<class 'list'> [[1, 2], [3, 4]]
+```
+
+
+
+```python
+a = np.array([[1, 2], [3, 4]])
+print(type(a), a)
+print('a.tolist():',type(a.tolist()), a.tolist(), type(a.tolist()[0]))
+a = np.array(a.tolist())
+print(type(a), a)
+#Output: 
+<class 'numpy.ndarray'> [[1 2]
+ [3 4]]
+a.tolist(): <class 'list'> [[1, 2], [3, 4]] <class 'list'>
+<class 'numpy.ndarray'> [[1 2]
+ [3 4]]
+```
+
+> The array may be recreated, `a = np.array(a.tolist())`. a前后不变
+
+
+
+
+
 ##### flatten 
 
 > numpy.ndarray.flatten 
