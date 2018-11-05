@@ -7,15 +7,14 @@
 - adaptor  适配器
 
 
- 
+
 
 -   warning！
 -   vector不可以存引用
 
-
 ---
 
-# <vector>
+# vector
 
 -   Vectors are sequence containers representing arrays that can change in size.
 -   <vector>是可以改变大小的数组的序列容器
@@ -201,7 +200,7 @@ capacity changed: 100
 
 ---
 
-# <map>
+# map
 
 -   Map是STL的一個容器，它提供一對一的hash
 -   第一個可以稱為關鍵字(key)，每個關鍵字只能在map中出現一次，第二個可能稱為該關鍵字的值(value)
@@ -367,7 +366,7 @@ b => 300
 
 ---
 
-# <queue>
+# queue
 
 -   队列是只允许在表的前端(front)进行删除操作，而在表的后端(rear)进行插入操作的线性表。队列的修改按照先进先出(First In First Out, FIFO)的原则进行，是操作受限的线性表
 -   **queue**s are a type of container adaptor, specifically designed to operate in a FIFO context (first-in first-out), where elements are inserted into one end of the container and extracted from the other.
@@ -456,7 +455,7 @@ int main () {//push back size front pop
 
 
 
-### <priority_queue>
+### priority_queue
 
 ```cpp
 template <class T, //存储的对象
@@ -484,7 +483,7 @@ priority_queue<int, std::vector<int>, std::greater<int> > p_que;
 
 ---
 
-# <deque>
+# deque
 
 -   双向队列 
 -   deque (usually pronounced like *"deck"*) is an irregular acronym of **d**ouble-**e**nded **que**ue. Double-ended queues are sequence containers with dynamic sizes that can be expanded or contracted on both ends (either its front or its back).
@@ -497,7 +496,7 @@ priority_queue<int, std::vector<int>, std::greater<int> > p_que;
 
 ---
 
-# <set>
+# set
 
 -   set封装了二叉树
 -   在set中每个元素的值都唯一，并且会根据元素的值自动进行排序。set中数元素的值不能直接被改变
@@ -548,7 +547,7 @@ int main(){
 
 ---
 
-# <stack>
+# stack
 
 -   栈是限定仅在表尾进行插入或删除操作的线性表。栈的修改是按后进先出的原则进行的。因此，本又称为后进先出(Last In First Out)的线性表(简称LIFO结构)
 -   stack模板类需要两个模板参数，一个是元素类型，一个容器类型，但只有元素类型是必要的，在不指定容器类型时，默认的容器类型为deque(双向队列)
@@ -557,10 +556,9 @@ int main(){
 
 
 
-
 ---
 
-# <list>
+# list
 
 ```c++
 #include <iostream>// list::assign

@@ -86,8 +86,6 @@ Reading 640 characters... all characters read successfully.
 
 
 
-
-
 ```cpp
 #include <iostream>//
 #include <fstream>

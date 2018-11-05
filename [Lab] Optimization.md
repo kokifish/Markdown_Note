@@ -27,10 +27,10 @@ S: 可行域\\
 f_i(x) = 优化问题的第i(i = 1, 2, ..., m)个目标函数; m为目标函数个数\\
 $$
 
-Pareto支配: (最小化问题时)u is dominated by v: u被v支配(v的适应度更好), v支配u
+Pareto支配: (最大化问题时)u is dominated by v: u被v支配(v的适应度更好), v支配u
 $$
-\forall i = 1, 2, ..., m, f_i(u) \ge f_i(v), and\\
-\exists j = 1, 2,...,m, f_j(u) > f_j(v), it's\ v\prec u(v支配u，v适应度更好)
+\forall i = 1, 2, ..., m, f_i(u) \le f_i(v), and\\
+\exists j = 1, 2,...,m, f_j(u) < f_j(v), it's\ v\prec u(v\text{ dominate }u，v适应度更好)\\
 $$
 
 
@@ -176,6 +176,37 @@ $$
 > Evolution Algorithm 进化算法
 
 A kind of stochastic global optimization methods inspired by the biological mechanism(机制, 机理) of evolution(进化) and heredity(遗传).
+
+```c
+//pseudocode of single object or multi-object Evolution Algorithm
+pop[N]=ini_population(N);//initialization of population pop.
+population Evolution_Algorithm(){
+	Evaluate(pop);//Evaluate the fitness of all individual(solution) in pop
+	while(termination criteria are not satisfied){//propagation loop
+		offspring = Crossover(pop);//typically global search
+        //offspring: population with size M.(typically M==N)
+        offspring[i] = Mutation(offspring[i] for i in [0,M));
+        //or Mutation(offspring + pop)//typically local search
+        Evaluate(offspring);//Evaluate the fitness
+        pop = Kill_to_N(offspring + pop);
+        //kill some bad individuals,keep population pop size = N
+    }
+    return pop;//if(single object){return the best;}
+               //else{return the non-dominated solution set}
+}
+```
+
+
+
+##### roulette wheel selection
+
+$$
+p_i = \frac{f_i}{\sum_{j=1}^N f_j};f_i: \text{fitness of individual i}
+$$
+
+
+
+
 
 
 
@@ -327,7 +358,7 @@ To date, there are several widely used MOSA algorithms such as SMOSA, UMOSA, PSA
 >
 > elitist strategy 精英策略
 >
-> 致力于解决: O(MN^3^)时间复杂度，非精英机制，非精英机制 
+> 致力于解决: O(MN^3^)时间复杂度，非精英机制
 
 - Tournament Selection with two candidates. Crowding measure.
 - O(MN^2^)     M: Number of objectives   N: the population size
@@ -352,11 +383,13 @@ $$ P^1 = \{G_1^1, G_2^1, ..., G_\Omega^1\}$$
 
 for i = 1 to M do
 
-	在$$G_i^1$$中随机选择两个边$$e_{kl}, e_{mn}$$(k,l,m,n互异), 且$$e_{km}, e_{ln}\notin G_i^1$$
-	
-	移除$$e_{kl}, e_{mn}$$, 增加$$e_{km}, e_{ln}$$
-	
-	if( $$G_i^1$$ is not connected ): 撤销前两步操作，恢复原来的$$G_i^1$$; end if
+$$
+在G_i^1中随机选择两个边e_{kl}, e_{mn}(k,l,m,n互异), 且e_{km}, e_{ln}\notin G_i^1\\
+	移除e_{kl}, e_{mn}, 增加$$e_{km}, e_{ln}\\
+	if( G_i^1 \text{ is not connected} ):
+		撤销前两步操作，恢复原来的G_i^1;
+	end if
+$$
 
 end for
 $$
@@ -379,19 +412,19 @@ Output:
 Gc1 and Gc2: Two child chromosomes;
 Gc1 ← Gp1, Gc1 ← Gp1;
 for i = 1 to N do
-	if (U(0, 1) < $$p_c$$ ) // U(0, 1) is a uniformly distributed random real number in [0, 1];
-		计算 $$\bar V^{G_{c1}}_{i}$$ and $$\bar V^{G_{c2}}_{i}$$ ;
-		for each node j $$\in V^{G_{c1}}$$ i do
-			随机选择节点 k $$\in V^{G_{c2}}_{i}$$ ;
-			移除$$e_{ij}$$ from $$G_{c1}$$ and $$e_{ik}$$ from Gc2; //交叉操作
-			增加$$e_{ik}$$ to $$G_{c1}$$ and $$e_{ij}$$ to $$G_{c2}$$; //交叉操作
-			随机选择另一条边 $$e_{kl}$$ that node k connects in $$G_{c1}$$ and $$e_{jl} \notin G_{c1}$$;
-			移除$$e_{kl}$$ , 增加 $$e_{jl}$$ in $$G_{c1}$$;
-			随机选择另一条边 $$e_{jm}$$ that node j connects in $$G_{c2}$$ and $$e_{km} \notin G_{c2}$$;
-			移除 $$e_{jm}$$ , 增加 $$e_{km}$$ in $$G_{c2}$$;
-			$$\bar V^{G_{c2}}_i = \bar V^{G_{c2}}_i - \{k\}$$;
-		end for;
-	end if ;
+​	if (U(0, 1) < $$p_c$$ ) // U(0, 1) is a uniformly distributed random real number in [0, 1];
+​		计算 $$\bar V^{G_{c1}}_{i}$$ and $$\bar V^{G_{c2}}_{i}$$ ;
+​		for each node j $$\in V^{G_{c1}}$$ i do
+​			随机选择节点 k $$\in V^{G_{c2}}_{i}$$ ;
+​			移除$$e_{ij}$$ from $$G_{c1}$$ and $$e_{ik}$$ from Gc2; //交叉操作
+​			增加$$e_{ik}$$ to $$G_{c1}$$ and $$e_{ij}$$ to $$G_{c2}$$; //交叉操作
+​			随机选择另一条边 $$e_{kl}$$ that node k connects in $$G_{c1}$$ and $$e_{jl} \notin G_{c1}$$;
+​			移除$$e_{kl}$$ , 增加 $$e_{jl}$$ in $$G_{c1}$$;
+​			随机选择另一条边 $$e_{jm}$$ that node j connects in $$G_{c2}$$ and $$e_{km} \notin G_{c2}$$;
+​			移除 $$e_{jm}$$ , 增加 $$e_{km}$$ in $$G_{c2}$$;
+​			$$\bar V^{G_{c2}}_i = \bar V^{G_{c2}}_i - \{k\}$$;
+​		end for;
+​	end if ;
 end for;
 
 Algorithm 3 Local Search Operator 局部搜索算子

@@ -6,6 +6,38 @@
 
 
 
+---
+
+# OpenMP
+
+> **Open Multi-Processing**
+
+- an application programming interface (API) that supports multi-platform shared memory multiprocessing programming in C, C++, and Fortran
+- OpenMP is an implementation of multithreading, a method of parallelizing whereby a master thread (a series of instructions executed consecutively) forks a specified number of slave threads and the system divides a task among them. The threads then run concurrently, with the runtime environment allocating threads to different processors.
+
+
+
+# Cython
+
+- Cython是一个 Python **编译器**。针对python模块的一个优化工具,不使用jit技术,有一定局限性
+- 拥有**静态类型**并能嵌入 C 函数的 Python，支持释放 GIL 后的并行
+- Cython是python的超集,所以python解释器无法解释cython代码,必须编译才可以
+
+可以做到:
+
+- 将python代码翻译为C语言代码
+- 将python代码编译为python可以直接调用的动态链接库
+- 通过为python代码指定类型静态化模块,生成python可以直接调用的动态链接库
+- 编译python语法的的超集,Cython语法的源文件`.pyx`文件生成python可以直接调用的动态链接库
+- 通过Cython语法的头文件`.pxd`申明C/C++语言的库,再通过Cython语法的源文件`.pyx`文件生成python可以直接调用的动态链接库
+
+
+
+Cython解释器可以识别`.py`,`.cpp`,`.c`,`.h`,`.pyx`,`.pxd`,`.pxi`,其中
+
+- `.py`是python的源码,一般用在纯净模式下
+- `.cpp`,`.c`,`.h`是c/c++的源码和头文件,一般用在包装模式下
+- `.pyx`(源码文件),`.pxd`(申明文件),`.pxi`(包含文件)是cython源码和头文件,用在一般模式下.
 
 
 
@@ -13,20 +45,7 @@
 
 
 
-
-# Windows
-
-
-
-
-
-## Multi Thread
-
-
-
-
-
-### CRT
+# CRT
 
 -   C run-time libraries
 

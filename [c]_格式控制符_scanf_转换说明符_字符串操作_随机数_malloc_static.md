@@ -362,9 +362,9 @@ int main(){
 
 There are three types of control structures available in C and C++  控制结构，流程控制
 
-1.  Sequence structure (straight line paths)		顺序结构
-  2.  Selection Control Structure (one or many branches)选择结构
-  3.  Loop Control Structure (repetition of a set of activities)循环控制结构
+1.  Sequence structure (straight line paths) 顺序结构
+  2.  Selection Control Structure (one or many branches) 选择结构
+  3.  Loop Control Structure (repetition of a set of activities) 循环控制结构
 
 
 
@@ -553,7 +553,7 @@ strcpy和memcpy主要有以下3方面的区别
 
 
 
-###### memset ()
+###### memset
 
 - 内存初始化<string.h>
 - void * memset( void * ptr, int value, size_t num ); //返回指向 ptr 的指针

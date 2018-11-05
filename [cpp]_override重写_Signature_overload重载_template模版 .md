@@ -11,10 +11,8 @@
 
 1. 重载 **overload**
 
-
-
 - **范围相同**
-- 函数名字相同，参数不同，不依赖于返回值
+- 函数名字相同，**参数不同**，不依赖于返回值
 - virtual关键字可有可无
 
 2. 重写(覆盖) **override**
@@ -101,7 +99,6 @@ It specifies the general information about a function like the name, scope and p
 
 
 
-
 ---
 
 # 运算符重写 operator override
@@ -114,7 +111,6 @@ It specifies the general information about a function like the name, scope and p
 - 重载运算符有一个返回类型和一个参数列表
 - Box operator + (const Box& temp);
 - 定义类型 大多数的重载运算符可被定义为普通的非成员函数或者被定义为类成员函数
-
 
 ---
 
@@ -336,7 +332,6 @@ int main(){
 #### = 赋值运算符重载
 
 -   ​
-
 
 
 

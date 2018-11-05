@@ -9,7 +9,6 @@
 
 
 
-
 ---
 
 # 中英对照
@@ -402,55 +401,6 @@ private:
 	PhoneNumber voiceNumber;
 }; 
 ```
-
-
-
-
-
----
-
-# visual studio使用
-
-
-
-```cpp
-#pragma warning(disable:4996)//禁止4996的warning
-```
-
-
-
-
-
-### 快捷键
-
-- 显示代码提示 alt + ->
-- 在MSDN中搜索  F1
-- 开始调试 F5
-- 构建工程 F7
-- 设置断点、取消断点 F9
-- 单步跟踪 F10
-- 单步步入 F11
-- 转到定义 F12
-- 新建文件ctrl + N
-- 查找 ctrl + F
-- 转为小写 ctrl + U
-- 转为大写 ctrl + shilt + U
-- 注释所在行 ctrl + K      ctrl + C
-- 设置文档格式 ctrl + K      ctrl + D
-
-
-
-
-
-###### 查看class内存布局
-
--   ​项目 :arrow_right: [项目]属性 :arrow_right: C/C++ :arrow_right: 命令行 :arrow_right: 其它选项 :arrow_right: /d1reportSingleClassLayout[Class]
--   demo: /d1reportSingleClassLayoutTest
--   查看: 输出(下方) ​:arrow_right:​ 输出来源：生成
-
-
-
-
 
 
 

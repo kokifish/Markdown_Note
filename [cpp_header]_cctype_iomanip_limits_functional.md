@@ -6,6 +6,8 @@
 
 # cassert
 
+
+
 **assert() *宏*  macro**
 
 >    `#include <cassert>`    //C Diagnostics Library  //Diagnostics 诊断
@@ -220,22 +222,21 @@ isxdigit
 
 
 
-
-islower
+###### islower
 
 >   int islower ( int c );
 
 -   Check if character is lowercase letter
 -   判断一个char是否是小写字母
 
-isupper
+###### isupper
 
 >   int isupper ( int c );
 
 -   Check if character is uppercase letter
 -   判断一个char是否是大写字母
 
-isblank
+###### isblank
 
 >   int isblank ( int c );
 
@@ -282,8 +283,7 @@ isblank */
 
 
 
-
-tolower
+###### tolower
 
 >   int tolower ( int c );
 

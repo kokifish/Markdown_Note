@@ -14,12 +14,13 @@ df911863 //root
 
 
 
-### CentOS常用指令
+# CentOS常用指令
 
 - Ctrl+Shift+C: console下copy
 - Ctrl+Shift+V: console下paste
 - Ctrl+Insert: console下复制 或 鼠标选中即为复制
 - Shift+Insert: console下粘贴 或 鼠标中键即为粘贴
+- sudo apt install [software name]
 
 
 
@@ -29,7 +30,7 @@ df911863 //root
 
 
 
-### Linux指令汇总
+# Linux指令汇总
 
 - bc 计算器(scale=3 显示小数点后3位，否则默认显示整数)
 - cal \[month\] \[year\]显示日历(calendar)
@@ -37,7 +38,7 @@ df911863 //root
 - locale 显示目前所支持的语系
 - ls 列出文件 -a 包括隐藏文件 -l 详情
 - LANG=en_US.utf8修改语系为英文语系(当次登录有效)
-- ​
+- 
 - shutdown 关机
 
 
@@ -50,6 +51,18 @@ df911863 //root
 - ctrl + d EOF键盘输入结束，输入时离开命令行，相当于输入exit
 - shift + page up/down 文本页面翻页
 - ctrl+alt+F1~6切换控制台
+
+### apt
+
+```python
+sudo apt install python3 #Install a Package
+sudo apt remove nmap #Remove a Package
+sudo apt update #Update the Package Index
+sudo apt upgrade #Upgrade Packages
+apt help
+```
+
+
 
 ---
 

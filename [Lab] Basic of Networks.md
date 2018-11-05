@@ -4,7 +4,7 @@
 
 ---
 
-n.b.  : a Latin phrase meaning "**note well**". 
+n.b.  : a Latin phrase meaning "**note well**". 
 
 
 
@@ -39,7 +39,7 @@ $$
 
 如果样本数据点精确的落在直线上（计算样本皮尔逊系数的情况），或者双变量分布完全在直线上（计算总体皮尔逊系数的情况），则相关系数等于1或-1。
 
-对称性：corr(X,Y) = corr(Y,X) 
+对称性：corr(X,Y) = corr(Y,X) 
 
 
 
@@ -91,13 +91,13 @@ $$
 >
 > triplet: [n.] 三个一组；三连音符；三元组中的一个；三胞胎之一
 
-A **triplet** is three nodes that are connected by either two (**open triplet**) or three (**closed triplet**) undirected ties.  A triangle graph therefore includes three closed triplets(一个三角形的图有三个闭三点组), one centered on each of the nodes (n.b. this means the three triplets in a triangle come from overlapping(重复的 重叠的) selections of nodes). 
+A **triplet** is three nodes that are connected by either two (**open triplet**) or three (**closed triplet**) undirected ties.  A triangle graph therefore includes three closed triplets(一个三角形的图有三个闭三点组), one centered on each of the nodes (n.b. this means the three triplets in a triangle come from overlapping(重复的 重叠的) selections of nodes). 
 
 整体集聚系数：一个图中所有闭三点组占所有连通三点组(包括开/闭)的比例。(也有定义为这个值的三倍，使得在完全图中的整体集聚系数等于1)
 $$
 C={\frac   {\mbox{number of closed triplets}}
 {\mbox{number of all triplets (open and closed)}}}\\
-C={\frac {3\times {\mbox{number of triangles}}}{\mbox{number of all triplets}}}
+C={\frac {3\times {\mbox{number of closed triangles}}}{\mbox{number of all triplets}}}
 $$
 
 
@@ -125,13 +125,13 @@ $$C(i)\in [0,1]$$, C(i)越接近1，这个点附近的点越有抱团的趋势
 
 > 网络平均集聚系数
 
-As an alternative to the global clustering coefficient, the overall level of clustering in a network is measured by Watts and Strogatz as **the average of the local clustering coefficients of all the vertices n**. 网络平均集聚系数定义为局部集聚程度的等权平均
+As an alternative to the global clustering coefficient, the overall level of clustering in a network is measured by Watts and Strogatz as **the average of the local clustering coefficients of all the vertices n**. 网络平均集聚系数定义为局部集聚程度的等权平均
 $$
 \bar  {C}={\frac  {1}{n}}\sum_{i=1}^{{n}}C{i}.
 $$
 It is worth noting that this metric places more weight on the low degree nodes, while the transitivity ratio places more weight on the high degree node. 低度点的权重更大，而transitivity ratio的高度点权重更大
 
-A graph is considered small-world, if the graph has a small mean-shortest path length that scales with the natural log of the number of nodes in the network, log(N). For example, a random graph is small-world, while a lattice is not, and scale-free graphs are often considered ultra-small world, as their mean-shortest path length scales with log (log (N)). 若一个图的平均最短路径长度与点数的关系大致为自然对数log(N)，则称为小世界网络。例如，随即图为小世界的，网格图则不是，通常无度图成为甚小世界，因为其平均最短路径长度约为log (log (N))
+A graph is considered small-world, if the graph has a small mean-shortest path length that scales with the natural log of the number of nodes in the network, log(N). For example, a random graph is small-world, while a lattice is not, and scale-free graphs are often considered ultra-small world, as their mean-shortest path length scales with log (log (N)). 若一个图的平均最短路径长度与点数的关系大致为自然对数log(N)，则称为小世界网络。例如，随即图为小世界的，网格图则不是，通常无度图成为甚小世界，因为其平均最短路径长度约为log (log (N))
 
 
 
@@ -142,7 +142,7 @@ A graph is considered small-world, if the graph has a small mean-shortest path
 
 > 度分布
 
-- 当随机地从网络中抽取一个节点时，与这个节点相连的节点数（叫做这个节点的度）d 的概率分布 
+- 当随机地从网络中抽取一个节点时，与这个节点相连的节点数（叫做这个节点的度）d 的概率分布 
 - 度分是对一个图（网络）中顶点（节点）度数的总体描述。对于随机图，度分布指的是图中顶点度数的概率分布。 
 
 度分布则是对每个非负整数m，考察度数是m的顶点在所有顶点中占的比例
@@ -173,7 +173,7 @@ $$
 
 Assortative Coefficient: 同配系数
 
-The *assortativity coefficient* is the **Pearson correlation coefficient** of degree between pairs of linked nodes. 
+The *assortativity coefficient* is the **Pearson correlation coefficient** of degree between pairs of linked nodes. 
 
 
 
@@ -251,7 +251,7 @@ $$
 
 # Random Graph
 
-**ER model**: ER模型是指在给定 *n* 个顶点后，规定每两个顶点之间都有 *p* 的概率连起来$$0\leqslant p\leqslant 1$$，而且这些判定之间两两无关。这样得到的随机图一般记作$$G_{n}^{p}$$或$$ER_{n}(p)$$
+**ER model**: ER模型是指在给定 *n* 个顶点后，规定每两个顶点之间都有 *p* 的概率连起来$$0\leqslant p\leqslant 1$$，而且这些判定之间两两无关。这样得到的随机图一般记作$$G_{n}^{p}$$或$$ER_{n}(p)$$
 
 **内积模型**: 对每一个顶点指定一个实系数的向量，而两个顶点之间是否连接的概率则是它们的向量的内积的函数。一般来说，可以定义任意两个顶点之间相连的概率，这个概率也被称为**边概率**。定义更广泛的随机图模型的方法是定义所谓的网络概率矩阵。这个矩阵的系数就是边概率，因此详细刻画了随机图的模型 
 

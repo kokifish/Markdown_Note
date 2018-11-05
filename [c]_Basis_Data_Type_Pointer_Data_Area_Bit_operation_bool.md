@@ -16,7 +16,7 @@ d) Invalid declaration
 Answer:b
 Explanation:'\0′ is accepted as a char in the string. Even though strlen(字符长度) will give length of string “Sanfoundry.com”, in memory str is pointing to entire string including training classes”
 
--   Foobar  在计算机程序设计与计算机技术的相关文档中，术语foobar是一个常见的无名氏化名，常被作为“伪变量”使用
+-   Foobar  在计算机程序设计与计算机技术的相关文档中，术语foo, bar是一个常见的无名氏化名，常被作为“伪变量”使用
 -   const const int i 将被当作 const int i 处理
 -   snippet(片段)
 
@@ -576,6 +576,8 @@ union number value = {99.1234};//输出value.x为99 小数部分被截掉
 ```c++
 #define test int*	//纯粹的替换
 typedef int* INTP;	//typedef语句需要有分号;
+
+//#define name int
 int main(void){
 	int* normal_a, normal_b;//normal_a 是int*, normal_b 只是int
 	INTP a, b;	//两个都是int*，属于指针	//typedef使得定义时每一个都变成了指针
@@ -952,16 +954,6 @@ char str = (char *)malloc(sizeof(char)size);  *(str+0) = 'A';
 
 
 
-
-
-
-
-
-
-
-
-
-
 ```c++
 //snippet//按位与运算通常用来对某些位清 0，或保留某些位。例如要把 n 的高16 位清0，保留低16位
 	num= n & 0XFFFF;
@@ -970,8 +962,6 @@ char str = (char *)malloc(sizeof(char)size);  *(str+0) = 'A';
 //按位异或运算可以用来将某些二进制位反转。例如要把 n 的高 16 位反转，保留低 16 位
 	num = n ^ 0XFFFF0000;
 ```
-
-
 
 
 
@@ -1004,7 +994,7 @@ char str = (char *)malloc(sizeof(char)size);  *(str+0) = 'A';
 ###### ^ 按位异或
 
 - 异为1，同为0
-- 参与^运算两个二进制位不同时，结果为 1，相同时结果为 0。例如0^1为1，0^0为0，1^1为0  （0为假，非零为真，与这相反，相同为零即假）
+- 参与^运算两个二进制位不同时，结果为 1，相同时结果为 0。例如0\^1为1，0\^0为0，1\^1为0  （0为假，非零为真，与这相反，相同为零即假）
 
 9^5
 0000 0000 -- 0000 0000 -- 0000 0000 -- 0000 1001  （9 在内存中的存储）

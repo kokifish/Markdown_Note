@@ -423,6 +423,12 @@ time_zones = [rec['tz'] for rec in records if 'tz' in rec]
 | list.clear()                             | 清空列表                                     |
 | list.copy()                              | 复制列表                                     |
 
+> list去重 http://peiqiang.net/2015/01/13/python-remove-duplicates-in-list.html
+
+```python
+list(set(seq))# Not order preserving #不保持顺序
+```
+
 
 
 
@@ -573,7 +579,7 @@ str(100) # '100'
 >
 > https://www.python.org/dev/peps/pep-0448/
 
-星号表达式 `*args` 用于将传入的可迭代参数序列解析出来，并存入`args`中
+星号表达式 `*args` 用于将传入的可迭代参数序列解析出来，并存入`args`中
 
 1. 参数传递
 
@@ -667,7 +673,42 @@ squared = {x**2 for x in [1, 1, 2]} #set推导式
 
 
 
-#### The **Scope** of a Name Binding
+### The **Scope** of a Name Binding
+
+
+
+
+
+
+
+### shallow and deep copy
+
+```python
+def f(a):
+    a.append(2)
+    print('in f():id:', id(a), 'a:', a)
+    print(' id(a[0]):', id(a[0]), 'a[0]:', a[0])
+    return a
+
+def main():
+    a=[1]
+    print('ori id(a):', id(a), 'a:', a)
+    print(' id(a[0]):', 'a[0]:', a[0])
+    re_a=f(a)
+    print('now id(a):', id(a), 'a:', a)
+    print(' id(a[0]):', id(a[0]), 'a[0]:', a[0])
+    print('id(re_a): ', id(re_a), 're_a:', re_a)
+
+main()
+#Output:
+ori id(a): 2376741096840 a: [1]
+ id(a[0]): 140728639411232 a[0]: 1
+in f():id: 2376741096840 a: [1, 2]
+ id(a[0]): 140728639411232 a[0]: 1
+now id(a): 2376741096840 a: [1, 2]
+ id(a[0]): 140728639411232 a[0]: 1
+id(re_a):  2376741096840 re_a: [1, 2]
+```
 
 
 
@@ -783,7 +824,26 @@ x is y == true
 
 >   成员运算符
 
--   ​
+| operator | Logic                                                 |                               |
+| -------- | ----------------------------------------------------- | ----------------------------- |
+| in       | 如果在指定的序列中找到值返回 True，否则返回 False     | 如果 x 在 y 序列中返回 True   |
+| not in   | 如果在指定的序列中没有找到值返回 True，否则返回 False | 如果 x 不在 y 序列中返回 True |
+
+
+
+
+```python
+>>> 3 not in [2, 3, 4]
+False
+>>> 3 not in [4, 5, 6]
+True
+```
+
+
+
+
+
+
 
 ---
 
@@ -1109,6 +1169,19 @@ for x in f:#此时迭代器已经到了StopIteration，不再有输出
 
 
 
+#### Conversion of Generator
+
+
+
+```python
+#assume: ge is <class 'generator'>
+
+#需要多次使用genertator的东西时:
+list(ge)#可以理解为：list不断调用迭代器ge的__next__直到抛出错误
+for i in ge:
+    print('This cannot print')#永远不会输出，因为ge已经被next完了
+```
+
 
 
 
@@ -1271,7 +1344,7 @@ sum([0,1,2,3,4], 2)#list计算总和(10)后再 +2, output: 12
 
 ###### reduce 
 
-- **reduce()** 函数会对参数序列中元素顺序两两操作
+- **reduce()** 函数会对参数序列中元素顺序两两操作
 
 ```python
 reduce(function, iterable[, initializer])#注意第一个是function
@@ -1318,6 +1391,18 @@ d.update({key: value/2 for key,value in d.items()})
 
 
 
+###### enumerate
+
+- 返回 enumerate(枚举) 对象
+
+```python
+>>>seasons = ['Spring', 'Summer', 'Fall', 'Winter']
+>>> list(enumerate(seasons))
+[(0, 'Spring'), (1, 'Summer'), (2, 'Fall'), (3, 'Winter')]
+>>> list(enumerate(seasons, start=1))       # 小标从 1 开始
+[(1, 'Spring'), (2, 'Summer'), (3, 'Fall'), (4, 'Winter')]
+```
+
 
 
 
@@ -1341,7 +1426,7 @@ import numpy as np
 
 
 
-###### pip 
+### pip 
 
 -   a package management system used to install and manage software packageswritten in Python
 
@@ -1361,7 +1446,9 @@ pip install -U pip #Linux: Upgrading pip
 
 pip list --outdated #检查哪些packet需要更新
 pip install --upgrade numpy #更新numpy
+pip uninstall numpy #卸载
 
+pip install matplotlib==2.0.0 #安装指定版本的包
 #↓使用whl文件安装第三方模块
 pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
 ```
@@ -1377,6 +1464,17 @@ pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
 
 1.  download get-pip.py  //https://pip.pypa.io/en/stable/installing/
 2.  python get-pip.py
+
+#### pip批处理相关
+
+```python
+pip freeze >requirements.txt #在当前目录下，将当前环境下pip list能列出的几乎所有包列出，除去pip, setuptools等 
+pip install -r requirements.txt #根据requirements.txt安装需要的包，注意-r参数
+```
+
+
+
+
 
 ---
 
@@ -1445,6 +1543,12 @@ datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S') #字符串todatetime
 
 
 
+### timeit
+
+- 可用于计算一段代码的使用时间
+
+
+
 ### re 正则表达式
 
 
@@ -1487,9 +1591,41 @@ print(re.search('www', 'awwwwwwwwwww')) #
 
 
 
+### sys
+
+
+
+### IO重定向
+
+```python
+#stdout redirect
+import sys
+print('Dive in')#print to console
+saveout = sys.stdout#save original stdout
+fsock = open('out.log', 'w')#open a file, if not exits, create it
+sys.stdout = fsock#redirect the stdout to the file fsock
+print('This message will be logged instead of displayed') #this will be print to file
+sys.stdout = saveout#recover the stdout, 后面的print会输出到console
+fsock.close()#close the file
+```
+
+
+
+```python
+#stderr redirect
+import sys
+fsock = open('error.log', 'w')#open a file
+sys.stderr = fsock
+raise Exception, 'this error will be logged'
+```
+
+> Note: need not to close the file.
+>
+> 当程序由于异常而崩溃时，Python程序也结束了，Python会替我们清理和关闭文件
+
 ## Module Interaction
 
-
+> 模块之间的相互作用
 
 ```python
 # file: a.py
@@ -1515,6 +1651,14 @@ print(__name__)
 
 
 
+---
+
+## ipython与魔法命令
+
+> http://blog.hszofficial.site/TutorialForPython/%E5%B7%A5%E5%85%B7%E9%93%BE%E7%AF%87/%E4%BA%A4%E4%BA%92%E7%8E%AF%E5%A2%83jupyter/ipython%E4%B8%8E%E9%AD%94%E6%B3%95%E5%91%BD%E4%BB%A4/ipython%E4%B8%8E%E9%AD%94%E6%B3%95%E5%91%BD%E4%BB%A4.html
+
+- 魔法命令都以%或者%%开头,可以理解为ipython里定义的宏或者内置方法,以%开头的成为行命令，%%开头的称为单元命令。行命令只对命令所在的行有效，而单元命令则必须出现在单元的第一行，**对整个单元的代码进行处理**
+
 
 
 
@@ -1538,7 +1682,122 @@ print("%+5d" % (a))#强制带符号,填充空格至5位
 
 
 
+---
 
+## Concurrent Execution 并发执行
+
+> 并发执行
+>
+> Related Python module: os, multiprocessing
+>
+> note: parfor
+
+- 线程是最小的执行单元，而进程由至少一个线程组成。如何调度进程和线程，完全由操作系统决定，程序自己不能决定什么时候执行，执行多长时间
+- **全局解释器锁 global interpreter lock**: 运行在解释器主循环中，在多线程环境下，任何一条线程想要执行代码的时候都必须获取 acquire 到这个锁，运行一定数量字节码，然后释放 release掉，然后再尝试获取。这样 GIL 就保证了**同时只有一条线程在执行**
+
+Unix/Linux操作系统提供了一个`fork()`系统调用，`fork()`返回两次
+
+1. 子进程: return 0
+2. 父进程: return child process id
+
+Python的`os`模块封装了常见的系统调用，其中就包括`fork`
+
+```python
+import os #fork()
+
+print('Process (%s) start...' % os.getpid())
+# Only works on Unix/Linux/Mac:
+pid = os.fork()
+if pid == 0:#child process
+    print('I am child process (%s) and my parent is %s.' % (os.getpid(), os.getppid()))
+else:#main process
+    print('I (%s) just created a child process (%s).' % (os.getpid(), pid))
+```
+
+> Windows无fork调用，无法运行。MacOS基于BSD(Unix的一种)故可运行
+
+
+
+### Module multiprocessing
+
+> `multiprocessing`: 跨平台版本的多进程模块
+>
+> fork在module os中，但Windows无法使用，Module multiprocessing为跨平台版本的多进程模块
+
+- Process(): 创建子进程
+
+```python
+from multiprocessing import Process
+import os
+
+# 子进程要执行的代码
+def run_proc(name):
+    print('Run child process %s (%s)...' % (name, os.getpid()))
+
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())#parent process id
+    p = Process(target=run_proc, args=('test',))#创建一个Process p
+    print('Child process will start.')
+    p.start()#启动child proecess p
+    p.join()#等待child process p结束后再继续向下进行，用于进程间同步
+    print('Child process end.')
+```
+
+
+
+
+
+### Module threading
+
+> Python Module: threading, `_thread`的高级模块，对`_thread`进行了封装
+>
+> This module constructs higher-level threading interfaces on top of the lower level [`_thread`](https://docs.python.org/3/library/_thread.html#module-_thread) module
+
+- Python的线程是真正的Posix Thread，而不是模拟出来的线程
+
+```python
+import time, threading
+
+def loop():
+    print('thread %s is running...' % threading.current_thread().name)
+    time.sleep(1)
+    print('thread %s ended.' % threading.current_thread().name)
+
+print('thread %s is running...' % threading.current_thread().name)#获取主进程名字: MainThread
+t = threading.Thread(target=loop, name='LoopThread')#target: thread function; the name of new thrad t: LoopThread
+t.start()
+t.join()
+print('thread %s ended.' % threading.current_thread().name)#
+#Output:
+thread MainThread is running...
+thread LoopThread is running...
+thread LoopThread ended.
+thread MainThread ended.
+```
+
+- threading.current_thread(): 返回当前进程实例. threading.current_thread().name 当前进程实例的名字
+
+
+
+
+
+```python
+balance = 0
+lock = threading.Lock()
+
+def run_thread(n):
+    for i in range(100000):
+        # 先要获取锁:
+        lock.acquire()
+        try:
+            # 放心地改吧:
+            change_it(n)
+        finally:
+            # 改完了一定要释放锁:
+            lock.release()
+```
+
+> 用`try...finally`确保锁一定会被释放
 
 
 

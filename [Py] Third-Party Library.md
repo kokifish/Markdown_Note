@@ -197,11 +197,11 @@ array([ 1,  2,  3,  5,  6,  7,  8,  9, 10])
 >
 > matrix.A[0] :取二维数组中第一行元素
 
-a array([[6, 7, 1, 6],        [1, 0, 2, 3],        [7, 8, 2, 1]]) 
+a array([[6, 7, 1, 6],        [1, 0, 2, 3],        [7, 8, 2, 1]]) 
 
 #### arange
 
-> numpy.arange([*start*, ]*stop*, [*step*, ]*dtype=None*) 
+> numpy.arange([*start*, ]*stop*, [*step*, ]*dtype=None*) 
 
 ```python
 >>> np.arange(3)
@@ -222,7 +222,7 @@ array([3, 5])
 
 ##### choice
 
-> `numpy.random.choice`(*a*, *size=None*, *replace=True*, *p=None*) 
+> `numpy.random.choice`(*a*, *size=None*, *replace=True*, *p=None*) 
 
 Generates a random sample from a given 1-D array 
 
@@ -274,6 +274,29 @@ array([[1, 2, 5],
 
 
 
+### common function
+
+
+
+###### flatnonzero
+
+- Return indices that are non-zero in the flattened version of a
+
+```python
+
+>>> x = np.arange(-2, 3)
+>>> x
+array([-2, -1,  0,  1,  2])
+>>> np.flatnonzero(x)
+array([0, 1, 3, 4])#去除0后，所有元素加上array的最小值绝对值
+```
+
+
+
+
+
+
+
 ---
 
 # pandas
@@ -314,13 +337,13 @@ s = pd.Series(d_data)#创建后dict的key-value对应Series的tag-value(有序�
 
 ```
 
-`data` can be many different things: 
+`data` can be many different things: 
 
 - a Python dict
 - an ndarray
 - a scalar value (like 5)
 
-The passed **index** is a list of axis labels. Thus, this separates into a few cases depending on what **data is**: 
+The passed **index** is a list of axis labels. Thus, this separates into a few cases depending on what **data is**: 
 
 ```python
 # From ndarray:
@@ -408,14 +431,6 @@ dtype: float64
 
 
 
-
-
-
-
-
-
-
-
 ###### DataFrame
 
 > pandas.DataFrame 横行为index，竖列为columns
@@ -425,7 +440,7 @@ dtype: float64
 每个轴都有标签，可以当作一个Series的字典。
 
 ```python
-class pandas.DataFrame(data=None, index=None, columns=None, dtype=None, copy=False)
+class pandas.DataFrame(data=None, index=None, columns=None, dtype=None, copy=False)
 ```
 
 
@@ -444,9 +459,7 @@ class pandas.DataFrame(data=None, index=None, columns=None, dtype=None, cop
 
 > Column labels to use for resulting frame. Will default to RangeIndex (0, 1, 2, …, n) if no column labels are provided
 
-**dtype** : dtype, default None
-
-> Data type to force. Only a single dtype is allowed. If None, infer
+**dtype** : dtype, default None. 强制存储的数据类型
 
 **copy** : boolean, default False
 
@@ -511,9 +524,9 @@ type(ttt[0]) #<class 'list'>
 
 ##### read_csv
 
-> 如果数据集中有中文最好在read_csv里面加上 `encoding = 'gbk'`，以避免乱码问题 
+> 如果数据集中有中文最好在read_csv里面加上 `encoding = 'gbk'`，以避免乱码问题 
 
-- **filepath_or_buffer** : str, pathlib.Path, py._path.local.LocalPath or any object with a read() method (such as a file handle or StringIO). The string could be a URL. Valid URL schemes include http, ftp, s3, and file. For file URLs, a host is expected. For instance, a local file could be <file://localhost/path/to/table.csv>
+- **filepath_or_buffer** : str, pathlib.Path, py._path.local.LocalPath or any object with a read() method (such as a file handle or StringIO). The string could be a URL. Valid URL schemes include http, ftp, s3, and file. For file URLs, a host is expected. For instance, a local file could be  file://localhost/path/to/table.csv
 - sep : str, default ‘,’ . Delimiter to use. If sep is None, the C engine cannot automatically detect the separator, but the Python parsing engine can, meaning the latter will be used and automatically detect the separator by Python’s builtin sniffer tool, csv.Sniffer. In addition, separators longer than 1 character and different from '\s+' will be interpreted as regular expressions and will also force the use of the Python parsing engine. Note that regex delimiters are prone to ignoring quoted data. Regex example: '\r\t'
 - header : int or list of ints, default ‘infer’. Row number(s) to use as the column names, and the start of the data. Default behavior is to infer the column names: if no names are passed the behavior is identical to header=0 and column names are inferred from the first line of the file, if column names are passed explicitly then the behavior is identical to header=None. Explicitly pass header=0 to be able to replace existing names. The header can be a list of integers that specify row locations for a multi-index on the columns e.g. [0,1,3]. Intervening rows that are not specified will be skipped (e.g. 2 in this example is skipped). Note that this parameter ignores commented lines and empty lines if skip_blank_lines=True, so header=0 denotes the first line of data rather than the first line of the file.
 - encoding : str, default None. Encoding to use for UTF when reading/writing (ex. ‘utf-8’). List of Python standard encodings
@@ -591,11 +604,11 @@ len(df)
 
 ##### loc iloc ix at
 
-iloc 只能使用数字型。返回给定行的 series，行中的每一列都是返回 series 的一个元素 
+iloc 只能使用数字型。返回给定行的 series，行中的每一列都是返回 series 的一个元素 
 
 loc 返回引用的列，使用的是基于字符串的引用，而不是基于数字的
 
-ix 是基于标签的查询方法，同时也支持数字型索引作为备选。但ix有轻微的不可预测性
+ix 是基于标签的查询方法，同时也支持数字型索引作为备选。但ix有轻微的不可预测性
 
 
 
@@ -648,9 +661,6 @@ from sympy.abc import x
 f = x**3-2*x-6
 print f.diff() #result is :3*x**2-2
 print f.diff().evalf(subs={x:6}) #result is : 106.0000000000
-
-
-
 
 ```
 
@@ -807,6 +817,16 @@ with open('test.csv','rb') as myFile:
 >
 > https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html 函数references
 
+```python
+matplotlib.rcParams[‘figure.figsize’]#图片像素 
+matplotlib.rcParams[‘savefig.dpi’]#分辨率 
+plt.savefig(‘plot123_2.png’, dpi=200)#指定分辨率
+```
+
+
+
+
+
 
 
 ###### plot()
@@ -838,6 +858,28 @@ ax2.axhline(0, color='black', lw=2)
 plt.show()
 
 ```
+
+
+
+
+
+###### imshow
+
+```python
+matplotlib.pyplot.imshow(X, cmap=None, norm=None, aspect=None, interpolation=None, alpha=None, vmin=None, vmax=None, origin=None, extent=None, shape=None, filternorm=1, filterrad=4.0, imlim=None, resample=None, url=None, hold=None, data=None, **kwargs)[source]
+```
+
+- **X** (image): array_like, shape (n, m) or (n, m, 3) or (n, m, 4)
+
+  Display the image in `X` to current axes. `X` may be an array or a PIL image. If `X` is an array, it can have the following shapes and types:
+
+  - MxN -- values to be mapped (float or int)
+  - MxNx3 -- RGB (float or uint8)
+  - MxNx4 -- RGBA (float or uint8)
+
+  MxN arrays are mapped to colors based on the `norm`(mapping scalar to scalar) and the `cmap` (mapping the normed scalar to a color).
+
+  Elements of RGB and RGBA arrays represent pixels of an MxN image. All values should be in the range [0 .. 1] for floats or [0 .. 255] for integers. Out-of-range values will be clipped to these bounds.
 
 
 
@@ -1405,6 +1447,48 @@ if __name__ == "__main__":
     nx.draw(G_ba)
     plt.show()
 ```
+
+
+
+---
+
+# python文件批量运行(真并行)
+
+1. 每个运行的实例都得在一个独立的虚拟环境，否则会出错，包括其调用的包
+2. 用一个额外的程序或脚本调用那些独立的虚拟环境。
+
+
+
+## Virtualenv & Pythonbrew
+
+> python的虚拟环境及多版本开发利器: https://www.openfoundry.org/tw/tech-column/8516-pythons-virtual-environment-and-multi-version-programming-tools-virtualenv-and-pythonbrew
+
+Pythonbrew 已整合了 Virtualenv
+
+Windows下的安装:
+
+1. 将C:\PythonX.Y\Scripts\下找到easy_install.exe，并将该目录放进Windows环境中的PATH
+2. cmd: easy_install virtualenv 安装virtualenv
+
+使用方法：
+
+建立虚拟环境:
+
+1. cd进工作目录
+2. virtualenv [指定虚拟环境的名称], 例如使用virtualenv ENV创建一个叫ENV的虚拟环境
+
+启动虚拟环境:
+
+1. cd ENV
+2. source bin/activate, windows: \path\to\env\Scripts\activate.bat
+3. 此时命令行的最前端出现了虚拟环境名称，e.g. (ENV)
+4. [opt.] 如果在虚拟环境中需要安装其他包，可以使用pip与requirements.txt相关的指令
+
+退出虚拟环境:
+
+1. 在已启动虚拟环境的情况下，输入deactivate，而后命令行最前端不再显示虚拟环境的名称
+
+
 
 
 
