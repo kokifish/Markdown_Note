@@ -409,24 +409,26 @@ time_zones = [rec['tz'] for rec in records if 'tz' in rec]
 
 
 
-| 方法                                       | 功能                                       |
-| ---------------------------------------- | ---------------------------------------- |
-| list.append(obj)                         | 在列表**末尾添加**新的对象                          |
-| list.count(obj)                          | 统计某个元素在列表中出现的次数                          |
-| list.extend(seq)                         | 在列表末尾一次性追加另一个序列中的多个值(用新列表扩展原来的列表)        |
-| list.index(obj)                          | 从列表中找出某个值第一个匹配项的索引位置                     |
-| list.insert(index, obj)                  | 将obj插入列表                                 |
-| list.pop( [index = -1 ] )                | 移除列表中的一个元素(默认最后一个 即index = -1), 并返回该元素的值 |
-| list.remove(obj)                         | 删除列表中第一个与obj匹配的项                         |
-| list.reverse()                           | 反向列表中元素                                  |
-| list.sort(cmp=None, key=None, reverse=False) | 对原列表进行排序                                 |
-| list.clear()                             | 清空列表                                     |
-| list.copy()                              | 复制列表                                     |
+| 方法                                         | 功能                                                         |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| list.append(obj)                             | 在列表**末尾添加**新的对象                                   |
+| list.count(obj)                              | 统计某个元素在列表中出现的次数                               |
+| list.extend(seq)                             | 在列表末尾一次性追加另一个序列中的多个值(用新列表扩展原来的列表) |
+| list.index(obj)                              | 从列表中找出某个值**第一个**匹配项的索引位置                 |
+| list.insert(index, obj)                      | 将obj插入列表                                                |
+| list.pop( [index = -1 ] )                    | 移除列表中的一个元素(默认最后一个 即index = -1), 并返回该元素的值 |
+| list.remove(obj)                             | 删除列表中第一个与obj匹配的项                                |
+| list.reverse()                               | 反向列表中元素                                               |
+| list.sort(cmp=None, key=None, reverse=False) | 对原列表进行排序                                             |
+| list.clear()                                 | 清空列表                                                     |
+| list.copy()                                  | 复制列表                                                     |
 
 > list去重 http://peiqiang.net/2015/01/13/python-remove-duplicates-in-list.html
 
 ```python
-list(set(seq))# Not order preserving #不保持顺序
+list(set(seq))# Not order preserving #不保持顺序 #list去重
+[1,2,3,2].index(2) # => 1
+[i for i,x in enumerate([1,2,3,2]) if x==2] # => [1, 3]
 ```
 
 
@@ -667,6 +669,7 @@ set推导式：跟list推导式类似。 唯一的区别在于使用大括号`{}
 ```python
 squared = {x**2 for x in [1, 1, 2]} #set推导式
 # squared: {1, 4}
+s = {i+1 for i in range(9)} # 1~9的set
 ```
 
 
@@ -780,6 +783,7 @@ else:
 ###### Division & Mod
 
 -   Python中，有两种除法: 精确除   /    和   取整除   //
+-   求模: % 取模，保证出来的数大于等于0
 
 ```python
 >>> 10 / 3
@@ -790,6 +794,8 @@ else:
 3
 >>> 10 % 3 #取余
 1
+>>> -1 % 3 #取余
+2
 ```
 
 
@@ -1334,6 +1340,8 @@ range(-5, 6, 1) #创建整数列表[-5, 6)的list: -5 -4 -3 -2 -1 0 1 2 3 4 5
 
 ###### sum pow 
 
+The two-argument form `pow(x, y)` is equivalent to using the power operator: `x**y`
+
 ```python
 sum(iterable[, start])
 sum([0,1,2])#output:3
@@ -1501,7 +1509,7 @@ random.randint(12, 20)
 random.randrange([start], stop[, step])
 random.randrange(10, 100, 2)#相当于从[10, 12, 14, 16, ... 96, 98]中随机生成
 random.choice(range(10, 100, 2))#等效
-              
+
 #从指定序列中获取一个随机元素
 random.choice(["JGood", "is", "a", "handsome", "boy"])
 

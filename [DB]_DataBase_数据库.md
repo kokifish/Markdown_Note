@@ -713,7 +713,9 @@ to <用户/角色列表>
 
 # 形式化关系查询语言
 
-
+- 关系代数
+- 元组关系演算
+- 域关系演算
 
 
 
@@ -863,9 +865,11 @@ Sara
 
 
 
+---
+
 # 数据库设计和E-R模型
 
-> Entity-Relationship Model
+> Entity-Relationship Model 实体-联系模型
 >
 > 前面讲的SQL是关系模型 Relation Model
 
@@ -873,7 +877,11 @@ Sara
 
 
 
+---
 
+# 查询处理
+
+> query processing: 查询处理，指从数据库中提取数据时涉及的一系列活动
 
 
 

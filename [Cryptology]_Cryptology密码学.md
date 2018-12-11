@@ -622,5 +622,441 @@ $$
 
 
 
+# RSA密码体制和整数因子分解
 
 
+
+
+
+## RSA  cryptosystem
+
+设n=pq, 其中p, q是素数。明文空间和密文空间P=C=Z~n~, 定义密钥空间为:
+$$
+\mathbf{K} = \{(n, p, q, e, d):ed \equiv 1\mod{\phi(n)}) \}
+$$
+对于给定的密钥K = (n, p, q, e, d), 加密过程和解密过程分别为:(模指数运算)
+$$
+e_K(m) = m^{e} \mod{n};\  d_K(c) = c^{d} \mod{n};(m, c \in \mathbf{Z}_n)
+$$
+公钥public key: n, e; 密钥private key: p, q, d.
+
+> related number theory knowledge:
+> $$
+> ed\equiv 1\mod{\phi(n)} \Rightarrow ed \equiv 1\mod{(p-1)(q-1)}\\
+> \therefore m^{ed} \equiv m^{k\phi(n)+1} \equiv m^{1} \equiv m \mod{n}
+> $$
+>
+>完全破解RSA的重点在于知道$$\phi(n)$$, 可以通过(p-1)(q-1)求得，故可以对n进行大整数分解。
+
+
+
+### Key Generation
+
+The keys for the RSA algorithm are generated the following way:
+
+1. Choose two distinct prime numbers *p* and *q*
+    - For security purposes, the integers *p* and *q* should be chosen at random, and should be similar in magnitude but differ in length by a few digits to make factoring harder.Prime integers can be efficiently found using a **primality test**.
+
+2. Compute **n = pq**
+   - n is used as the modulus for both the public and private keys. Its length, usually expressed in bits, is the **key length**.
+
+3. Compute *λ*(*n*) = lcm(*λ*(*p*), *λ*(*q*)) = lcm(*p* − 1, *q* − 1), where *λ* is Carmichael's totient function. This value is kept private. (lcm for Lowest Common Multiple)
+
+4. Choose an integer **e** such that 1 < *e* < *λ*(*n*) and gcd(*e*, *λ*(*n*)) = 1; i.e., *e* and *λ*(*n*) are **coprime**(互质).
+
+5. Determine **d** as d ≡ e^−1^ (mod *λ*(*n*)); i.e., *d* is the **modular multiplicative inverse** (模乘逆) of *e* modulo *λ*(*n*).
+
+
+
+---
+
+## Primality Test
+
+> Primality [prai'mæləti]; 素性检验
+
+
+
+### Miller-Rabin Primality Test
+
+> 强伪素数检测 strong pseudo-prime test
+>
+> 对于合数问题的偏是的Monte Carlo算法
+
+- 多项式时间算法
+
+引理：-1和1是 mod p的平凡平方根，当p是奇素数时，不存在1 mod p的非平凡平方根。下面有英语解释及证明。
+
+Certainly 1 and −1 always yield 1 when squared modulo *p*; call these trivial square(平凡平方根) roots of 1.
+$$
+1^2 \equiv 1 \mod{p}, (-1)^2\equiv 1 \mod{p}
+$$
+To show this, suppose that *x* is a square root of 1 modulo *p*. Then:
+$$
+x^2 \equiv 1 \mod{p} \Rightarrow (x-1)(x+1) \equiv 0 \mod{p} 
+$$
+In other words, prime *p* divides the product (*x* − 1)(*x* + 1). By Euclid's lemma it divides one of the factors *x* − 1 or *x* + 1, implying that *x* is congruent(同余) to either 1 or −1 modulo *p*.
+
+有待补充，摘自Miller–Rabin primality test wiki，https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
+
+```python
+# True: is prime (maybe a composite)
+# False: is composite, then must be a composite
+def Miller_Rabin(n:int):
+    if(n <= 0):
+        return False
+    m = n-1
+    k = 0
+    while(m % 2 == 0): # m = n-1
+        k += 1
+        m = m >> 1
+	# now we heave: n-1 == 2^k * m ########## prepare end, now start main process
+    a = random.randint(1, n-1)# randomly choose a interger in [1, m-1]
+    b = pow(a,m,n) # b = a^m mod n # ini value of b
+    if(b == 1):
+        return True # n maybe is prime, no enough witness show that n is composite
+    for i in range(k): # iiterate for k times
+        if(b == n-1):
+            return True # n maybe is prime, no enough witness show that n is composite
+        else:
+            b = pow(b,2,n)
+    return False # n must be a composite
+```
+
+证明Miller-Rabin 算法对于合数问题是一个偏是的Monte Carlo算法：反证法
+
+假定对于某个素数n回答的是n为合数。则必有$$a^m \not\equiv 1 \mod{n}$$. 下面考虑算法中检测的b的值的序列，由于算法中每一步都进行b的平方操作。故b的序列为$$a^{m}, a^{2m}, ..., a^{2^{k-1}m}$$. 由于算法回答的是n为合数，则有
+$$
+a^{2^{i}m}\not\equiv -1 \mod{n}; \tag 1
+$$
+因为n为素数(由假设)，n-1=2^k^m，由Fermat费马定理：
+$$
+a^{n-1}\equiv 1 \mod{n} \Rightarrow a^{2^{k}m}\equiv 1 \mod{n} \tag 2
+$$
+所以$$a^{2^{k-1}m}$$为mod n的1的平方根，而由于n为素数，故mod 1的1的平方根仅有-1 mod n, 1 mod n. 而又因为式1，有:
+$$
+a^{2^{k-1}m} \equiv 1 \mod{n}
+$$
+重复此过程可以得到$$a^{m} \equiv 1 \mod{n}$$, 而在算法一开始判断的时候，会将此种情况判断为n是素数，推出矛盾。
+
+
+
+---
+
+## Factoring Algorithms
+
+- In number theory, **integer factorization** (整数分解) is the decomposition of a composite number into a product of smaller integers. If these integers are further restricted to prime numbers, the process is called **prime factorization**. (质因数分解)
+
+
+
+### Pollard p-1 Algorithm
+
+- 缺陷: 要求n有一个素因子p使得p-1的所有素因子都较小。
+
+$$
+\begin{align}
+& \text{Pollard } p-1 \text{ Factoring Algorithm}(n, B):\\
+& a := 2\\
+& \text{for } i:=2 \text{ to }B \text{ do}:\\
+& \qquad a := a^{j} \mod{n}\\
+& d := \gcd{(a-1, n)}\\
+& \text{if } (1<d<n):\\
+& \qquad \text{return }d\\
+& \text{else return }False\\
+\end{align}
+$$
+
+d is a non-trivial factor of n
+
+proof: 假定p是n的一个素因子，对每一个素数幂q | (p-1), 有q <= B, 则有: (a在for结束时不可等于1)
+$$
+(p-1)|B!\\
+\text{when for ends: }a \equiv 2^{B!}\mod{n}\\
+\because p|n \Rightarrow a \equiv 2^{B!} \mod{p}\\
+\text{Fermat theorem }\Rightarrow 2^{p-1} \equiv 1 \mod{p}\\
+(p-1) | B! \Rightarrow a \equiv 1 \mod{p}\\
+\therefore p|(a-1) \because p|n \therefore p|d=\gcd{(a-1,n)}
+$$
+
+> 为了抵抗p-1方法的分解，一般在构造RSA参数的时候会选择两个大素数p1,q1，使得p = 2×p1 + 1, q = 2 × q1 + 1也为素数(此时p-1只有2为小素因子，p1也很大)。
+
+
+
+### Pollard rho Algorithm
+
+- **Pollard's rho algorithm** is an algorithm for integer factorization. It was invented by John Pollard in 1975. It uses only a small amount of space, and its expected running time is proportional to the square root of the size of the smallest prime factor of the **composite number** being factorized.
+- 对于通过计算x2-x1 和 n 的最大公因子得到n的一个非平凡因子
+
+设p为n的最小素因子，则有: 
+$$
+\exists x, x' \in \mathbf{Z_n}, (x \neq x') \and (x \equiv x' \mod{p}) \Rightarrow p \le \gcd{(x-x', n)} \le n\\
+$$
+注意gcd求出的数不一定为p，并且无需知道p即可对n进行分解
+
+下面是rho算法，其中x1需要让f(x1)不至于一开始就循环，通常可以取1。算法计算出n的一个非平凡解。This(gcd(x-x', n)) may be n itself, since the two sequences might repeat at the same time. In this (uncommon) case the algorithm fails, and can be repeated with a different parameter.
+$$
+\begin{align}
+& \text{Pollard } \rho \text{ Factoring Algorithm}(n, x_1):\notag\\
+& \text{external }f; \text{which is integer polynomial}\notag\\
+& x := x_1\notag\\
+& x' := f(x) \mod{n}\notag\\
+& p := \gcd{(x-x', n)}\notag\\
+& \text{while } (p==1) \text{ do }://\text{in the ith iteration:} x=x_i, x'=x_{2i}\notag\\
+& \qquad x := f(x) \mod{n}\notag\\
+& \qquad x' := f(f(x')) \mod{n}\notag\\
+& \qquad p := \gcd{(x-x', n)}\notag\\
+& \text{if }(p=n):\notag\\
+& \qquad \text{return } Failure\notag\\
+& \text{else return } p//\text{a non-trivial factor of n}\notag\\
+\end{align}
+$$
+
+
+
+### Dixon's random squares method
+
+> Dixon's factorization method, Dixon's random squares method, Dixon's algorithm
+
+- 核心思想: 对于分解n的一个因子的问题，核心步骤为找到一个碰撞并求gcd. 特点是有一个因子基 factor base, 碰撞的值为因子基中的因子的乘积。
+
+$$
+x^2 \equiv y^2 \mod{n} \and x\not\equiv \pm y \mod{n} \\
+\Rightarrow n |(x-y)(x+y) \and n \nmid (x+y) \and n \nmid (x-y)\\
+\Rightarrow \gcd{(x-y, n)} \text{ is a non-trivival factor of }n.
+$$
+
+
+
+
+
+### Number Field Sieve
+
+> NFS 数域筛法
+
+数域筛法的渐进运行时间比二次筛法和椭圆曲线算法的渐进运行时间都少。
+$$
+L_n[1/3, \lambda]\\
+O(e^{(1.92+O(1))(\ln n)^{1/3} (\ln \ln n)^{2/3}})
+$$
+
+
+
+---
+
+
+# 公钥密码学和离散对数
+
+
+
+
+
+#### Discrete Logarithm Problem (DLP)
+
+> 离散对数问题可以理解为，在群中，求解对数问题。
+>
+> 即在群G中求 $$\log_{\alpha}\beta$$ 的值x，使得 $$\alpha^{x} = \beta$$ 成立
+
+- Discrete Logarithm Problem 离散对数问题
+
+$$
+\text{Compute }x = \log_{\alpha}\beta\\
+\text{So that }\alpha^{x} = \beta \text{ in Group G}
+$$
+
+
+
+###### Discrete Logarithm
+
+Definition of discrete logarithm: 离散对数的定义
+
+Let *G* be any group. Denote its group operation by multiplication and its identity element by 1. Let *b* be any element of *G*. For any positive integer *k*, the expression b^k^ denotes the product of *b* with itself *k* times: b^k^ = b·b·b…b·b. (k times)
+
+Similarly, let b^-k^ denote the product of b^−1^ with itself *k* times. For *k* = 0, the *k*th power is the identity: b^0^ = 1.
+
+Let *a* also be an element of *G*. An integer *k* that solves the equation b^k^ = *a* is termed a **discrete logarithm** (or simply **logarithm**) of *a* to the base *b*. One writes *k* = log~b~ a.
+
+
+
+
+
+## ElGamal cryptosystem
+
+- In cryptography, the **ElGamal encryption system** is an asymmetric(非对称) key encryption algorithm for public-key cryptography which is based on the Diffie–Hellman key exchange.
+
+
+
+Key generation
+
+The key generator works as follows:
+
+- Alice generates an efficient description of a cyclic group G of order p with generator g. See below for a discussion on the required properties of this group.
+- Alice chooses an x randomly from {1, …,q-1}.
+- Alice computes  h = g^x^.
+- Alice publishes h, along with the description of G,q,g, as her **public key**. Alice retains x as her **private key**, which must be kept secret.
+
+Encryption
+
+The encryption algorithm works as follows: to encrypt a message m to Alice under her public key (G,q,g,h),
+
+- Bob chooses a random y from {1, …,q-1}, then calculates c~1~ = g^y^.
+- Bob calculates the shared secret s =h^y^ = g^xy^.
+- Bob maps his message m onto an element  m' of G.
+- Bob calculates c~2~ = m's.
+- Bob sends the ciphertext (c~1~, c~2~)=(g^y^,m'h^y^=(g^y^,m'g^xy^) to Alice.
+
+Note that one can easily find h^y^ if one knows m'. Therefore, a new y is generated for every message to improve security. For this reason, y is also called an **ephemeral key**.
+
+Decryption
+
+The decryption algorithm works as follows: to decrypt a ciphertext (c~1~,c~2~) with her private key x,
+
+- Alice calculates the shared secret s = c~1~^x}^
+- and then computes m' = c~2~s^-1^ which she then converts back into the plaintext message m, where s^-1^ is the inverse of s in the group G. (E.g. modular multiplicative inverse if G is a subgroup of a multiplicative group of integers modulo *n*).
+
+
+
+
+
+### Diffie–Hellman key exchange
+
+> 迪菲-赫尔曼密钥交换 Diffie–Hellman key exchange，缩写为D-H  是一种安全协议
+>
+> 迪菲－赫尔曼密钥协商 , 迪菲－赫尔曼密钥创建, 指数密钥交换, 迪菲－赫尔曼协议
+
+- 让双方在完全没有对方任何预先信息的条件下通过不安全信道创建起一个密钥。这个密钥可以在后续的通讯中作为对称密钥来加密通讯内容
+- 虽然迪菲－赫尔曼密钥交换本身是一个匿名（无认证）的密钥交换协议，它却是很多认证协议的基础，并且被用来提供传输层安全协议的短暂模式中的**前向安全性**
+- 安全性: 基于素域(模素数p剩余类域)上离散对数求解的困难性。
+
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/crypt_DH_key_exchange.png)
+
+
+
+#### Description
+
+Alice作为发起方，Bob作为应答方，以下为DH密钥交换的过程：
+
+1. Alice: choose, compute and send:
+   1. choose: p: prime number;
+   2. choose: g: residue class group mod p, not 0. 模p剩余类群中的非零元素
+   3. choose: **a**: secret number, keep by Alice only.
+   4. compute:  $$A = g^{a} \mod{p}$$.
+   5. send g, p, A to Bob.
+2. Bob: receive, choose, compute, send and compute shared secret:
+   1. receive: g, p, A
+   2. choose: **b**: secret number, keep by Bob only.
+   3. compute:  $$ B = g^{b} \mod{p} $$
+   4. send: B
+   5. compute shared secret: $$ K = A^{b} \mod{p}$$
+3. Alice: receive and compute shared secret
+   1. receive: B
+   2. compute shared secret: $$K = B^{a} \mod{p}$$ , ephemeral(短暂的) key
+
+其中a, b, $$g^{ab} \equiv g^{ba} \mod{p}$$  都为秘密的， 其余的所有值: p, g, $$g^a \mod{p}, g^b \mod{p}$$都可以在公共信道上传输
+
+> Tips: $$g^{ab} = g^{ba} \mod{p}$$  , this is ephemeral(短暂的) key, which are used in the Discrete Logarithm based public cryptosystems, are to ensure the security of the systems. ephemeral key通常是短暂使用，多变的，每一个session都使用一个新的ephemeral key. 相反static key则是长期使用不更改的。
+
+
+
+
+
+
+
+#### 前向安全性
+
+> 前向安全, 前向保密, Forward Secrecy, FS, 完美前向安全, Perfect Forward Secrecy, PFS
+
+- 密码学中通讯协议的安全属性，指的是**长期使用的主密钥泄漏**不会导致过去的**会话密钥**泄漏
+- 前向安全能够保护过去进行的通讯不受密码或密钥在未来暴露的威胁
+- 如果系统具有前向安全性，就可以保证在主密钥泄露时历史通讯的安全，即使系统遭到主动攻击也是如此
+
+
+
+
+
+## Algorithms for DLP
+
+
+
+
+
+### Shanks Algorithm
+
+- 一个非平凡的时间-存储折中算法
+
+- $$O(\sqrt{n})$$
+
+
+$$
+\alpha^{mj} = y = \beta \alpha^{-i}\\
+\Rightarrow \alpha^{mj+i} = \beta
+$$
+
+
+
+
+### Pollard rho DLP Algorithm
+
+> 之前已经介绍过因子分解的Pollard rho Algorithm
+
+- 与之前因子分解的Pollard rho算法一样，该算法求解离散对数的核心步骤之一也是寻找有限域中的碰撞。
+
+$$
+\text{Ensure that }(x, a, b) \text{ satisfy that } x = \alpha^{a}\beta^{b}\\
+n = ord(\alpha) \text{ in group }G.\\
+\alpha^{a_{2i}}\beta^{b_{2i}} = \alpha^{a_{i}}\beta^{b_{i}} 
+\and c = \log_{\alpha}\beta  \\
+\Rightarrow \alpha^{a_{2i}+cb_{2i}} = \alpha^{a_{i}+cb_{i}} 
+\Rightarrow a_{2i}+cb_{2i} \equiv a_{i}+cb_{i} \mod{n}\\
+\Rightarrow c(b_{2i}-b_{i}) \equiv a_{i}-a_{2i} \mod{n} 
+\Rightarrow c \equiv (a_{i}-a_{2i})(b_{2i}-b_{i})^{-1} \mod n \\
+$$
+
+
+
+
+
+算法input: 群G, 元素g的阶n, 需要求对数的值y。output: $$x = log_{g}y$$
+$$
+\begin{align}
+& \text{Pollard } \rho \text{ DLP Algorithm}(G, n, g, y):\notag\\
+& \text{function }f(x, a, b): //<a>\times\mathbf{Z_n}\times\mathbf{Z_n} \rightarrow <a>\times\mathbf{Z_n}\times\mathbf{Z_n}\notag\\
+& \qquad \text{if }x\in S_1: f \leftarrow(\ bx,\ a,\ (b+1)\mod{n})\notag\\
+& \qquad \text{elif }x\in S_2: f \leftarrow(x^{2},2a\mod{n}, 2b\mod{n})\notag\\
+& \qquad \text{else }: f \leftarrow(ax,(a+1)\mod{n}, b)//S_3\notag\\
+
+& \text{main: }\notag\\
+& \text{define a partition: } G = S_1 \cup S_2 \cup S_3  \notag\\
+& (x, a, b) = f(1,0,0)  \notag\\
+& (x', a', b') = f(x, a, b) \notag\\
+& \text{while}(x \neq x') \text{ do}: \notag\\
+& \qquad (x, a, b) = f(x, a, b) \notag\\
+& \qquad (x', a', b') = f(x', a', b') \notag\\
+& \qquad (x', a', b') = f(x', a', b') \notag\\
+& \text{if }(\gcd{(b'-b, n) \neq 1}): \notag\\
+& \qquad \text{return } Failure  \notag\\
+& \text{else return }((a-a')(b'-b)^{-1})\mod{n} \ //x = \log_{g}y, g^x = y\mod{n} \notag\\
+\end{align}
+$$
+
+> 注意该算法在n为实际元素的阶的倍数的时候也能运行，只是在while循环出来后，需要直接求解同余式来求得x。例如直接令n=p-1
+
+
+
+
+
+### Pohlig-Hellman Algorithm
+
+
+$$
+n = \prod_{i=1}^{k} p_{i}^{c_i}\\
+\text{Assume }q \text{ is a prime number, and }n \equiv 0 \mod{q^{c}}, n \not\equiv 0 \mod{q^{c+1}}\\
+\text{To compute }x\equiv a \mod{q^{c}}\\
+$$
+
+
+
+
+
+
+### Index Calculus Method
+
+> 指数演算法

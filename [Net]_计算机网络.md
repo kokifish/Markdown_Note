@@ -101,9 +101,6 @@
 
 
 
-
-![](http://op4fcrj8y.bkt.clouddn.com/17-7-24/83001368.jpg)
-
 注意有的地方将ARP RARP protocol归类到网络层
 
 五层协议的体系结构：
@@ -184,7 +181,7 @@
 
 
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-7-17/19533900.jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Net_light.png)
 
 
 
@@ -407,7 +404,7 @@ PPP协议的六阶段
 
 802.3的MAC帧格式：
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-4-12/37856643.jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Net_802.3_MAC.png)
 
 -   前导字符 Preamble：同步字符(7B)和起始定界符(Start of Frame Delimiter)(1B)
 
@@ -1096,7 +1093,7 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 -   客户在获得了一个IP地址以后，就可以发送一个ARP请求来避免由于DHCP服务器地址池重叠而引发的IP冲突
 
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-4-26/12159353.jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/DHCP_process.png)
 
 >   DHCP使用了租约的概念，或称为计算机IP地址的有效期。租用时间是不定的，主要取决于用户在某地连接Internet需要多久，这对于教育行业和其它用户频繁改变的环境是很实用的。通过较短的租期，DHCP能够在一个计算机比可用IP地址多的环境中动态地重新配置网络。DHCP支持为计算机分配静态地址，如需要永久性IP地址的Web服务器
 
@@ -1459,7 +1456,7 @@ IPv6 路由表
 3. 清除定时器 Flush Timer(default = 240s): 到期时将从路由表中删除(更新该路由时复位)
 4. 抑制定时器 Hold-down Timer：在路由的距离变为无穷大(包括收到毒化路由)时启动并在其到期之前不允许修改该路由的距离。抑制超时器超时后可重新接受对**端**发送的路由更新报文
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-6-25/59222809.jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/RIP_Timer.png)
 
 ###### 防止网络环路等问题
 

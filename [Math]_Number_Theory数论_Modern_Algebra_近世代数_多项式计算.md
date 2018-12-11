@@ -8,9 +8,9 @@
 
 ---
 
-# 数论
+# 数论 Number theory
 
-> 数论 Number theory
+
 
 
 
@@ -55,9 +55,73 @@
 -   元素d叫做元素（ a1，a2，…,an）在映射φ之下的象;
 -   元素（ a1，a2，…,an）叫做元素d在映射φ之下的逆象
 -   一个映射常用以下符号来描写
--     φ： （ a1，a2，…,an） →d= φ（ a1，a2，…,an）
+-   φ： （ a1，a2，…,an） →d= φ（ a1，a2，…,an）
 -   一个A×B到D的映射叫做一个A×B到D的代数运算。一个代数运算用◦来表示，◦: (a,b) → d=◦(a,b)
     为方便起见, ◦(a,b)可以写成a◦b
+
+
+
+### Quadratic Residue 二次剩余
+
+> 二次剩余
+
+
+
+#### Legendre symbol
+
+> 勒让德符号 二次特征
+>
+> 其他延申和推广包括 雅可比符号，克罗内克符号，希尔伯特符号，阿廷符号
+
+- a模p同余0: 0；a是模p二次剩余: 1；a是模p二次非剩余: -1. 要求p为奇素数。
+
+$$
+\left({\frac {a}{p}}\right)={\begin{cases}\quad 0, \text{if } a\equiv0\mod{p}\\
++1, \text{if } a \text{ is a quadratic non-residue modulo }p\\
+-1, \text{if } a \text{ is a quadratic residue modulo }p \text{ and }a \not\equiv0\mod{p}
+\end{cases}}
+$$
+
+
+
+##### property
+
+$$
+\left({\frac  {ab}{p}}\right)=\left({\frac  {a}{p}}\right)\left({\frac  {b}{p}}\right)\\
+\left({\frac  {a}{p}}\right)=\left({\frac  {b}{p}}\right) \text{ if } a\equiv b \mod{p}\\
+\left({\frac  {a^{2}}{p}}\right)=1
+$$
+
+
+
+#### Jacobi symbol
+
+For any integer *a* and any positive odd integer n, the Jacobi symbol (a/n) is defined as the product of the **Legendre symbols** corresponding to the prime factors of n:
+$$
+\left({\frac {a}{n}}\right)=\left({\frac {a}{p_{1}}}\right)^{\alpha _{1}}\left({\frac {a}{p_{2}}}\right)^{\alpha _{2}}\cdots \left({\frac {a}{p_{k}}}\right)^{\alpha _{k}},\\
+\text{where }{\displaystyle n=p_{1}^{\alpha _{1}}p_{2}^{\alpha _{2}}\cdots p_{k}^{\alpha _{k}}} \text{is the prime factorization of n.}
+$$
+
+
+
+
+#### Law of Quadratic Reciprocity
+
+> 二次互反律 Law of Quadratic Reciprocity. 判别二次剩余的解的存在性的定律
+>
+> 一般用勒让德符号表示，但是对于其他符号，也有对应的二次互反律
+
+- 二次互反律揭示了方程$$x^{2}\equiv p{\pmod {q}}$$ 可解和 $$x^{2}\equiv q{\pmod {p}}$$可解的简单关系。运用二次互反律可以将模数较大的二次剩余判别问题转为模数较小的判别问题，并最后归结为较少的几个情况，从而在实际上解决了**二次剩余的判别**问题。然而，二次互反律只能提供二次剩余的存在性，对于二次同余方程的具体求解并没有实际帮助
+
+$$
+\left({\frac  {p}{q}}\right)\cdot \left({\frac  {q}{p}}\right)=(-1)^{{{\frac  {(p-1)(q-1)}{4}}}}
+$$
+
+
+
+
+
+
 
 ---
 
@@ -85,11 +149,13 @@
 - 给定集合A，二元函数F:$$A\times A\rightarrow A$$ 称为集合A上的**二元运算**, An operation is a mapping that associates an element of the set to *every* pair of its elements. 给定集合A中两个元素a、b，则按顺序通常写为aFb。更多时候，二元运算会采用某种运算符而不是字母做为标记。
 - 可以看出，“集合A上的二元运算”这样的提法暗示了该运算在A上封闭
 
--
+
+
+
 
 ---
 
-## 群
+## 群 Group
 
 
 
@@ -173,7 +239,9 @@ e.g.
 
 
 
-##### 有限/无限群 群的阶
+##### 有限/无限群 群的阶 order
+
+> 群的阶即群的势。The **order** of a group is its cardinality.
 
 G中的**元素个数|G|**称为该**群的阶**
 $$
@@ -182,23 +250,24 @@ $$
 
 设(G, · )是一个群，如果G是一个有限集合，则称G为**有限群**，否则为**无限群**。
 
-有限群中每个元素的阶都是有限的，否则群就变成无限群了
+由一个群或其内之元素的阶可以大致知道群的结构。简略地说，阶的因式分解越复杂，这个群就会越复杂
 
 
 
-##### 元素的幂 & 阶 & 逆元性质
+##### 元素的幂 & 逆元性质
 
-
-
-**元素的幂**：在一个代数系统(G, · )中(一般讨论的是群)，元素a的**幂**a^n^(n为正整数)定义为：
-
+- **元素的幂**：在一个代数系统(G, · )中(一般讨论的是群)，元素a的**幂**a^n^(n为正整数)定义为：
 - a^n^ = a·a·a…a (n个a进行运算)。约定 a^0^ = e
 
 在交换群(加群) (G, + )中，定义中的a^n^ = e就是 na = 0
 
 
 
-**元素的阶**：设(G, · )是一个群，e为单位元，a ∈ G，使得 a^n^ = e成立的最小正整数n称为**a的阶(order)**，也称周期(period)，记作o(a)，如果不存在这样的正整数，则称a的阶是**无限阶**的。单位元e的阶为1。
+##### 元素的阶 order
+
+> 阶: order
+
+**元素的阶 order**: 设(G, · )是一个群，e为单位元，a ∈ G，使得 a^n^ = e成立的最小正整数n称为**a的阶(order)**，也称周期(period)，记作o(a)，如果不存在这样的正整数，则称a的阶是**无限阶**的。单位元e的阶为1。
 $$
 n = \text{ord}{(a)} = |a| = o(a)\\
 \text{Lagrange 推论:} \text{ord}{(a)}| ord(G) ; (ord(G): 群G的阶; |G|)
@@ -207,7 +276,11 @@ $$
 
 设(G, · )是群，如果G中除了单位元外所有元素都是**二阶**的，则(G, · )是**交换群**
 
+$$
+(G, \cdot)\text{is a group.}, a\in G: a^{m} = 1 \Leftrightarrow o(a)|m
+$$
 
+- 有限群中每个元素的阶都是有限的，否则群就变成无限群了
 
 
 
@@ -219,23 +292,24 @@ $$
 
 - **交换律**：∀a, b ∈ G，a · b = b · a
 
-
-
 - 通常把交换群中的运算称为**加法运算**，故交换群又称为**加群。**其中单位元称为**零元**，记为**0**。x(x ∈ G)的**逆元**称为**负元**，记作 **-x**
 
 
 
-##### 循环群
+##### 循环群 & 生成元
 
-- 若一个群的每一个元素都是G的某一个固定元素a的乘方，我们把G叫做**循环群**，我们也说**G是由元素a所生成的**，并且用符号G = (a)来表示。a叫做G的一个**生成元**
-- 定义：任意的 b ∈ G, 都存在a ∈ G 和一个整数i，都有 b=ai，我们把a 叫群的生成元。记G=\<a\>.
+> 循环群 cyclic group; 
+
+- A group *G* is called cyclic if there exists an element *g* in *G* such that *G* = ⟨*g*⟩ = { g^n^ | *n* is an integer }.
+- 若一个群的每一个元素都是G的某一个固定元素a的乘方，我们把G叫做**循环群**，我们也说**G是由元素a所生成的**，并且用符号G = (a)来表示。**a**叫做G的一个**生成元**(generator)
+- 定义：任意的 b ∈ G, 都存在a ∈ G 和一个整数i，都有 b=a^i^，我们把 a 叫群的生成元。记**G=\<a\>**.
 - Euler 函数$$\phi$$(N) ：不超过N且和N互素的元素的个数。
 
 定理：
 - 循环群G=(a)的任何子群都是循环群
 - 任意的d |#(a) ， 都唯一存在一个阶为d的子群
 - 如果#(a)=m， 那么#(a^k^)=ord( a^k^ )=m/（k，m）
-- 任意d |#(a) , (a)中存在$$\phi$$(d)个阶为d 的元素
+- 任意d |#(a) , (a)中存在$$\phi​$$(d)个阶为d 的元素
 - 如果#(a)=m，那么(a)中有$$\phi$$(m)个生成元
 - 素数阶的循环群的任何非恒等元都是生成元
 
@@ -243,7 +317,31 @@ $$
 
 ##### 子群
 
+> 子群: subgroup
+
 - 设G是一个群，若H是G的一个非空子集且同时H在和G一样的**单位元**与**代数运算**下是一个群，则H称为G的一个子群
+
+
+
+##### 置换群 对称群
+
+> 置换群: Permutation group; 对称群: Symmetric group
+
+- In mathematics, a **permutation group** is a group *G* whose elements are permutations of a given **set** *M* and whose group operation is the **composition** of permutations in *G* (which are thought of as bijective functions from the set *M* to itself).The group of *all* permutations of a set *M* is the symmetric group of *M*, often written as Sym(*M*). The term *permutation group* thus means a **subgroup** of the symmetric group. If *M* = {1,2,...,*n*} then, **Sym(*M*)**, the *symmetric group on n letters* is usually denoted by S~n~.
+- 置换群的元素是给定集合M的排列。
+- 置换群是对称群的子群。
+
+Since permutations are bijections(双射) of a set, they can be represented by Cauchy's *two-line notation*. This notation lists each of the elements of *M* in the first row, and for each element, its image under the permutation below it in the second row. If $$\sigma$$ is a permutation of the set $$M=\{x_{1},x_{2},\ldots ,x_{n}\}$$ then,
+$$
+\sigma ={\begin{pmatrix} x_{1} &x_{2} &x_{3} &\cdots &x_{n}\\
+\sigma (x_{1}) &\sigma (x_{2}) &\sigma (x_{3}) &\cdots &\sigma (x_{n})\end{pmatrix}}.
+$$
+
+> The elements of *M* need not appear in any special order in the first row. 第一行中M的元素的出现顺序可以无序。
+
+> 对称群: Symmetric group; n次对称群
+
+- 对称群: 集合*X*上的**对称群**记作S~X~或Sym(X)。它的元素是所有*X*到*X*自身的双射组成的群
 
 
 
@@ -270,6 +368,8 @@ e.g.
 **交换环**：如果环中**乘法**也是**可交换**的，则称之为**交换环**
 
 - 一般都假定环中至少有两个元素
+
+
 
 
 
@@ -319,7 +419,7 @@ Division rings differ from fields only in that their multiplication is not requi
 
 
 
-#### 有限域
+#### 有限域 伽罗华域 Galois Fields
 
 > 一个元素个数有限的域称为有限域，或者**伽罗瓦域, 伽罗华域 Galois field**
 
@@ -334,19 +434,25 @@ Division rings differ from fields only in that their multiplication is not requi
 
 定理：任何一个有限域都有一个素特征
 
-任何一个有限域都可以表示成 GF(P)　或者GF(P^n^)，Ｐ是一个素数。 GF(P^n^)叫做GF(P)的n次扩域，它可以表示成定义在GF(P)上一个n维的向量空间。
+任何一个有限域都可以表示成 GF(P)　或者GF(P^n^)，Ｐ是一个素数。 GF(P^n^)叫做GF(P)的n次扩域，它可以表示成定义在GF(P)上一个n维的向量空间。e.g. GF(2^128^)
 
 子域： GF(P^n^)的子域只有GF(P^m^)，m｜n
 
+The simplest examples of finite fields are the fields of prime order: for each prime number *p*, the **prime field** GF(*p*) (also denoted **Z**/*p***Z**, $$\mathbb {F} _{p}$$, or F~p~) of order (that is, size) *p* may be constructed as the integers modulo p.
 
 
-#### 伽罗华域 Galois Fields
 
 The polynomials Z~p~[x] mod p(x)  Where  p(x) ∈ Z~p~[x],  p(x) is **irreducible**(不可约的), and deg(p(x)) = n (i.e. n+1 coefficients)  form a finite field. Such a field has p^n^ elements.
 
 These fields are called Galois Fields or GF(p^n^).
 The special case n = 1 reduces to the fields Z~p~
 The multiplicative group of GF(p^n^)/{0} is **cyclic** (adj. 环的；循环的；周期的).
+
+
+
+##### 素域
+
+模素数p剩余类域
 
 
 

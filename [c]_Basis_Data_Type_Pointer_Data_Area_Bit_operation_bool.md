@@ -269,7 +269,7 @@ sizeof(b)//为3，strlen无法确定，因为后面不会添加'\0'
 char a[]="abc"//sizeof是3+1，strlen是3，字符串能好好输出
 //若中括号写3 sizeof是3，strlen不确定，字符串无法正常输出
 //大部分编译程序 在编译的时候就把sizeof计算过了 是类型或是变量的长度
-char str[20]="0123456789"; 
+char str[20]="0123456789";
 int a=strlen(str); //a=10;
 int b=sizeof(str); //b=20;
 ```

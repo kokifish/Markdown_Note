@@ -69,12 +69,14 @@ Reinforcement learning 增强学习: determine what to do based on a series of r
 
 
 
+#### Schools of AI
+
 Mainly three schools: 主要是三个流派
 
 | 派别                    | 起源        | 擅长算法                         |
 | ----------------------- | ----------- | -------------------------------- |
 | Symbolists 符号主义     | 逻辑学 哲学 | Inverse deduction 逆演绎算法     |
-| Connectionists 联结主义 | 神经科学    | Backpropagation 反向传播算法     |
+| Connectionists 联结主义 | 神经科学    | Backpropagation 反向传播算法(BP) |
 | Evolutionaries 进化主义 | 进化生物学  | Genetic programming 基因编程     |
 | Bayesians 贝叶斯派      | 统计学      | Probabilistic inference 概率推理 |
 | Analogizer 类推比较     | 心理学      | Kernel machines 核机器           |
@@ -85,7 +87,7 @@ Mainly three schools: 主要是三个流派
 4. 贝叶斯: 常被前三个流派当作一种工具，邮件过滤。
 5. 类推比较: 推荐系统，核心思想：新旧知识间的相似性。Recommender Systems. 
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/1538243420(1).jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_bayes_formula.jpg)
 
 
 
@@ -137,7 +139,9 @@ Mainly three schools: 主要是三个流派
 
 > Technically, the **A\*** algorithm should be called simply **A** if the heuristic is an underestimate of the actual cost. However, I will continue to call it **A\*** because the implementation is the same and the game programming community does not distinguish **A** from **A\***.
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Astar_progress_animation.gif)
+
+
+![AStar.gif](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Astar_progress_animation.gif)
 $$
 {\displaystyle
 {\begin{aligned}
@@ -185,10 +189,6 @@ $$
 & \text{End While}\\
  \end{aligned}}}
 $$
-
-
-
-
 
 
 
@@ -452,11 +452,11 @@ At a Min node n:
 - If β becomes ≤ α we can stop expanding the children of n. Max will never choose to move from n’s parent to n since it would choose one of n’s higher value siblings first.
 - In general, at a Min node n, if β becomes ≤ α value of an ancestor Max node, then we can stop expanding n. 在Min节点n，如果β ≤ 祖先节点(Max node)的α，则停止展开n，因为在祖先节点处，Max会选择最高的子树(例如图中的7)，而不会选择β=3的当前节点n。
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/1540496495(1).jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_Alpha_Beta_Cut_GameTree.png)
 
 
 
-# Constraint Satisfaction Problems
+## Constraint Satisfaction Problems
 
 > 约束满足问题 约束补偿问题 
 
@@ -464,5 +464,479 @@ CSPs是人工智能和运筹学 的热门主题,因为它们公式中的规律�
 
 
 
+# Uncertain Knowledge and Reasoning
 
+> 不确定知识与推理
+
+By weighing likelihoods(可能性) of events (probabilities), we can develop mechanisms(机制) for acting rationally(理性地) under uncertainty. 
+
+> Density(of B): pick an element at random from the entire set. How likely is it that picked element is in the set B?
+
+conditional independence: In probability theory, two events A and B are **conditionally independent** given a third event Y precisely if the occurrence of A and the occurrence of B are independent events in their conditional probability distribution given Y.
+
+
+
+### Expectation-Maximization Algorithm
+
+> 最大期望算法 Expectation-maximization algorithm 期望最大化算法
+
+- 在统计计算中，**最大期望(EM)算法**是在概率模型中寻找参数最大似然估计或者最大后验估计的算法，其中概率模型依赖于无法观测的隐性变量
+- EM是一个在已知部分相关变量的情况下，估计未知变量的迭代技术
+
+1. 随即给出模型参数的估计，初始化分布参数
+2. loop直到收敛:
+   1. E step: 根据隐含数据的假设值，给出当前的参数的极大似然估计
+   2. M step: 重新给出未知变量的期望估计。应用于缺失值
+
+
+
+1. 给出模型参数假设，初始化概率分布的参数
+2. loop: 直到模型参数可以认为不变，或者达到设定的最大迭代次数
+   1. E: 根据当前参数，计算出隐变量的概率分布
+   2. M: 根据隐变量的概率分布，计算模型参数的期望估计，替换原本的模型参数
+
+# Machine Learning
+
+机器学习的主要方法:
+
+1. 监督学习 supervised learning: 有数据和标签
+2. 非监督学习 unsupervised learning: 只有数据，没有标签
+3. 半监督学习 : 结合监督学习和非监督学习
+4. 强化学习 reinforcement learning: 从经验中总结强化提升
+5. 遗传算法 genetic algorithm: 
+
+
+
+
+
+##### ROC & AUC
+
+> ROC曲线：**接收者操作特征曲线**  **receiver operating characteristic curve** 
+>
+> AUC: **Area Under Curve** **ROC曲线下的面积**
+
+ROC分析的是二元分类模型，即输出结果只有两种类别的模型。
+
+ROC空间将伪阳性率（FPR）定义为 *X* 轴，真阳性率（TPR）定义为 *Y* 轴。一系列的(fp rate, tp rate)或者写成(FPR, TPR)，为二维笛卡尔坐标系中的坐标点
+
+将**同一模型每个阈值** 的 (FPR, TPR) 座标都画在ROC空间里，就成为**特定模型的ROC曲线** 
+
+- **当阈值设定为最高时，必得出ROC座标系左下角的点 (0, 0)**，没有样本被预测为阳性
+- **当阈值设定为最低时，必得出ROC座标系右上角的点 (1, 1)** ，没有样本被预测为阴性
+- **随着阈值调低，ROC点** 往右上（或右／或上）移动，或不动；但**绝不会往左下(或左／或下)移动**
+
+
+
+AUC（确切的说，应该是AUROC）被定义为**ROC曲线下的面积**，显然这个面积的数值不会大于1。**AUC值越大的分类器，正确率越高** 
+
+
+
+
+
+
+
+### Cluster Analysis 
+
+> 聚类分析, 群集分析
+
+- 把相似的对象通过**静态分类**的方法分成不同的组别或者更多的**子集**（subset），这样让在同一个子集中的成员对象都有相似的一些属性
+- 一般把数据聚类归纳为一种**非监督式学习** 
+
+
+
+常用的几个距离计算方法：
+
+- 欧式距离（2-norm距离）
+- 曼哈顿距离（Manhattan distance, 1-norm距离）
+- infinity norm
+- 马氏距离
+- 余弦相似性
+- 汉明距离
+
+
+
+
+
+---
+
+# Neural Networks and Deep Learning
+
+
+
+
+
+
+
+
+
+## AutoEncoder
+
+> 自编码机 自动编码器 在无监督学习中用于有效编码 
+
+- 一种数据压缩算法，其中数据的压缩和解压缩函数是数据相关的，有损的，从样本中自动学习的。
+- An **autoencoder** is a type of artificial neural network used to learn efficient data codings in an unsupervised manner.
+- 在大部分提到自编码机的场合，压缩和解压缩的函数都是通过神经网络实现的。
+- 自编码的目的是对一组数据学习出一种表示（也称表征，编码），通常用于降维
+
+
+
+1. Encoder: 将大数据集压缩成小的数据集
+2. Decoder: 将压缩后的小的数据集还原成大的数据集
+
+### Undercomplete Autoencoder
+
+> 欠完备自编码机
+
+从自编码器获得有用特征的一种方法是限制 h的维度比 x 小，这种编码维度小于输入维度的自编码器称为欠完备（undercomplete）自编码器。学习欠完备的表示将强制自编码器捕捉训练数据中最显著的特征。
+
+### Sparse Autoencoder
+
+> 稀疏自编码机
+
+
+
+
+
+### Denoising Autoencoder
+
+> 去噪自编码机
+
+
+
+### Variational Autoencoder
+
+> 变分自编码机
+
+
+
+------
+
+# PyTorch
+
+> Python的深度学习框架
+
+以前是Lua语言下的模块Torch，2016被移植到Python上，可以和Tensor flow一拼高下
+
+
+
+```python
+import torch
+import numpy as np
+
+np_data = np.arange(6).reshape((2, 3))
+torch_data = torch.from_numpy(np_data)
+tensor2array = torch_data.numpy()
+print(
+    '\nnumpy array:', np_data, # [[0 1 2], [3 4 5]]
+    '\ntorch tensor:', torch_data, #  0  1  2 \n 3  4  5[torch.LongTensor of size 2x3]
+    '\ntensor to array:', tensor2array,# [[0 1 2], [3 4 5]]
+)
+```
+
+
+
+#### Variable
+
+在 Torch 中的 Variable 就是一个存放会变化的值的地理位置. 里面的值会不停的变化.
+
+```python
+import torch
+from torch.autograd import Variable # torch 中 Variable 模块
+
+# 先生鸡蛋
+tensor = torch.FloatTensor([[1,2],[3,4]])
+# 把鸡蛋放到篮子里, requires_grad是参不参与误差反向传播, 要不要计算梯度
+variable = Variable(tensor, requires_grad=True)# requires_grad: need gradient or not
+
+print(tensor)
+"""
+ 1  2
+ 3  4
+[torch.FloatTensor of size 2x2]
+"""
+
+print(variable)
+"""
+Variable containing:
+ 1  2
+ 3  4
+[torch.FloatTensor of size 2x2]
+"""
+t_out = torch.mean(tensor*tensor)       # x^2
+v_out = torch.mean(variable*variable)   # x^2
+print(t_out)
+print(v_out)    # 7.5
+v_out.backward()    # 模拟 v_out 的误差反向传递
+
+# v_out = 1/4 * sum(variable*variable) 这是计算图中的 v_out 计算步骤
+# 针对于 v_out 的梯度就是, d(v_out)/d(variable) = 1/4*2*variable = variable/2 求偏导的结果
+
+print(variable.grad)    # 初始 Variable 的梯度
+'''
+ 0.5000  1.0000
+ 1.5000  2.0000
+'''
+
+
+print(variable)     #  Variable 形式
+"""
+Variable containing:
+ 1  2
+ 3  4
+[torch.FloatTensor of size 2x2]
+"""
+
+print(variable.data)    # tensor 形式
+"""
+ 1  2
+ 3  4
+[torch.FloatTensor of size 2x2]
+"""
+
+print(variable.data.numpy()) # numpy 形式。注意需要先索引到data后才是tensor形式
+"""
+[[ 1.  2.]
+ [ 3.  4.]]
+"""
+```
+
+
+
+
+
+#### Activation Function
+
+```python
+import torch #relu sigmoid tanh可以直接在这使用
+import torch.nn.functional as F     # 激励函数都在这
+from torch.autograd import Variable
+import matplotlib.pyplot as plt
+
+# 做一些假数据来观看图像 # Fake data
+x = torch.linspace(-5, 5, 200)  # x data (tensor), shape=(100, 1)
+x = Variable(x)
+x_np = x.data.numpy()   # 换成 numpy array, 出图时用
+
+# 几种常用的 激励函数
+y_relu = torch.relu(x).data.numpy() #relu直接在torch中
+y_sigmoid = torch.sigmoid(x).data.numpy()
+y_tanh = torch.tanh(x).data.numpy()
+y_softplus = F.softplus(x).data.numpy()
+# y_softmax = F.softmax(x)  softmax 比较特殊, 不能直接显示, 不过他是关于概率的, 用于分类
+
+### 可视化
+plt.figure(1, figsize=(8, 6))
+plt.subplot(221)
+plt.plot(x_np, y_relu, c='red', label='relu')
+plt.ylim((-1, 5))
+plt.legend(loc='best')
+
+plt.subplot(222)
+plt.plot(x_np, y_sigmoid, c='red', label='sigmoid')
+plt.ylim((-0.2, 1.2))
+plt.legend(loc='best')
+
+plt.subplot(223)
+plt.plot(x_np, y_tanh, c='red', label='tanh')
+plt.ylim((-1.2, 1.2))
+plt.legend(loc='best')
+
+plt.subplot(224)
+plt.plot(x_np, y_softplus, c='red', label='softplus')
+plt.ylim((-0.2, 6))
+plt.legend(loc='best')
+
+plt.show()
+```
+
+
+
+
+
+#### Build NN
+
+```python
+torch.optim #包含很多optimizer #e.g. SGD, Adom
+```
+
+
+
+
+
+### Study Case
+
+
+
+#### AutoEncoder
+
+```python
+# -*- coding: utf-8 -*-
+# author: 黄海宇 student id: 16337087  email:hyhuang1024@outlook.com
+# 将MNIST数据集读入后，训练自编码机，并且用自编码机编码后的数据训练分类器，对预测集数据做预测
+import os
+import time
+import struct
+import numpy as np
+import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+import torch.utils.data as Data
+from torch.autograd import Variable
+from sklearn.neighbors import KNeighborsClassifier
+
+# 超参数 parameter
+EPOCH = 10 #对数据整体训练的次数
+BATCH_SIZE = 128 #批训练的大小
+LEARNING_RATE = 0.002
+
+path = './mnist'
+
+def load_mnist(path, kind='train'):
+    # Load MNIST data from `path`
+    labels_path = os.path.join(path, '%s-labels-idx1-ubyte' % kind)
+    images_path = os.path.join(path, '%s-images-idx3-ubyte' % kind)
+    with open(labels_path, 'rb') as lbpath:
+        magic, n = struct.unpack('>II', lbpath.read(8))
+        labels = np.fromfile(lbpath, dtype=np.uint8)
+
+    with open(images_path, 'rb') as imgpath:
+        magic, num, rows, cols = struct.unpack('>IIII', imgpath.read(16))
+        images = np.fromfile(imgpath, dtype=np.uint8).reshape(len(labels), 784)
+
+    return images, labels  # images: n x m: n:样本数量; m: 784=28*28
+
+# 自编码机
+class AutoEncoder(nn.Module):  # 继承自torch.nn.Module
+    #定义所有的层属性
+    def __init__(self):  # 该行和下一行是官方步骤
+        super(AutoEncoder, self).__init__()  # 继承AutoEncoder到self: Module
+
+        # 压缩 encoder
+        self.encoder = nn.Sequential( #Sequential: 一层一层的神经层搭建,快速搭建
+            nn.Linear(28*28, 196), #para1: 输入的神经元数量; para2: 输出的神经元的数量
+            nn.ReLU(), #激励层
+            nn.Linear(196, 64),
+            nn.ReLU(),
+            nn.Linear(64, 16),
+            nn.ReLU(),
+            nn.Linear(16, 8),
+        )
+        # 解压 decoder
+        self.decoder = nn.Sequential(
+            nn.Linear(8, 16),
+            nn.ReLU(),
+            nn.Linear(16, 64),
+            nn.ReLU(),
+            nn.Linear(64, 196),
+            nn.ReLU(),
+            nn.Linear(196, 28*28),
+            nn.Sigmoid(),# 该激励函数使得输出值在[0,1]
+        )
+
+    # 前向传递的过程 #一层层搭建层与层的关系链接
+    def forward(self, x):  # x:输入信息,data
+        encoded = self.encoder(x)
+        decoded = self.decoder(encoded)
+        return encoded, decoded
+
+
+if __name__ == '__main__':
+    X_train, y_train = load_mnist(path)
+
+    ### 动态显示过程，显示数据集中第一个出现的0,1,2,...,9
+    fig, ax = plt.subplots( nrows=2, ncols=10, sharex=True, sharey=True, figsize=(6, 2))
+    idx_l = [np.where(y_train==i)[0][0] for i in range(10)] # 0,1,2,...,9第一次出现的坐标
+    # print(idx_l, len(idx_l))
+    ax = ax.flatten()
+    for i in range(10):
+        img = X_train[idx_l[i]].reshape(28, 28)
+        ax[i].imshow(img, cmap='Greys', interpolation='nearest')
+        ax[10+i].imshow(img, cmap='Greys', interpolation='nearest')
+    ax[0].set_xticks([]);ax[0].set_yticks([])
+    plt.tight_layout()
+    plt.ion()#打开互动模式，就是边显示边修改
+    plt.draw(); plt.pause(0.05)
+    #####################
+
+    X_train = X_train.astype(np.float32) /255 # to float, to [0,1]
+    X_train, y_train = torch.from_numpy(X_train), torch.from_numpy(y_train)# to tensor
+    print('X_train:', type(X_train), X_train.shape, 'y_train:', type(y_train))
+
+    autoencoder = AutoEncoder() # 创建自编码机
+    gpuFLAG = torch.cuda.is_available() # True: use cuda; False: cuda NOT used.
+    # gpuFLAG = False
+    if(gpuFLAG):
+        autoencoder = autoencoder.cuda()
+        X_train = X_train.cuda()
+        y_train = y_train.cuda()
+    print('AutoEncoder structure:', autoencoder)
+    # 优化器优化神经网络的参数 #1st para: 需要优化的参数; lr: learning rate, 学习速率
+    optimizer = torch.optim.Adam(autoencoder.parameters(), lr=LEARNING_RATE)
+    # 误差计算函数，Loss Function #MSELoss：Mean Square Error 均方差
+    loss_func = nn.MSELoss()
+
+    train_data = Data.TensorDataset(X_train, y_train)
+    # print('train_data:', type(train_data))
+    train_loader = Data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
+
+    t = time.process_time()
+
+    # epoch: 对数据整体训练的次数
+    for epoch in range(EPOCH):
+        for step, (x, batch_label) in enumerate(train_loader):
+            batch_x = x.view(-1, 28*28)#转换数据的维度
+            batch_y = x.view(-1, 28*28)
+            encoded, decoded = autoencoder(batch_x)  # 往autoencoder中放入输入信息
+
+            loss = loss_func(decoded, batch_y)  # 损失函数计算，均方误差
+            optimizer.zero_grad()  # 将所有参数的梯度都清空0 #否则保存的梯度会是上一次的梯度
+            loss.backward() # 反向传递，计算出梯度
+            optimizer.step() # 以给定的学习速率，反向传递计算出来的梯度，优化参数
+            if(step % BATCH_SIZE == 0):
+                if(gpuFLAG):
+                    loss = loss.cpu()
+                print('[Training] epoch:',epoch,', loss:', loss.data.numpy())
+
+                for i in range(10): # 动态更新显示的0~9, 显示解码后的显示效果
+                    _, decoded_data = autoencoder(X_train[idx_l[i]])
+                    if(gpuFLAG):
+                        decoded_data = decoded_data.cpu()
+                    ax[10+i].clear()
+                    ax[10+i].imshow(np.reshape(decoded_data.data.numpy(), [28,28]), cmap='Greys')
+                    ax[10+i].set_xticks([]); ax[10+i].set_yticks([])
+                plt.draw();plt.pause(0.1)
+    print('[Train End] AutoEncoder train success! Train Time Used:', time.process_time()-t)
+    for i in range(10):
+        _, decoded_data = autoencoder(X_train[idx_l[i]])
+        if(gpuFLAG):
+            decoded_data = decoded_data.cpu()
+        ax[10+i].clear()
+        ax[10+i].imshow(np.reshape(decoded_data.data.numpy(), [28,28]), cmap='Greys')
+        ax[10+i].set_xticks([]); ax[10+i].set_yticks([])
+    plt.draw();plt.pause(0.1)
+    plt.ioff()
+    plt.show()
+
+    # 分类过程 # 训练 training
+    encodedX, _ = autoencoder(X_train)#对训练集进行编码
+    if(gpuFLAG):
+        encodedX = encodedX.cpu()
+        y_train = y_train.cpu()
+    x_train = encodedX.data.numpy() # to numpy array
+    y_train = y_train.data.numpy()
+    knn = KNeighborsClassifier() #创建训练器
+    knn.fit(x_train, y_train) #训练分类器
+
+    # 测试过程
+    X_test, y_test = load_mnist(path,'t10k') # load: 测试集与测试标签
+    X_test = torch.from_numpy(X_test.astype(np.float32) /255)
+    if(gpuFLAG):
+        X_test = X_test.cuda()
+    encodedX, _ = autoencoder(X_test)#对测试集进行编码
+    if(gpuFLAG):
+        encodedX = encodedX.cpu()
+    X_test = encodedX.data.numpy()
+    #用测试集数据进行预测 #(测试集输入, 测试集输出)进行评分，输出准确度
+    print('Prediction Accuracy:' ,knn.score(X_test, y_test))
+```
 

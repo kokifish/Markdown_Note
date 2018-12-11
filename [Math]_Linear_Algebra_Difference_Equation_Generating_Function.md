@@ -26,7 +26,7 @@
 
 ##### Laplacian matrix
 
-> 拉普拉斯矩阵, 基尔霍夫矩阵,  **Laplacian matrix,** **admittance matrix**, **Kirchhoff matrix**, **discrete Laplacian**
+> 拉普拉斯矩阵, 基尔霍夫矩阵,  **Laplacian matrix,** **admittance matrix**, **Kirchhoff matrix**, **discrete Laplacian**
 >
 > 表示图的一种矩阵 
 
@@ -34,7 +34,6 @@
 $$
 L = D - W
 $$
-
 
 
 

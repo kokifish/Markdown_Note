@@ -278,6 +278,8 @@ Kali Client Process:
 
 
 
+### 安装VMware Tools
+
 Fedora安装VMware Tools
 
 https://blog.csdn.net/pan869823184/article/details/7237248?utm_source=blogxgwz0

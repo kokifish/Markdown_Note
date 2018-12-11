@@ -37,7 +37,7 @@ $$
 
 > Pareto frontier, Pareto Front, Pareto set 帕累托解集
 
-The **Pareto frontier** is the set of all Pareto efficient allocations, conventionally shown graphically. It also is variously known as the **Pareto front** or **Pareto set**.
+The **Pareto frontier** is the set of all Pareto efficient allocations, conventionally shown graphically. It also is variously known as the **Pareto front** or **Pareto set**.
 
 Pareto Optimal Ser(Non-dominated set)
 
@@ -280,7 +280,7 @@ A: Approaches for improvement
 4. 选择：通过将误差F(xi)和F(x’i)，i＝1，…，p **进行排序**，选择并决定哪些矢量保留。具有最小误差的p个矢量变成下一代的新亲本。（**把父亲和儿子放在一起用适应度排序，保留好的**）。
 5. 重复进化和选择直到达到收敛
 
-**变异：** 在每个分量上面加上**零均值、某一方差**的高斯分布的变化产生新的个体。这个某一方差就是变异程度 
+**变异：** 在每个分量上面加上**零均值、某一方差**的高斯分布的变化产生新的个体。这个某一方差就是变异程度 
 
 **变异程度：**变异程度并不是一直不变化的，算法开始的时候变异程度比较大，当接近收敛后，变异程度会开始减小 
 
@@ -483,8 +483,7 @@ $$
 Robustness:
 
 $$
-R = \frac{N_{host}^{lcc}}{N_{host}}\\
 R = \frac{1}{N}\sum_{Q=1}^{N}s(Q)\\
-s(Q) = \text{host count of the connected component with the most host / original host count}
+s(Q) = \text{the fraction of hosts in the connected component with the most hosts after removing }Q\text{ nodes}
 $$
 

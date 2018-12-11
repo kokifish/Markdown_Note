@@ -49,6 +49,8 @@ print(np_arr.shape) # 形状 (2, 3)
 print(np_arr.size) # 总共有的元素 6
 print(np_arr.dtype) # 存储的元素类型 int64
 
+reversed_arr = arr[::-1]#将一个array逆序
+
 a = np.zeros( (3, 4) ) #生成一个3行4列的全0的矩阵
 a = np.ones( (3, 4) ) #生成一个3行4列的全1的矩阵
 a = np.empty( (3, 4) ) #生成一个3行4列的空的矩阵

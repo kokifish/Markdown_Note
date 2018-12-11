@@ -150,7 +150,6 @@ $$
 
   概率**密度函数**: $$f_X(x, n) = \frac{\partial F_X(x, n)}{\partial x}$$
 
-  
 
 ## 随机过程的数字特征
 
@@ -547,5 +546,87 @@ $$= P\{X(t_1)\le x_1+x, X(t_2)\le x_2+x,…,  X(t_n)\le x_n+x|X(0) = x\}$$，则
 
 - $$\forall t>0, W(t)\sim N(0, \sigma^2t)$$
 - $$m_W(t) = 0, D_W(t) = \sigma^2t,R_W(s, t) = C_W(s, t) = \sigma^2 \min(s, t);s,t\ge0$$
+
+
+
+
+
+
+
+# 统计分析 数据分析方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 主成分分析 PCA
+
+> **Principal Components Analysis**
+>
+> SVD分解(说法不同仅因角度不同) singular Value Decomposition
+
+- 分析、简化数据集的技术。经常用于减少数据集的维数，同时保持数据集中的对方差贡献最大的特征。这是通过保留低阶主成分，忽略高阶主成分做到的
+- 通过对协方差矩阵进行特征分解，以得出数据的主成分(特征向量)与它们的权值(特征值)。PCA是最简单的以特征量分析多元统计分布的方法
+- PCA的数学定义是：一个正交化线性变换，把数据变换到一个新的坐标系统中，使得这一数据的任何投影的第一大方差在第一个坐标（称为第一主成分）上，第二大方差在第二个坐标（第二主成分）上，依次类推
+
+
+
+### 均值向量与协方差矩阵
+
+> covariance matrix
+
+随机向量X的**均值向量**: 设X= (X~1~, X~2~, … X~p~)^T^, E(X~i~)=μ~i~, (i=1,2,…p) 存在X的**均值向量**:
+$$
+E(\vec X) = \left[
+ \begin{matrix}
+ E(X_1)\\
+ E(X_2)\\
+ \vdots\\
+ E(X_p)\end{matrix} \right]
+  = \left[
+ \begin{matrix}
+\mu_1\\
+\mu_2\\
+ \vdots\\
+\mu_p\end{matrix} \right] = \vec\mu
+$$
+协方差矩阵的第(i,j)項（第(i,j)項是一个协方差）被定义为如下形式: 用大Sigma表示
+$$
+\displaystyle \Sigma_{ij}=\mathrm{cov} (X_{i},X_{j})=\mathrm {E} {\begin{bmatrix}(X_{i}-\mu_{i})(X_{j}-\mu_{j})\end{bmatrix}}
+$$
+n维随机**向量X**的**协方差阵**: 半正定(非负定)，对称，大多数情况下是正定的
+$$
+\Sigma = D(X) = \mathrm{cov}(\mathbf{X}, \mathbf{X}) = \mathrm {E} \left[\left(\mathbf{X} -\mathrm{E} [\mathbf {X} ]\right)\left(\mathbf{X} -\mathrm{E} [\mathbf{X} ]\right)^{\rm {T}}\right]\\
+= \begin{bmatrix}  \mathrm{E}[(X_1 - \mu_1)(X_1 - \mu_1)] & \mathrm{E}[(X_1 - \mu_1)(X_2 - \mu_2)] & \cdots & \mathrm{E}[(X_1 - \mu_1)(X_n - \mu_n)] \\ 
+\mathrm{E}[(X_2 - \mu_2)(X_1 - \mu_1)] & \mathrm{E}[(X_2 - \mu_2)(X_2 - \mu_2)] & \cdots & \mathrm{E}[(X_2 - \mu_2)(X_n - \mu_n)] \\ 
+\vdots & \vdots & \ddots & \vdots \\  \mathrm{E}[(X_n - \mu_n)(X_1 - \mu_1)] & \mathrm{E}[(X_n - \mu_n)(X_2 - \mu_2)] & \cdots & \mathrm{E}[(X_n - \mu_n)(X_n - \mu_n)] \end{bmatrix}
+$$
+矩阵中的第(i,j)个元素是Xi与Xj的协方差。这个概念是对于标量随机变数方差的一般化推广。称  |Cov(X,X)| 为X的广义方差，它是协方差矩阵的行列式
+$$
+\Sigma = \mathrm{E}(\mathbf{X X^\top}) - \mathbf{\mu}\mathbf{\mu^\top} 
+$$
+
+随机向量X和Y的协方差阵: 设X= (X1, X2, … Xn)^T^, Y= (Y1, Y2, … Yp)^T^, 它们的协方差矩阵是一个n×p的矩阵，其矩阵元素为 Cov(Xi, Yj)。若Cov(X,Y)=0, 称X和Y不相关
+
+#### 运算性质
+
+$$
+X = (X_1, X_2, … X_n)^T, Y= (Y_1, Y_2, … Y_p)^T; A,B为常数矩阵\\
+\mathrm{E}(AX) = A\mathrm{E}(X), \mathrm{E}(AXB)=A\mathrm{E}(X)B\\
+\mathrm{D}(AX) = A\mathrm{D}(X)A^T = A\Sigma A^T\\
+\mathrm{cov}(AX, BY) = A\mathrm{cov}(X,Y)B^T\\
+\mathrm{E}(X^T A X) = tr(A\Sigma) + \mu^T A \mu\\
+$$
+
 
 

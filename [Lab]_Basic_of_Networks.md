@@ -169,11 +169,15 @@ $$
 
 #### Assortativity
 
+> 网络科学导论 4.2.4
+
 如果总体上度大的顶点倾向于连接度大的顶点，那么就称网络的度正相关的，或者成网络是**同配**的；如果总体上度大的顶点倾向于连接度小的顶点，那么就称网络的度负相关的，或者成网络是**异配**的
 
 Assortative Coefficient: 同配系数
 
 The *assortativity coefficient* is the **Pearson correlation coefficient** of degree between pairs of linked nodes. 
+
+
 
 
 
@@ -219,8 +223,6 @@ $$
 d_i = \frac{1}{N}\sum_{j=1}^Nd_{ij}\\
 CC_i =  \frac{1}{d_i} = \frac{N}{\sum_{j=1}^N d_{ij}}
 $$
-
-
 
 
 
