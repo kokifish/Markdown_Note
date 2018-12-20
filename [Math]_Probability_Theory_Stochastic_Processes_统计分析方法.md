@@ -551,13 +551,13 @@ $$= P\{X(t_1)\le x_1+x, X(t_2)\le x_2+x,…,  X(t_n)\le x_n+x|X(0) = x\}$$，则
 
 
 
-
+---
 
 # 统计分析 数据分析方法
 
-
-
-
+> Statistical Analysis
+>
+> 主要参照的教材为《数据分析方法》 梅长林
 
 
 
@@ -622,11 +622,106 @@ $$
 
 $$
 X = (X_1, X_2, … X_n)^T, Y= (Y_1, Y_2, … Y_p)^T; A,B为常数矩阵\\
-\mathrm{E}(AX) = A\mathrm{E}(X), \mathrm{E}(AXB)=A\mathrm{E}(X)B\\
-\mathrm{D}(AX) = A\mathrm{D}(X)A^T = A\Sigma A^T\\
-\mathrm{cov}(AX, BY) = A\mathrm{cov}(X,Y)B^T\\
-\mathrm{E}(X^T A X) = tr(A\Sigma) + \mu^T A \mu\\
+\mathrm{E}(AX) = A \mathrm{E}(X), \mathrm{E}(AXB)=A\mathrm{E}(X)B\\
+\mathrm{D}(AX) = A \mathrm{D}(X)A^T = A\Sigma A^T\\
+\mathrm{cov}(AX, BY) = A \mathrm{cov}(X,Y)B^T\\
+\mathrm{E}(X^T A X) = tr(A \Sigma) + \mu^T A \mu\\
 $$
 
 
+
+
+
+## 聚类分析 Cluster Analysis
+
+> 聚类分析 群集分析 Cluster analysis
+
+- 聚类是把相似的对象通过静态分类的方法分成不同的组别或者更多的子集 subset，这样让在同一个子集中的成员对象都有相似的一些属性，常见的包括在坐标系中更加短的空间距离等
+- 一般把数据聚类归纳为一种**无监督**式学习
+
+聚类分析分为两种类型：
+
+1. 按样品聚类
+2. 按变量(指标)聚类
+
+聚类分析与判别分析：聚类分析和判别分析都是研究分类的，但是聚类分析一般寻求客观的分类方法，在进行聚类分析之前，对总体到底有几种类型并不知道，判别分析则是总体分类已给定，在总体分布或来自总体训练样本基础上，对当前的新样品判定它们世俗与哪个总体。聚类分析与判别分析有一定联系：判别分析中的训练样本往往是从聚类分析得到的。
+
+
+
+#### 距离测量
+
+- 曼哈顿距离 Manhattan Distance, 1-norm距离 L~1~距离, 绝对距离: 各维距离(边长)的加和
+
+$$
+d(x_i, x_j) = \sum_{k=1}^{p}|x_{ik} - x_{jk}|
+$$
+
+- 欧式距离 2-norm距离, L~2~距离: 
+
+$$
+d(x_i, x_j) = [\sum_{k=1}^{p}(x_{ik} - x_{jk})^{2}]^{\frac{1}{2}}
+$$
+
+- Minkowski 距离: m>=1, 又称L~m~距离，L~2~距离即欧式距离
+
+$$
+d(x_i, x_j) = [\sum_{k=1}^{p}(x_{ik} - x_{jk})^{m}]^{\frac{1}{m}}
+$$
+
+
+
+- Chebyshev 距离
+- 方差加权距离
+- 马氏距离
+- 余弦相似度
+- 汉明距离
+
+
+
+### 快速聚类法
+
+> 动态聚类法
+
+- 首先将样本粗糙地分类，然后再依据样品间的距离按一定规则逐步调整，直至不能调整为止。
+- 快速聚类法适合于样品数目较大的数据集的聚类分析，但需要事先指定分类的数目，此数目对最终分类结果有较大影响
+
+选择初始聚点:
+
+1. 经验选择: 根据经验选择k个样品(观察)作为初始聚点
+2. 人为分类: 将n个样品认为分为k类，以每类的均值向量(重心)作为聚点
+3. 最小最大原则:
+   1. 设将n个样品分成k类，先选择所有样品中相距最远的两个样品$$x_{i_1}, x_{i_2}$$作为初始聚点，即$$d(x_{i_1}, x_{i_2}) = d_{i_1 i_2} = \max{\{d_{ij} \}}$$
+   2. 若已经选择了$$l$$个聚点($$l<k$$), 则l+1聚点$$x_{i_{l+1}}$$根据以下公式选择:
+
+$$
+\min{\{ d(x_{i_{l+1}}, x_{i_r}), r=1,2,...,l \}} = \max{\{ \min{[d(x_j, x_{i_r}), r=1,2,...,l ]} ,j\neq i_1,...,i_l\}}
+$$
+
+
+
+### *k*-means clustering
+
+> k-平均聚类算法
+
+- NP Hard, 但存在高效的启发式算法
+
+将n个样本分为k类
+$$
+\begin{align}
+& k\text{-means Algorithm} \notag\\
+& \text{----------------------------------------------------------}\notag\\
+& \mathbf{L}^{(0)} = \{x_{1}^{(0)}, x_{2}^{(0)}, ..., x_{k}^{(0)}\} \notag\\
+& G_{i}^{(0)} = \{x:d(x,x_{i}^{(0)}) \le d(x,x_{j}^{(0)}), j=1,2,...,k \and j \neq i \}, i=1,2,...,k \notag\\
+& \mathbf{G}^{(0)} = \{G_{1}^{(0)},G_{2}^{(0)},...,G_{k}^{(0)} \} \notag\\
+& m=0, \mathbf{G}^{(-1)} = \mathbf{G}^{(0)} \notag\\
+
+& \text{While } (\mathbf{G}^{(m)} \neq \mathbf{G}^{(m-1)}) \text{ do:}  \notag\\
+& \qquad m = m+1  \notag\\
+& \qquad x_{i}^{(m)} = \frac{1}{n_{i}} \sum_{x_{l}\in G_{i}^{(m-1)} } x_{l}, i=1,2,...,k \notag\\
+& \qquad \mathbf{L}^{(m)} = \{x_{1}^{(m)}, x_{2}^{(m)}, ..., x_{k}^{(m)}\} \notag\\
+& \qquad G_{i}^{(m)} = \{x:d(x,x_{i}^{(m)}) \le d(x,x_{j}^{(m)}), j=1,2,...,k \and j \neq i \}, i=1,2,...,k \notag\\
+& \qquad \mathbf{G}^{(m)} = \{G_{1}^{(m)},G_{2}^{(m)},...,G_{k}^{(m)} \} \notag\\
+& \text{Return }\mathbf{G}^{(m)} = \{G_{1}^{(m)},G_{2}^{(m)},...,G_{k}^{(m)} \} \notag\\
+\end{align}
+$$
 

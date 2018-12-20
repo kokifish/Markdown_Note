@@ -306,7 +306,7 @@ p=1: Manhattan Distance 曼哈顿距离: 各维距离(边长)的加和
 $$
 L_1(x_i, x_j) = \sum_{l=1}^{n}|x_i^{(l)} - x_j^{(l)}|
 $$
-p=2: Euclidean Distance 欧式距离: 空间中常用的距离
+p=2: Euclidean Distance 欧式距离: 空间中常用的距离 2-norm距离
 $$
 L_2(x_i, x_j) = (\sum_{l=1}^{n}|x_i^{(l)} - x_j^{(l)}|^2)^\frac{1}{2}
 $$
@@ -517,13 +517,13 @@ conditional independence: In probability theory, two events A and B are **condit
 
 ROC分析的是二元分类模型，即输出结果只有两种类别的模型。
 
-ROC空间将伪阳性率（FPR）定义为 *X* 轴，真阳性率（TPR）定义为 *Y* 轴。一系列的(fp rate, tp rate)或者写成(FPR, TPR)，为二维笛卡尔坐标系中的坐标点
+ROC空间将伪阳性率（FPR）定义为 *X* 轴，真阳性率（TPR）定义为 *Y* 轴。一系列的(fp rate, tp rate)或者写成(FPR, TPR)，为二维笛卡尔坐标系中的坐标点
 
-将**同一模型每个阈值** 的 (FPR, TPR) 座标都画在ROC空间里，就成为**特定模型的ROC曲线** 
+将**同一模型每个阈值** 的 (FPR, TPR) 座标都画在ROC空间里，就成为**特定模型的ROC曲线** 
 
 - **当阈值设定为最高时，必得出ROC座标系左下角的点 (0, 0)**，没有样本被预测为阳性
 - **当阈值设定为最低时，必得出ROC座标系右上角的点 (1, 1)** ，没有样本被预测为阴性
-- **随着阈值调低，ROC点** 往右上（或右／或上）移动，或不动；但**绝不会往左下(或左／或下)移动**
+- **随着阈值调低，ROC点** 往右上（或右／或上）移动，或不动；但**绝不会往左下(或左／或下)移动**
 
 
 
@@ -606,6 +606,51 @@ AUC（确切的说，应该是AUROC）被定义为**ROC曲线下的面积**，�
 ### Variational Autoencoder
 
 > 变分自编码机
+
+
+
+
+
+
+
+
+
+## GAN
+
+
+
+#### Paper: Learning from Simulated and Unsupervised Images through Adversarial Training
+
+Abstract: puzzle: expensive annotations 
+=> train models on synthetic images(合成图)
+=> gap: synthetic and real image distributions 
+=> How to reduce? 
+=> Apple: Simulated + Unsupervised(S+U) learning (“模拟+无监督”学习);
+similar to Generative Adversarial Networks (GANs, 生成对抗网络);
+
+Motivation: 减少生成图和真实图片之间的差别
+
+input: synthetic images instead of random vectors. 使用合成图作为输入而非随机向量
+
+合成图片通常不够真实，导致神经网络过度拟合合成图像中不真实的细节部分。而提高模拟器生成的合成图像的质量难度很大，所以提出“模拟+无标签”学习，目的是使用未标注的真实数据的模拟器提高合成图像的真实性。
+
+Idea of SimGAN:
+
+模拟器生成合成图，在Refiner网络中改善合成图真实性，用类似于GAN网络的方法训练Refiner。使用完全卷积神经网络(fully convolutional neural network)，在像素水平操作，保留图像全局结构。
+
+Key Modifications:
+
+1. self-regularization term 自正则化：为保留合成图的注释信息(label, annotation)，用自正则化损失弥补对抗性损失。(用于Machine Learning等)
+2. local adversarial loss 局部对抗性损失：判别器接受图的局部区域，而非整张图，每张图片将产生多个局部对抗性损失，以避免伪影问题。
+3. updating the discriminator using a history of refined images 使用精炼过的图片更新判别器：用精炼图像而非当前Refiner中现有的图像强化判别器(Discriminator)，以提高训练稳定性。
+
+Contributions:
+
+
+
+
+
+
 
 
 

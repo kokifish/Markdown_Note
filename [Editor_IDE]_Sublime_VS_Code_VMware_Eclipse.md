@@ -295,7 +295,7 @@ https://blog.csdn.net/pan869823184/article/details/7237248?utm_source=blogxgwz0
 5. Change to a working directory, e.g. cd /tmp   cd /
 6. (Optional) Delete any previous vmware-tools-distrib directory before you install VMware Tools.
 7. List the contents of the mount point directory and note the file name of the VMware Tools tar installer. `ls mount-point`
-8. 解压安装文件:   tar zxpf /mnt/cdrom/VMwareTools-x.x.x-yyyy.tar.gz
+8. 解压安装文件:   tar zxpf /mnt/cdrom/VMwareTools-x.x.x-yyyy.tar.gz -C /      //解压到根目录
 9. If necessary, unmount the CD-ROM image.  `umount /dev/cdrom`
 10. `cd vmware-tools-distrib
     sudo ./vmware-install.pl`

@@ -606,6 +606,14 @@ man -k man 查看说明文档中含有man字眼(不一定是单词是man)的文�
 
 
 
+# Ubuntu
+
+```python
+sudo -i #sudo whoami
+sudo passwd #change the default blank root password and set root password
+su #Once the root password is set, you can login as root by using the su command
+```
+
 
 
 

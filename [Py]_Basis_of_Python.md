@@ -652,7 +652,7 @@ squared = [x**2 for x in range(10)]
 dict推导式：
 
 ```python
-#快速兑换dict key—value to value-key
+#快速对换dict key—value to value-key
 mca={"a":1, "b":2, "c":3, "d":4}
 dicts={v:k for k,v in mca.items()}
 

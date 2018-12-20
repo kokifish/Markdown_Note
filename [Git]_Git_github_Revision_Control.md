@@ -381,6 +381,9 @@ $ git status  #查看仓库当前状态
 $ git remote -v #列出所有远程仓库
 $ git checkout -- file #撤销工作区文件的修改至上次add/commit
 $ git reset HEAD <file> #把stage中的修改撤销掉(unstage)
+
+$ git config --global core.autocrlf false # global 不自动转换crlf #默认为true
+$ git pull origin master # 将远程仓库同步到本地
 ```
 
 

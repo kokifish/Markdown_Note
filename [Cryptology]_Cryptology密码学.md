@@ -313,11 +313,7 @@ $$
 
 梅森(Mersenne)素数: 2p-1, p is prime
 
-
-
 广义梅森素数: 2p  ± a, p is prime（a是小奇数）
-
-
 
 费马素数Fn:
 $$
@@ -339,9 +335,9 @@ $$
 
 安全分类: 
 
-1. Computational Security 计算安全性:如果使用最好的算法攻破一个密码体制需要至少N次操作，这里的N是一个特定的非常大的数字，我们可以定义这个密码体制是计算安全的。没有一个已知的实际的密码体制在这个定义下可以被证明安全。人们经常经过几种特定的攻击类型来研究计算上的安全性。对一种类型的攻击是安全的，并不表示对其他类型的攻击是安全的
-2. Provable Security 可证明安全性: 将密码体制的安全性归结为某个经过深入研究的数学难题。这种途径只是说明了安全和另一个问题是相关的，并没有完全证明是安全的。这和证明一个问题是NP完全的有些类似：证明给定的问题和任何其他的NP完全问题的难度是一样的，但没有完全证明这个问题的计算难度。
-3. Unconditional Security 无条件安全性: 对攻击者的计算量没有限制。即使提供了无穷的计算资源，也是无法被攻破的。讨论安全性时，与攻击类型（手段）有关。惟密文攻击下无条件安全的密码体制是存在的。
+1. Computational Security 计算安全性:如果使用最好的算法攻破一个密码体制需要至少N次操作，这里的N是一个特定的非常大的数字，我们可以定义这个密码体制是计算安全的。**没有一个已知的实际的密码体制在这个定义下可以被证明安全**。人们经常经过几种特定的攻击类型来研究计算上的安全性。对一种类型的攻击是安全的，并不表示对其他类型的攻击是安全的
+2. Provable Security 可证明安全性: 通过**归约**的方式为安全性提供证据。将密码体制的安全性归结为某个经过深入研究的数学难题。这种途径只是说明了安全和另一个问题是相关的，并没有完全证明是安全的。这和证明一个问题是NP完全的有些类似：证明给定的问题和任何其他的NP完全问题的难度是一样的，但没有完全证明这个问题的计算难度。
+3. Unconditional Security 无条件安全性: 对攻击者的**计算量没有限制**。即使提供了无穷的计算资源，也是无法被攻破的。讨论安全性时，与攻击类型（手段）有关。惟密文攻击下无条件安全的密码体制是存在的。
 
 
 
@@ -353,18 +349,17 @@ $$
 
 ## 完善保密的定义和性质
 
-定义: 一个密码体制具有完善保密性，如果对于任意的x $$\in$$ P和 y $$\in$$ C, 都有 $$P[x|y] = P[x]$$ .  也就是说，给定密文y，明文x的后验概率等于明文的先验概率。通俗地讲，完善保密性就是攻击者不能通过观察密文获得明文的任何信息。 
+定义: 一个密码体制具有完善保密性，如果对于任意的x $$\in$$ P和 y $$\in$$ C, 都有 $$P[x|y] = P[x]$$ .  也就是说，**给定密文y，明文x的后验概率等于明文的先验概率**。通俗地讲，完善保密性就是攻击者不能通过观察密文获得明文的任何信息。 
 
 > 先验概率：在考虑"观测数据"前(例如密文)，能表达p不确定性的概率分布
 >
 > 后验概率：给出某数据，该不确定量的条件分布
 
-为简单起见，这里将注意力集中在C=P的密码体制：这种类型的密码体制称为**内嵌式密码体制 Endomorphic Cryptosystem**.
+- 假设移位密码的26个密钥都是以相同的概率1/26使用的，则对于任意的明文概率分布，移位密码具有完善保密性。(证明见《密码学原理与实践 第三版》p40)
 
-设S~1~ = (P , P , K~1~ , E~1~ , D~1~ ), S~2~ = (P , P , K~2~ , E~2~ , D~2~ )是两个具有相同明文空间(密文空间)的内嵌式密码体制，那么S~1~和S~2~的乘积密码体制$$S_1 \times S_2$$定义为
-$$
-(\mathcal{P},\mathcal{P},\mathcal{K_1} \times \mathcal{K_2},\mathcal{E},\mathcal{D})
-$$
+定理：假设密码体制(P, C, K, E, D)满足|K| = |C| = |P|。该密码体制是完善保密的，**当且仅当**每个密钥被使用的概率都是1/|K|，并且对于任意的x $$\in$$ P, y $$\in$$ C, 存在唯一的密钥K使得$$e_K(x)=y$$
+
+- 一次一密密码体制：一个具有完善保密性的密码体制
 
 
 
@@ -373,6 +368,12 @@ $$
 
 通过结合两个或更多置换的方式制造比单独的加密方式更安全的密码以抵抗密码分析。乘积密码往往结合的是简单的置换/代换算法。其想法由克劳德·香农提出，在他决定性的论文“加密系统的通信理论”中首次提到。
 
+为简单起见，这里将注意力集中在C=P的密码体制：这种类型的密码体制称为**内嵌式密码体制 Endomorphic Cryptosystem**.
+
+设S~1~ = (P , P , K~1~ , E~1~ , D~1~ ), S~2~ = (P , P , K~2~ , E~2~ , D~2~ )是两个具有相同明文空间(密文空间)的内嵌式密码体制，那么S~1~和S~2~的乘积密码体制$$S_1 \times S_2$$定义为
+$$
+(\mathcal{P},\mathcal{P},\mathcal{K_1} \times \mathcal{K_2},\mathcal{E},\mathcal{D})
+$$
 
 
 #### 乘法密码 Multiplicative Cipher
@@ -853,14 +854,9 @@ $$
 
 > 离散对数问题可以理解为，在群中，求解对数问题。
 >
-> 即在群G中求 $$\log_{\alpha}\beta$$ 的值x，使得 $$\alpha^{x} = \beta$$ 成立
+> 即在群G中求 $$\log_{\alpha}\beta$$ 的值x，使得 $$\alpha^{x} = \beta$$ 成立
 
 - Discrete Logarithm Problem 离散对数问题
-
-$$
-\text{Compute }x = \log_{\alpha}\beta\\
-\text{So that }\alpha^{x} = \beta \text{ in Group G}
-$$
 
 
 
@@ -874,6 +870,9 @@ Similarly, let b^-k^ denote the product of b^−1^ with itself *k* times. For *k
 
 Let *a* also be an element of *G*. An integer *k* that solves the equation b^k^ = *a* is termed a **discrete logarithm** (or simply **logarithm**) of *a* to the base *b*. One writes *k* = log~b~ a.
 
+$$
+\text{Compute }x = \log_{\alpha}\beta\text{; so that }
+$$
 
 
 
@@ -982,13 +981,6 @@ Alice作为发起方，Bob作为应答方，以下为DH密钥交换的过程：
 
 - 一个非平凡的时间-存储折中算法
 
-- $$O(\sqrt{n})$$
-
-
-$$
-\alpha^{mj} = y = \beta \alpha^{-i}\\
-\Rightarrow \alpha^{mj+i} = \beta
-$$
 
 
 
@@ -999,21 +991,6 @@ $$
 
 - 与之前因子分解的Pollard rho算法一样，该算法求解离散对数的核心步骤之一也是寻找有限域中的碰撞。
 
-$$
-\text{Ensure that }(x, a, b) \text{ satisfy that } x = \alpha^{a}\beta^{b}\\
-n = ord(\alpha) \text{ in group }G.\\
-\alpha^{a_{2i}}\beta^{b_{2i}} = \alpha^{a_{i}}\beta^{b_{i}} 
-\and c = \log_{\alpha}\beta  \\
-\Rightarrow \alpha^{a_{2i}+cb_{2i}} = \alpha^{a_{i}+cb_{i}} 
-\Rightarrow a_{2i}+cb_{2i} \equiv a_{i}+cb_{i} \mod{n}\\
-\Rightarrow c(b_{2i}-b_{i}) \equiv a_{i}-a_{2i} \mod{n} 
-\Rightarrow c \equiv (a_{i}-a_{2i})(b_{2i}-b_{i})^{-1} \mod n \\
-$$
-
-
-
-
-
 算法input: 群G, 元素g的阶n, 需要求对数的值y。output: $$x = log_{g}y$$
 $$
 \begin{align}
@@ -1021,7 +998,7 @@ $$
 & \text{function }f(x, a, b): //<a>\times\mathbf{Z_n}\times\mathbf{Z_n} \rightarrow <a>\times\mathbf{Z_n}\times\mathbf{Z_n}\notag\\
 & \qquad \text{if }x\in S_1: f \leftarrow(\ bx,\ a,\ (b+1)\mod{n})\notag\\
 & \qquad \text{elif }x\in S_2: f \leftarrow(x^{2},2a\mod{n}, 2b\mod{n})\notag\\
-& \qquad \text{else }: f \leftarrow(ax,(a+1)\mod{n}, b)//S_3\notag\\
+& \qquad \text{else }: f \leftarrow(ax,(a+1)\mod{n}, b)\notag\\
 
 & \text{main: }\notag\\
 & \text{define a partition: } G = S_1 \cup S_2 \cup S_3  \notag\\
@@ -1046,17 +1023,24 @@ $$
 ### Pohlig-Hellman Algorithm
 
 
-$$
-n = \prod_{i=1}^{k} p_{i}^{c_i}\\
-\text{Assume }q \text{ is a prime number, and }n \equiv 0 \mod{q^{c}}, n \not\equiv 0 \mod{q^{c+1}}\\
-\text{To compute }x\equiv a \mod{q^{c}}\\
-$$
-
-
-
 
 
 
 ### Index Calculus Method
 
 > 指数演算法
+
+
+
+
+
+# Python Matlab
+
+
+
+```matlab
+# 分解大整数的code #matlab
+factor(sym('1318495191421054802278821514428263373126245158329273220186647806717202576007787869842301836780734718730787282445644314945034421950063629516552490933'))
+ans =[ 481006989528686211893, 602384082763980697559, 1037605481820435550019, 1206102098588167138789, 1206102098588167138789, 1524982628045073955591, 1976916723258661210051]
+```
+
