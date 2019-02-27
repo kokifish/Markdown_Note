@@ -1,6 +1,6 @@
-
-
 [TOC]
+
+
 
 
 
@@ -464,15 +464,103 @@ CSPs是人工智能和运筹学 的热门主题,因为它们公式中的规律�
 
 
 
+- 完整赋值: 每个变量都已赋值
+- solution 解: CSP问题的解是相容的、完整的赋值
+- generalized arc constraints 通用弧相容, 超弧相容: 将弧相容扩展到n元，不仅限于二元
+
+We do not care about the sequence of moves needed to get to a goal state. We only care about finding a setting of the variables that satisfies the goal. 过程不重要，只看解
+
+
+
+Thus CSPs can be solved by a specialized version of depth first search.
+
+- We can build up to a solution by searching through the space of partial assignments. 
+- Order in which we assign the variables does not matter --eventually they all have to be assigned. 
+- If during the process of building up a solution we falsify a constraint, we can immediately reject all possible ways of extending the current partial assignment. 
+
+
+
+### Forward Checking
+
+- 一旦一个变量X被赋值，前向检查就检查每个通过约束与X相关的未赋值变量Y，将Y的值域中与X的赋值不相容的取值删去。
+- Whenever a variable X is assigned, the forward-checking process establishes arc consistency for it: for each unassigned variable Y that is connected to X by a constraint, delete from Y′ s
+  domain any value that is inconsistent with the value chosen for X. 
+
+
+
+
+
+### Generalized Arc Consistency 
+
+> GAC
+
+A CSP is generalized arc consistent iff all of its constraints are generalized arc consistent.
+
+```python
+GAC(Level) #Maintain GAC Algorithm
+    If all variables are assigned: #所有变量都被赋值
+        PRINT Value of each Variable
+        return or exit (return for more solutions, exit for only one solution)#返回或输出
+    V := PickAnUnassignedVariable() #选择一个未赋值变量 V
+    Assigned[V] := TRUE #标记该变量已经被赋值
+    for d := each member of CurDom(V):#便利该变量的当前值域
+        Value[V] := d #对V赋值
+        Prune all values of V ≠ d from CurDom[V] #将当前值域的其他值剪枝
+        for each constraint C whose scope contains V: #遍历包含V的约束C
+            Put C on GACQueue#将C添加到 GACQueue
+        if(GAC_Enforce() != DWO): #调用函数，会传入参数GACQueue
+            GAC(Level+1) #all constraints were ok
+        RestoreAllValuesPrunedFromCurDoms()#恢复之前被剪枝的值
+    Assigned[V] := FALSE
+    return
+```
+
+```python
+GAC_Enforce()#GAC-Queue contains all constraints one of whose variables has had its domain reduced. At the root of the search tree. first we run GAC_Enforce with all constraints on GAC-Queue
+	while GACQueue not empty:
+    	C = GACQueue.extract()
+        for V := each member of scope(C): #遍历C的域
+            for d in CurDom[V]
+                Find an assignment A for all other variables in scope(C) such that C(A U {V=d}) = True
+                if A not found:
+                    CurDom[V] = CurDom[V] – d
+                    if CurDom[V] = empty set
+                    	empty GACQueue
+                        return DWO #return immediately
+                    else:
+                        push all constraints C’ such that V \in scope(C’) and C’ \notin GACQueue on to GACQueue
+	return TRUE #while loop exited without DWO
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
 # Uncertain Knowledge and Reasoning
 
 > 不确定知识与推理
 
 By weighing likelihoods(可能性) of events (probabilities), we can develop mechanisms(机制) for acting rationally(理性地) under uncertainty. 
 
+## Bayesain Networks
+
+
+
+
+
 > Density(of B): pick an element at random from the entire set. How likely is it that picked element is in the set B?
 
-conditional independence: In probability theory, two events A and B are **conditionally independent** given a third event Y precisely if the occurrence of A and the occurrence of B are independent events in their conditional probability distribution given Y.
+条件独立 conditional independence: In probability theory, two events A and B are **conditionally independent** given a third event Y precisely if the occurrence of A and the occurrence of B are independent events in their conditional probability distribution given Y.
 
 
 
@@ -561,9 +649,110 @@ AUC（确切的说，应该是AUROC）被定义为**ROC曲线下的面积**，�
 
 # Neural Networks and Deep Learning
 
+> 神经网络与深度学习
+>
+> 神经网络 是人工神经网络ANN(Artificial Neural Networks)的简称
+
+- A neural network is a nonlinear large-scale adaptive dynamic system composed of a large number of processing units.神经网络是由大量处理单元组成的大规模非线性自适应动态系统. It is based on the results of modern neuroscience research. It attempts to design a new machine to simulate the information processing ability of the human brain by simulating the brain neural network processing and memorizing information. At the same time, the study of this neural network will further deepen the understanding of thinking and intelligence.
+
+In 1986, Rumellhart, McClelland and Hinton Propose: Parallel and Distributed Processing
+
+PDP Model: Parallel Distributed Processing Model
 
 
 
+### Backpropagation
+
+> 反向传播算法
+
+1. Feed-forward computation 
+2. Backpropagation to the output layer 
+3. Backpropagation to the hidden layer 
+4. Weight updates
+
+
+
+### Activation Function
+
+- Nonlinear: Stronger fitting ability. 更强的拟合能力
+- Differentiability: Error Back Propagation. 误差反向传导
+- Monotonic: Convex function. 凸面的函数
+- $$f(x) \approx x$$: Efficient training
+- Range of outputs: Limited: Stable; Unlimited: Efficient.
+
+
+
+##### Sigmoid
+
+$$
+\sigma(x) = \frac{1}{1+e^{-x}}
+$$
+
+
+
+##### tanh
+
+$$
+\tanh(x)
+$$
+
+
+
+##### ReLU
+
+- 原始的ReLU是小于0的为0，大于零的不改变原始值
+
+$$
+\max(0,x)
+$$
+
+- Leaky ReLU
+
+$$
+\max(0.1x, x)
+$$
+
+##### Maxout
+
+$$
+\max(w_{1}^{T}x + b_{1}, w_{2}^{T}x+b_{2})
+$$
+
+##### Softmax
+
+- 接受n维向量，输出一个概率分布，值越小的，概率越小，值越大概率越大，输出的向量为n维，各元素之和为1
+
+$$
+\mathbf{Softmax}(x_i) = \frac{\exp(x_i)}{\sum_{j}\exp(x_j)}
+$$
+
+- LogSoftmax: 在Softmax基础上取log。输出值全为负值。log_softmax essential does log(softmax(x)), but the practical implementation is different and more efficient while doing the same operation. 实际实现不同且更高效。
+
+$$
+\mathbf{LogSoftmax}(x_i)=\log(\frac{\exp{(x_i)}}{\sum_{j}\exp{(x_j)}})
+$$
+
+
+
+### Optimizer
+
+> 优化器 训练优化器
+
+#### SGD
+
+> Stochastic gradient descent 随机梯度下降 incremental gradient descent 增量梯度下降
+
+- 非常基础的优化器
+
+## Perceptron
+
+> 感知机 感知器
+
+### Single Layer Perceptron
+
+> 单层感知机
+
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Single%20Layer%20Perceptron%20formula.png)
 
 
 
@@ -573,7 +762,7 @@ AUC（确切的说，应该是AUROC）被定义为**ROC曲线下的面积**，�
 
 > 自编码机 自动编码器 在无监督学习中用于有效编码 
 
-- 一种数据压缩算法，其中数据的压缩和解压缩函数是数据相关的，有损的，从样本中自动学习的。
+- 一种数据压缩算法，其中数据的压缩和解压缩函数是数据相关的，有损的，从样本中自动学习的。跟数据相关程度很高，意味着训练出来的自编码机只能压缩与训练数据相似的数据集
 - An **autoencoder** is a type of artificial neural network used to learn efficient data codings in an unsupervised manner.
 - 在大部分提到自编码机的场合，压缩和解压缩的函数都是通过神经网络实现的。
 - 自编码的目的是对一组数据学习出一种表示（也称表征，编码），通常用于降维
@@ -583,33 +772,98 @@ AUC（确切的说，应该是AUROC）被定义为**ROC曲线下的面积**，�
 1. Encoder: 将大数据集压缩成小的数据集
 2. Decoder: 将压缩后的小的数据集还原成大的数据集
 
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_AutoEncoder_general.png)
+
+
+
 ### Undercomplete Autoencoder
 
 > 欠完备自编码机
 
 从自编码器获得有用特征的一种方法是限制 h的维度比 x 小，这种编码维度小于输入维度的自编码器称为欠完备（undercomplete）自编码器。学习欠完备的表示将强制自编码器捕捉训练数据中最显著的特征。
 
+输入为D维，编码后为K维
+
+- Undercomplete: K < D ( “bottleneck”)
+- Related to PCA
+
+
+
+
+
 ### Sparse Autoencoder
 
 > 稀疏自编码机
 
+可以有大量的隐藏层单元，但仅有一小部分会被激活。
 
+allow large number of hidden units, but only a small number of hidden units are allowed to active at the same time.
+
+- 稀疏性参数 sparsity parameter : rho, typically a small value close to zero (ρ=0.05).
+
+当前真实稀疏性与稀疏性参数之间使用KL散度，加入到惩罚中。
 
 
 
 ### Denoising Autoencoder
 
-> 去噪自编码机
+> 去噪自编码机 降噪自编码机
+
+Motivation: representation should be robust to introduction of noise
+
+在样本x上添加随机高斯噪声，
+
+A denoising autoencoder is trained to map a corrupted input $$\tilde x$$ back to original input x. 去噪自编码机训练来将损坏了的x映射到原本的x上。
 
 
 
 ### Variational Autoencoder
 
-> 变分自编码机
+> VAE 变分自编码机; Variational [adj.] 变化的；因变化而产生的；[生物] 变异的
+>
+> Vanilla n. 香子兰，香草 adj. 香草味的
+>
+
+- Vanilla Autoencoders are not suitable for generative models, they attempt to “replicate”  input rather than generate a new one.
+- Variational Autoencoder provides a **probabilistic** manner for describing an input(image) in latent space(隐空间).
+
+
+
+## Convolutional Neural Network 
+
+> CNN 卷积神经网络
 
 
 
 
+
+### convolution
+
+1. input: 接受输入h @ m x n (通道数为h, 图片长宽为m n)
+2. (Optional)padding: 对图像进行边缘padding, 各边都增加padding个像素. m += 2 x padding; n += 2 x padding. 
+3. 卷积核卷积: 每个卷积核对每一个channel进行卷积。每个卷积核输出一个h @ l x c的图(result)。l = (m-k)/stride + 1; c = (n-k)/stride + 1.
+4. feature map: 对于每个卷积核卷积出来的result, 将每一个channel(共h个channel)对应坐标的值相加。Size变化: h@ l x c → l x c. 此时立方体形的result被压成二维的feature map矩形，若有h’个卷积核，则最终输出的图像形状为 h’ @ l x c
+
+卷积过程中，输入层有多少个通道channels，滤波器(卷积核)就要有多少个通道，但是滤波器的数量是任意的，滤波器的数量决定了卷积后 feature map 的通道数
+
+
+
+
+
+### Lenet 5
+
+- LeNet-5是用于手写字体的识别的一个经典CNN
+
+详解请参照: https://blog.csdn.net/d5224/article/details/68928083
+
+1. C1: 6个特征卷积核，卷积核大小选择5x5，得到6个特征图，每个特征图大小为32-5+1=28, 即神经元的个数为6@28x28=784
+2. S2: Max Subsampling. 最大池化下采样，池化kernel size=2x2，输出为6@14x14
+3. C3: 卷积层，卷积核大小为5x5，新图片长宽为14-5+1=10
+
+
+
+- LeNet-5使用Sigmoid和Tanh函数来获取非线性输出，现在常使用的非线性函数是ReLU
+- LeNet-5是在池化层之后引入了非线性，现在一般是在卷积层后通过激活函数获取非线性，在池化层后不再引入非线性
 
 
 
@@ -664,86 +918,43 @@ Contributions:
 
 
 
+
+
+
+
+
+
 ```python
 import torch
 import numpy as np
 
 np_data = np.arange(6).reshape((2, 3))
-torch_data = torch.from_numpy(np_data)
-tensor2array = torch_data.numpy()
+torch_data = torch.from_numpy(np_data)# np array to torch tensor
+tensor2array = torch_data.numpy()# torch tensor to np array
 print(
     '\nnumpy array:', np_data, # [[0 1 2], [3 4 5]]
-    '\ntorch tensor:', torch_data, #  0  1  2 \n 3  4  5[torch.LongTensor of size 2x3]
+    '\ntorch tensor:', torch_data,#0  1  2 \n 3  4  5[torch.LongTensor of size 2x3]
     '\ntensor to array:', tensor2array,# [[0 1 2], [3 4 5]]
 )
 ```
 
 
 
-#### Variable
+#### Tensor
 
-在 Torch 中的 Variable 就是一个存放会变化的值的地理位置. 里面的值会不停的变化.
+> Pytorch 0.4后，Variable和Tensor基本没有差别了
+>
+> https://blog.csdn.net/xholes/article/details/81667211
 
 ```python
 import torch
-from torch.autograd import Variable # torch 中 Variable 模块
+import torch.nn as nn
+import torch.utils.data as Data
 
-# 先生鸡蛋
-tensor = torch.FloatTensor([[1,2],[3,4]])
-# 把鸡蛋放到篮子里, requires_grad是参不参与误差反向传播, 要不要计算梯度
-variable = Variable(tensor, requires_grad=True)# requires_grad: need gradient or not
-
-print(tensor)
-"""
- 1  2
- 3  4
-[torch.FloatTensor of size 2x2]
-"""
-
-print(variable)
-"""
-Variable containing:
- 1  2
- 3  4
-[torch.FloatTensor of size 2x2]
-"""
-t_out = torch.mean(tensor*tensor)       # x^2
-v_out = torch.mean(variable*variable)   # x^2
-print(t_out)
-print(v_out)    # 7.5
-v_out.backward()    # 模拟 v_out 的误差反向传递
-
-# v_out = 1/4 * sum(variable*variable) 这是计算图中的 v_out 计算步骤
-# 针对于 v_out 的梯度就是, d(v_out)/d(variable) = 1/4*2*variable = variable/2 求偏导的结果
-
-print(variable.grad)    # 初始 Variable 的梯度
-'''
- 0.5000  1.0000
- 1.5000  2.0000
-'''
-
-
-print(variable)     #  Variable 形式
-"""
-Variable containing:
- 1  2
- 3  4
-[torch.FloatTensor of size 2x2]
-"""
-
-print(variable.data)    # tensor 形式
-"""
- 1  2
- 3  4
-[torch.FloatTensor of size 2x2]
-"""
-
-print(variable.data.numpy()) # numpy 形式。注意需要先索引到data后才是tensor形式
-"""
-[[ 1.  2.]
- [ 3.  4.]]
-"""
+torch.from_numpy(y_train).long()#numpy array => tensor => long tensor
 ```
+
+
 
 
 
@@ -796,6 +1007,87 @@ plt.show()
 
 
 
+#### Optimizer
+
+```python
+import torch
+import torch.utils.data as Data
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
+
+# torch.manual_seed(1)    # reproducible
+
+LR = 0.01
+BATCH_SIZE = 32
+EPOCH = 12
+
+# fake dataset
+x = torch.unsqueeze(torch.linspace(-1, 1, 1000), dim=1)
+y = x.pow(2) + 0.1*torch.normal(torch.zeros(*x.size()))
+
+# plot dataset
+plt.scatter(x.numpy(), y.numpy())
+plt.show()
+
+# put dateset into torch dataset
+torch_dataset = Data.TensorDataset(x, y)
+loader = Data.DataLoader(dataset=torch_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2,)
+
+
+# default network
+class Net(torch.nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.hidden = torch.nn.Linear(1, 20)   # hidden layer
+        self.predict = torch.nn.Linear(20, 1)   # output layer
+
+    def forward(self, x):
+        x = F.relu(self.hidden(x))      # activation function for hidden layer
+        x = self.predict(x)             # linear output
+        return x
+
+if __name__ == '__main__':
+    # different nets
+    net_SGD         = Net()
+    net_Momentum    = Net()
+    net_RMSprop     = Net()
+    net_Adam        = Net()
+    nets = [net_SGD, net_Momentum, net_RMSprop, net_Adam] #记录不同网络(同一模板)
+
+    # different optimizers #生成不同的优化器
+    opt_SGD = torch.optim.SGD(net_SGD.parameters(), lr=LR)
+    opt_Momentum = torch.optim.SGD(net_Momentum.parameters(), lr=LR, momentum=0.8)
+    opt_RMSprop = torch.optim.RMSprop(net_RMSprop.parameters(), lr=LR, alpha=0.9)
+    opt_Adam = torch.optim.Adam(net_Adam.parameters(), lr=LR, betas=(0.9, 0.99))
+    optimizers = [opt_SGD, opt_Momentum, opt_RMSprop, opt_Adam]
+
+    loss_func = torch.nn.MSELoss() #均方差误差函数
+    losses_his = [[], [], [], []] # record loss
+
+    # training
+    for epoch in range(EPOCH):
+        print('Epoch: ', epoch)
+        for step, (b_x, b_y) in enumerate(loader): # for each training step
+            for net, opt, l_his in zip(nets, optimizers, losses_his):
+                output = net(b_x)              # get output for every net
+                loss = loss_func(output, b_y)  # compute loss for every net
+                opt.zero_grad()                # clear gradients for next train
+                loss.backward() # backpropagation, compute gradients
+                opt.step() # apply gradients
+                l_his.append(loss.data.numpy()) # loss recoder
+
+    labels = ['SGD', 'Momentum', 'RMSprop', 'Adam']
+    for i, l_his in enumerate(losses_his):
+        plt.plot(l_his, label=labels[i])
+    plt.legend(loc='best')
+    plt.xlabel('Steps')
+    plt.ylabel('Loss')
+    plt.ylim((0, 0.2))
+    plt.show()
+```
+
+
+
 
 
 #### Build NN
@@ -806,13 +1098,126 @@ torch.optim #包含很多optimizer #e.g. SGD, Adom
 
 
 
+## Digest Of Pytorch Package Reference 
+
+> https://pytorch.org/docs/stable/index.html
 
 
-### Study Case
+
+### torch.nn
 
 
 
-#### AutoEncoder
+#### Conv2d
+
+> `torch.nn.Conv2d`(*in_channels*, *out_channels*, *kernel_size*, *stride=1*, *padding=0*, *dilation=1*, *groups=1*, *bias=True*)
+
+- Applies a 2D convolution over an input signal composed of several input planes.
+
+parameters:
+
+- in_channels 输入通道数: 例如输入的是rgb图像(对于第一层卷积层)，则通道数应为3
+- out_channels 输出通道数: 输出的通道数
+- kernel_size 核大小: 
+- stride 步幅: step/movement
+- padding 填充: 对输入图像边缘的补零
+- dilation 扩大: controls the spacing between the kernel points. 卷积核元素之间的间距
+- groups:
+- bias 偏置(bool, optional): If `True`, adds a learnable bias to the output. Default: `True`
+
+The parameters `kernel_size`, `stride`, `padding`, `dilation` can either be:
+
+- a single `int` – in which case the same value is used for the height and width dimension. 单个int表示宽高均为传入的int
+- a `tuple` of two ints – in which case, the first int is used for the height dimension, and the second int for the width dimension. 传入tuple分别表示高、宽
+
+> ### Note
+>
+> Depending of the size of your kernel, several (of the last) columns of the input might be lost, because it is a valid **cross-correlation**, and not a full cross-correlation. It is up to the user to add proper padding. 根据核大小，可能会丢失输入的(最后)几列。应该由用户来添加适当的padding。
+
+
+
+## Study Case
+
+
+
+### Classifier
+
+```python
+import torch
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
+
+# torch.manual_seed(1)    # reproducible
+
+# make fake data #制造实验数据###############################
+n_data = torch.ones(100, 2)# type:Tensor; torch.Size([100, 2]); 全为1
+x0 = torch.normal(2*n_data, 1) # class0 x data (tensor), shape=(100, 2)#正态分布化
+y0 = torch.zeros(100)          # class0 y data (tensor), shape=(100, 1)
+x1 = torch.normal(-2*n_data, 1) # class1 x data (tensor), shape=(100, 2)#正态分布化
+y1 = torch.ones(100)            # class1 y data (tensor), shape=(100, 1)
+x = torch.cat((x0, x1), 0).type(torch.FloatTensor)  # FloatTensor = 32-bit floating
+y = torch.cat((y0, y1), ).type(torch.LongTensor)    # LongTensor = 64-bit integer
+print(type(x), x.shape) # <class 'torch.Tensor'>, torch.Size([200, 2])
+print(type(y), y.shape) # <class 'torch.Tensor'>, torch.Size([200])
+print(type(y[0]), type(x[0]), type(x[0][0]), type(x[0][0].data), x[0][0], x[0][0].data)
+#(all Tensor)  Tensor, Tensor, Tensor, Tensor, tensor(3.2958), tensor(3.2958)
+# The code below is deprecated in Pytorch 0.4. Now, autograd directly supports tensors
+# x, y = Variable(x), Variable(y) # No needed for pytorch 1.0
+
+# plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=y.data.numpy(), s=100, lw=0, cmap='RdYlGn')
+# #s:scalar or array_like, shape (n, ) #linewidths : scalar or array_like.The linewidth of the marker edges.
+# #cmap : Colormap。A Colormap instance or registered colormap name.cmap is only used if c is an array of floats.
+# plt.show()
+
+
+class Net(torch.nn.Module):
+    def __init__(self, n_feature, n_hidden, n_output):
+        super(Net, self).__init__()
+        self.hidden = torch.nn.Linear(n_feature, n_hidden)   # hidden layer
+        self.out = torch.nn.Linear(n_hidden, n_output)   # output layer
+
+    def forward(self, x):
+        x = F.relu(self.hidden(x)) # activation function for hidden layer
+        x = self.out(x)
+        return x
+
+net = Net(n_feature=2, n_hidden=10, n_output=2)     # define the network
+print(net)  # net architecture #输出网络结构
+
+optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
+loss_func = torch.nn.CrossEntropyLoss()  # the target label is NOT an one-hotted
+# 在回归时使用的是MSELoss 均方差 #多分类问题常用交叉熵，计算的是概率
+# 例如输出的是[0.1, 0.2, 0.7]表示预测是第一类的概率是0.1，第二类是0.2,第三类是0.7
+plt.ion() # something about plotting # interactive model on
+
+for t in range(100):
+    out = net(x) # input x and predict based on x #使用网络进行预测
+    print(out[0], type(out), out.shape, type(out[0]), out[0].shape, F.softmax(out[0]))#调用softmax转化为概率
+    #tensor([ 1.1094, -0.5418], grad_fn=<SelectBackward>) Tensor,Size([200, 2]); Tensor,Size([2])
+    loss = loss_func(out, y) # must be (1. nn output, 2. target), the target label is NOT one-hotted
+
+    optimizer.zero_grad() # clear gradients for next train#清除梯度
+    loss.backward() # backpropagation, compute gradients #BP过程，计算梯度
+    optimizer.step() # apply gradients #将梯度施加到神经网络上
+
+    if(t % 2 == 0):
+        # plot and show learning process
+        plt.cla()#Clear the current axes.
+        prediction = torch.max(out, 1)[1]
+        pred_y = prediction.data.numpy()#tensor.data后才可以转换为numpy的array
+        target_y = y.data.numpy()
+        plt.scatter(x.data.numpy()[:, 0], x.data.numpy()[:, 1], c=pred_y, s=100, lw=0, cmap='RdYlGn')
+        accuracy = float((pred_y == target_y).astype(int).sum()) / float(target_y.size)
+        plt.text(1.5, -4, 'Accuracy=%.2f' % accuracy, fontdict={'size': 20, 'color':  'red'})
+        plt.pause(0.1)
+
+plt.ioff()
+plt.show()
+```
+
+
+
+### AutoEncoder
 
 ```python
 # -*- coding: utf-8 -*-
@@ -829,7 +1234,7 @@ import torch.utils.data as Data
 from torch.autograd import Variable
 from sklearn.neighbors import KNeighborsClassifier
 
-# 超参数 parameter
+# 超参数 Hyper parameter
 EPOCH = 10 #对数据整体训练的次数
 BATCH_SIZE = 128 #批训练的大小
 LEARNING_RATE = 0.002
@@ -922,7 +1327,7 @@ if __name__ == '__main__':
 
     train_data = Data.TensorDataset(X_train, y_train)
     # print('train_data:', type(train_data))
-    train_loader = Data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
+    train_loader = Data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)#创建DataLoader
 
     t = time.process_time()
 
@@ -984,4 +1389,16 @@ if __name__ == '__main__':
     #用测试集数据进行预测 #(测试集输入, 测试集输出)进行评分，输出准确度
     print('Prediction Accuracy:' ,knn.score(X_test, y_test))
 ```
+
+
+
+### Convolutional Neural Network 
+
+> CNN 卷积神经网络
+
+
+
+
+
+
 

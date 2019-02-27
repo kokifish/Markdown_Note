@@ -291,7 +291,7 @@ https://blog.csdn.net/pan869823184/article/details/7237248?utm_source=blogxgwz0
 3. Virtual machine terminal: `mount` with no arguments to determine whether your Linux distribution automatically mounted the VMware Tools virtual CD-ROM image. 若已挂载，挂载形式一般如下： /dev/cdrom on /mnt/cdrom type iso9660 (ro,nosuid,nodev) 
 4. 若未挂载，则挂载CD-ROM drive:
    1. mkdir /mnt/cdrom   //若已存在可以跳过
-   2. mount /dev/cdrom /mnt/cdrom
+   2. **mount /dev/cdrom /mnt/cdrom**
 5. Change to a working directory, e.g. cd /tmp   cd /
 6. (Optional) Delete any previous vmware-tools-distrib directory before you install VMware Tools.
 7. List the contents of the mount point directory and note the file name of the VMware Tools tar installer. `ls mount-point`
@@ -302,6 +302,8 @@ https://blog.csdn.net/pan869823184/article/details/7237248?utm_source=blogxgwz0
 11. 安装过程中，基本都可以直接回车，若遇到说gcc目录的，如果不需要gcc，可以写no，最后出现enjoy， VM team则说明成功安装VM tools
 
 
+
+eject -rf -v /dev/cdrom
 
 
 

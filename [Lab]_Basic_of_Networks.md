@@ -177,6 +177,8 @@ Assortative Coefficient: 同配系数
 
 The *assortativity coefficient* is the **Pearson correlation coefficient** of degree between pairs of linked nodes. 
 
+## Centrality
+
 
 
 
@@ -203,10 +205,13 @@ $$
 c_l^{BC} = \sum_{i\neq j \in V} \frac{p_{ij}^l}{p_{ij}}\\
 p_{ij}: 节点i到j的最短路径数\\
 p_{ij}^l: i到j的最短路径中经过了点l的数量\\
+C_{B}(v) = \sum_{s\neq v\neq t\in V}\frac{\sigma_{st}(v)}{\sigma_{st}}\\
+\sigma_{st} = \text{the number of shortest paths from }s\in V \text{ to }t\in V; \sigma_{ss} = 1;\\
+\sigma_{st}(v) = \text{the number of shortest paths from }s \text{ to }t\in V;
 $$
 edge betweenness centrality:
 $$
-c_{e_{kl}}^{BC} =  \sum_{i\neq j \in V} \frac{p_{ij}^{e_{kl}}: }{p_{ij}}\\
+c_{e_{kl}}^{BC} =  \sum_{i\neq j \in V} \frac{p_{ij}^{e_{kl}} }{p_{ij}}\\
 p_{ij}^{e_{kl}}: i到j的最短路径中经过了边e_{kl}的数量\\
 $$
 
@@ -228,6 +233,12 @@ $$
 
 
 
+### Graph centrality
+
+点的图中心性
+$$
+C_{G}(v) = \frac{1}{\max_{t\in V}d_{G}(v, t)}
+$$
 
 
 
@@ -304,5 +315,60 @@ A “onionlike” topology consist of a core of highly connected nodes hierarchi
 
 
 
+---
 
+# Papers
+
+> papers’ notes
+
+
+
+## A faster algorithm for betweenness centrality
+
+
+
+LEMMA: Bellman criterion: A vertex v in V lies on a shortest path between vertices s, v in V, if and only if
+$$
+d_{G}(s, t) = d_{G}(s, v) + d_{G}(v, t);\text{st最短距离 = sv最短距离+vt最短距离}
+$$
+Given pairwise distances and shortest paths counts, the **pair-dependency**(maybe called 点对依赖): O(n^2^)
+$$
+\delta_{st}(v) = \frac{\sigma_{st}(v)}{\sigma_{st}}\\
+\sigma_{st}(v) = \left\{
+\begin{aligned}
+0 & \text{ ,if } d_{G}(s,t) < d_{G}(s,v)+d_G(v,t)\\
+\sigma_{sv}·\sigma_{vt} & \text{ ,otherwise}\\
+\end{aligned}
+\right.
+$$
+To obtain the betweenness centrality index of a vertex v, we simply have to sum the **pair-dependencies** of all pairs on that vertex,
+$$
+C_{B}(v) = \sum_{s\neq v\neq t\in V}\delta_{st}(v)
+$$
+Therefore, betweenness centrality is traditionally determined in two steps:
+
+1. Compute the length and number of shortest paths between all pairs.
+2. Sum all pair-dependencies
+
+邻接矩阵：The adjacency matrix of a graph is the n x n-matrix A = $$(a_{uv})_{u,v\in V}$$ with a~uv~ = 1 if {u, v} $$\in$$ E, and a~uv~ = 0 otherwise.
+
+LEMMA: Algebraic path counting: Let A^k^ = $$(a^{(k)}_{uv})_{u, v \in V}$$ be the k-th power of the adjacency matrix of an unweighted graph. Then  $$a^{(k)}_{uv}$$ equals the number of paths from u to v of length exactly k. 邻接矩阵的k次幂的元素a~uv~表示u到v是否有长度恰好为k的路径。
+
+Clearly, algebraic path counting computes more information than needed. Instead of the number of paths of length shorter than the diameter of the network (the maximum distance of any pair of vertices), we are only interested in the number of shortest paths between each pair of vertices. 只对每个点对之间的最短路径数量感兴趣
+
+Define the set of **predecessors**(前任, 前驱结点) of a vertex v on shortest paths from s as:
+$$
+P_{s}(v) = \{u \in V: \{u,v\}\in E, d_{G}(s,v) = d_{G}(s,u) + w(u,v)\}; w(u,v)=\text{edge weight}
+$$
+LEMMA: Combinatorial shortest-path counting:
+$$
+\text{For }s\neq v \in V, \sigma_{sv} = \sum_{u\in P_s(v)}\sigma_{su}.
+$$
+Dijkstra's algorithm runs in time O(m + n log n), if the priority queue is implemented with a Fibonacci heap.
+
+Corollary(推论): Given a source s $$\in$$ V, both the length and number of all shortest paths to other vertices can be determined in time O(m + n log n) for weighted, and in time O(m)for unweighted graphs. Consequently, $$\sigma_{st}, s, t \in V$$, can be computed in time O(mn) for unweighted and in time O(nm + n^2^log n) for weighted graphs.
+
+Corollary 4 implies that running time is dominated by the O(n^3^) time it takes to sum pair-dependencies.
+
+4: ACCUMULATION OF PAIR-DEPENDENCIES
 
