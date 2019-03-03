@@ -5,5 +5,5 @@ Actually I don’t think you will spread these notes due to my limited knowledge
 
 
 # Contacts
-email: pureteap@gmail.com
+email: pureteap@gmail.com, annms1024@outlook.com
 
