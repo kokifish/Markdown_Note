@@ -614,11 +614,238 @@ Sample output:
 
 
 
+#### 二分搜索 解决每天吃巧克力数量不少于前一天吃的一半
+
+```cpp
+#include <algorithm>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+// N<=M<=100000
+
+int cal(int n_day, int num) {  //天数，第一天吃的数量
+    int need = 0;
+    for (int i = 0; i < n_day; ++i) {
+        need += num;
+        num = (num + 1) >> 1;
+    }
+    return need;
+}
+int BinSearch(int n_day, int m) {
+    if (n_day == 1) {
+        return m;
+    }
+    int low = 1;
+    int high = m;
+    while (low < high) {
+        int mid = (low + high + 1) >> 1;
+        int need = cal(n_day, mid);
+        if (need == m) {
+            return mid;
+        } else if (need > m) {
+            high = mid - 1;
+        } else {
+            low = mid;
+        }
+    }
+    return high;
+}
+int main() {
+    int n_day, m;
+    cin >> n_day >> m;
+    cout << BinSearch(n_day, m) << endl;
+    return 0;
+}
+```
+
+
+
+
+
 
 
 ---
 
 # 字符串处理
+
+
+
+#### 最长回文串
+
+- 将字符串反转后，求反转前和反转后的最长公共子序列 Note: 不要求连续
+- 使用的数据结构：长度数组
+- 子问题空间中，总共只有`O(m*n)`个不同的子问题，因此，用动态规划算法`自底向上`地计算`最优值`能提高算法的效率
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <string>
+using namespace std;
+const int ARR_MAX_LEN = 1005;
+int record[ARR_MAX_LEN][ARR_MAX_LEN];
+
+int getRemoveCount(string& ori_str) {
+    record[0][0] = 0;
+    record[0][1] = 0;
+    record[1][0] = 0;
+    int len = ori_str.length();
+    string rvs_str = ori_str;
+
+    reverse(rvs_str.begin(), rvs_str.end());
+    // cout << len << " " << rvs_str.length() << rvs_str << endl;
+    for (int i = 0; i < len; ++i) {
+        for (int j = 0; j < len; ++j) {
+            if (ori_str[i] == rvs_str[j]) {
+                record[i + 1][j + 1] = record[i][j] + 1;
+            } else {
+                record[i + 1][j + 1] = max(record[i][j + 1], record[i + 1][j]);
+            }
+        }
+    }
+    return len - record[len][len];
+}
+
+int main() {
+    string ori_str;
+    while (cin >> ori_str) {
+        cout << getRemoveCount(ori_str) << endl;
+    }
+    return 0;
+}
+```
+
+
+
+#### 不申请额外空间 将大写字母放在字符串后面
+
+- 需要保持相对顺序不变
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int ARR_MAX_LEN = 1005;
+
+void swap(string& ori_str, int l, int r) {
+    char temp = ori_str[l];
+    ori_str[l] = ori_str[r];
+    ori_str[r] = temp;
+}
+
+void moveAUpcase(string& ori_str, int forward, int behind) {
+    --behind;
+    for (; forward < behind; ++forward) {
+        swap(ori_str[forward], ori_str[forward + 1]);
+        // cout << forward << " behind:" << behind << endl;
+    }
+}
+
+void moveUpcase(string& ori_str) {
+    int behind = ori_str.length();
+    for (int idx = behind; idx >= 0; --idx) {
+        if (ori_str[idx] >= 'A' && ori_str[idx] <= 'Z') {
+            moveAUpcase(ori_str, idx, behind);
+            --behind;
+        }
+    }
+}
+// AkleBiCeilD
+// kleieilABCD
+int main() {
+    string ori_str;
+    while (cin >> ori_str) {
+        moveUpcase(ori_str);
+        cout << ori_str << endl;
+    }
+    return 0;
+}
+```
+
+#### 输出一组数中 最小值对和最大值对的数量(牛客网 未通过)
+
+```cpp
+#include <algorithm>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+const int N = 100000;
+
+int main() {
+    int arr[N];
+    int len = 0;
+    // ifstream fcin("in.txt");
+    // stringstream ss;
+    // ss << fcin.rdbuf();
+    while (cin >> len) {  // scanf("%d", &len) != EOF
+        // cout << "len == " << len << endl;
+        for (int i = 0; i < len; ++i) {
+            cin >> arr[i];  // scanf("%d", &arr[i]);
+            // cout << i << "arr[i] " << arr[i] << endl;
+        }
+        sort(arr, &arr[len]);
+        // printf("after sort ");
+        // for (int i = 0; i < len; ++i) {
+        //     printf("%d ", arr[i]);
+        // }
+        // printf("\n");
+        // 求最大值对的个数
+        int min_num = 1, max_num = 1;
+        while (arr[min_num - 1] == arr[min_num]) {
+            ++min_num;
+        }
+        while (arr[len - max_num] == arr[len - max_num - 1]) {
+            ++max_num;
+        }
+        max_num = max_num * min_num;
+
+        //求最小值对的个数
+        int min_value = ~(1 << (sizeof(int) * 8 - 1));
+        int last = 0;
+        vector<int> vec;
+        min_num = 1;
+        for (int i = 1; i < len; ++i) {
+            if (arr[i] - arr[i - 1] < min_value) {
+                min_value = arr[i] - arr[i - 1];
+                last = i;
+                vec.clear();
+                min_num = 1;
+            } else if (arr[i] - arr[i - 1] == min_value) {
+                if (i - 1 == last) {
+                    last = i;
+                    ++min_num;
+                } else {
+                    last = i;
+                    min_num = 1;
+                }
+            } else {
+                vec.push_back(min_num);
+            }
+        }
+        for (int i = 0; i < vec.size(); ++i) {
+            if (vec[i] > min_num) {
+                min_num = vec[i];
+            }
+        }
+        printf("%d %d\n", min_num, max_num);
+    }
+    return 0;
+}
+```
+
+
 
 
 

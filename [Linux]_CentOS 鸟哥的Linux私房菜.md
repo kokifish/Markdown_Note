@@ -14,56 +14,6 @@ df911863 //root
 
 
 
-# CentOS常用指令
-
-- Ctrl+Shift+C: console下copy
-- Ctrl+Shift+V: console下paste
-- Ctrl+Insert: console下复制 或 鼠标选中即为复制
-- Shift+Insert: console下粘贴 或 鼠标中键即为粘贴
-- sudo apt install [software name]
-
-
-
-
-
-
-
-
-
-# Linux指令汇总
-
-- bc 计算器(scale=3 显示小数点后3位，否则默认显示整数)
-- cal \[month\] \[year\]显示日历(calendar)
-- date 显示日期
-- locale 显示目前所支持的语系
-- ls 列出文件 -a 包括隐藏文件 -l 详情
-- LANG=en_US.utf8修改语系为英文语系(当次登录有效)
-- 
-- shutdown 关机
-
-
-
-
-
-- ca\[tab\]\[tab\] //命令补全(指令串的第一个字后):连按两次tab后，ca开头的命令被列出
-- ls -al ~/.bash\[tab\]\[tab\] //文件补全(指令串第二个字以后):列出该目录下以.bash开头的文件名
-- ctrl + c 中断目前正在执行的指令串
-- ctrl + d EOF键盘输入结束，输入时离开命令行，相当于输入exit
-- shift + page up/down 文本页面翻页
-- ctrl+alt+F1~6切换控制台
-
-### apt
-
-```python
-sudo apt install python3 #Install a Package
-sudo apt remove nmap #Remove a Package
-sudo apt update #Update the Package Index
-sudo apt upgrade #Upgrade Packages
-apt help
-```
-
-
-
 ---
 
 # 第零章 计算机概论
@@ -598,13 +548,24 @@ man -k man 查看说明文档中含有man字眼(不一定是单词是man)的文�
 
 
 
+# 第六章 Linux档案与目录管理
 
 
 
+## 6.3 档案内容查阅
+
+- cat  由第一行開始顯示檔案內容
+- tac  從最後一行開始顯示，可以看出 tac 是 cat 的倒著寫！
+- nl   顯示的時候，順道輸出行號！
+- more 一頁一頁的顯示檔案內容
+- less 與 more 類似，但是比 more 更好的是，他可以往前翻頁！
+- head 只看頭幾行
+- tail 只看尾巴幾行
+- od   以二進位的方式讀取檔案內容
 
 
 
-
+---
 
 # Ubuntu
 
@@ -618,6 +579,147 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
+# Case
+
+
+
+### 无sudo配置conda
+
+下载Anaconda3-2018.12-Linux-x86_64.sh    https://repo.continuum.io/archive/index.html
+
+wget URL
+
+安装：
+
+1. bash Anaconda3-2018.12-Linux-x86_64.sh
+2. Do you accept the license terms?  yes
+3. 是否添加到环境变量 yes
+
+conda --version 检查是否安装成功，如果command not found: export PATH="/home/hyhuang/anaconda3/bin/:$PATH"
+
+
+
+### Linux系统信息 硬件信息
+
+
+
+```cmd
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+#    24  Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz    #核心数 型号名 版本名 主频
+
+cat /proc/cpuinfo      # 查看CPU信息
+# 输出信息十分详细
+
+top #查看 CPU 使用状况 q退出
+# 输出信息实时刷新
+top -u annms #查看annms用户的进程CPU内存等使用信息
+```
+
+
+
+
+
+### 后台执行命令
+
+解决在后台执行作业，远程连接掉线后作业不受影响
+
+#### &
+
+**&**: Terminal运行程序时会被运行的作业占据，可以在命令后面加上&实现后台运行。e.g. sh a.sh &
+
+使用&后，作业被提交到后台运行，当前terminal没有被占用，但是一旦把当前terminal断开后，比如远程连接时掉线，作业就会停止。
+
+#### nohup
+
+> no hang up  不挂起
+
+nohup命令使得退出账户后，相应作业继续执行，不会被挂起通常形式如下
+
+```cmd
+nohup command
+nohup command &
+nohup command > out.file 2>&1 & #最后一个& 让该命令在后台执行
+# command>out.file 将command的输出重定向到out.file文件，即不输出到terminal，而输出到out.file
+# 2>&1 将标准出错重定向到标准输出。标准输出已经重定向到了out.file文件，即将标准出错也输出到out.file文件中
+# 2>: 2与>结合代表错误重定向，&1: &与1结合代表标准输出. 2>&1就变成错误重定向到标准输出
+```
+
+nohup --help 部分信息
+
+```cmd
+hyhuang@inpluslab-ThinkStation-P900:~$ nohup --help
+Usage: nohup COMMAND [ARG]...
+  or:  nohup OPTION
+Run COMMAND, ignoring hangup signals.   # 忽略hangup信号，实现后台运行，不挂断地运行命令
+
+      --help     display this help and exit
+      --version  output version information and exit
+
+If standard input is a terminal, redirect it from /dev/null.
+If standard output is a terminal, append output to 'nohup.out' if possible,
+'$HOME/nohup.out' otherwise.
+If standard error is a terminal, redirect it to standard output.
+To save output to FILE, use 'nohup COMMAND > FILE'.  # 保存输出至文件
+
+NOTE: your shell may have its own version of nohup, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+```
+
+setsid  disown  screen让进程在后台可靠运行，其中disown可以让已经运行了的作业免受hup信号影响
+
+https://www.ibm.com/developerworks/cn/linux/l-cn-nohup/index.html
+
+
+
+
+
+### 创建和删除软、硬链接
+
+> https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/index.html
+
+文件都有文件名与数据，这在Linux上被分成两个部分：用户数据 (user data) 与元数据 (metadata)。用户数据，即文件数据块 (data block)，数据块是记录文件真实内容的地方；而元数据则是文件的附加属性，如文件大小、创建时间、所有者等信息。
+
+在 Linux 中，元数据中的 inode 号（inode 是文件元数据的一部分但其并不包含文件名，inode 号即索引节点号）才是文件的唯一标识而非文件名。
+
+通过文件名打开文件的过程：filename -> inode ->(from metadata to user data)->data blocks
+
+> Linux中查看inode号：stat或ls -i
+
+为解决文件的共享使用，Linux 系统引入了两种链接
+
+1. 硬链接 hard link
+2. 软链接 符号链接 soft link symbolic link
+
+链接好处：解决文件的共享使用，隐藏文件路径，增加权限安全，节省存储
+
+若一个 inode 号对应多个文件名，则称这些文件为硬链接。换言之，硬链接就是同一个文件使用了多个别名。硬链接可由命令 link 或 ln 创建
+
+```cmd
+link oldfile newfile 
+ln oldfile newfile
+```
+
+由于硬链接是有着相同 inode 号仅文件名不同的文件，因此硬链接存在以下几点特性：
+
+1. 文件有相同的 inode 及 data block
+2. 只能对已存在的文件进行创建
+3. 不能交叉文件系统进行硬链接的创建
+4. 不能对目录进行创建，只可对文件创建
+5. 删除一个硬链接文件并不影响其他有相同 inode 号的文件
+
+若文件用户数据块中存放的内容是另一文件的路径名的指向，则该文件就是软连接。软链接就是一个普通文件，只是数据块内容有点特殊。软链接有着自己的 inode 号以及用户数据块。因此软链接的创建与使用没有类似硬链接的诸多限制：
+
+1. 软链接有自己的文件属性及权限等
+2. 可对不存在的文件或目录创建软链接
+3. 软链接可交叉文件系统
+4. 软链接可对文件或目录创建
+5. 创建软链接时，链接计数 i_nlink 不会增加
+6. 删除软链接并不影响被指向的文件，但若被指向的原文件被删除，则相关软连接被称为死链接（即 dangling link，若被指向路径文件被重新创建，死链接可恢复为正常的软链接）
+
+软链接访问：filename(soft link) -> inode -> datablock -> filename(ref file) -> inode -> data block
+
+软链接可以指向软链接，解析过程是递归的。软链接尽量使用绝对路径，使用相对路径的话，文件移动后很可能成为dangling(悬挂的) link
 
 
 
@@ -625,15 +727,122 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
+# Linux Basis
+
+一般著名的Linux分为两大类：
+
+1. RedHat Series: RedHat, CentOS, Fedora
+2. Debian Series: Debian, Ubuntu
+
+> https://blog.51cto.com/494981/1383655
+
+RedHat Series:
+
+1. 常见的安装包格式: rpm包,安装rpm包的命令是“rpm -参数” 
+2. 包管理工具 yum 
+3. 支持tar包
+
+Debian Series:
+
+1. 常见的安装包格式 deb包,安装deb包的命令是“dpkg -参数” 
+2. 包管理工具 apt-get 
+3. 支持tar包
+
+# Command Quick Find
+
+```cmd
+# apt-get等安装更新卸载相关
+apt-get update # 列举本地更新
+apt-get upgrade # 安装可用更新
+apt-cache search package_name # 查询软件包
+apt-get install package_name # 安装一个软件包
+apt-get remove package # 删除一个软件包
+dpkg -i package_file.deb ,sudo dpkg -r package_filename # install/unstall .deb files
+sudo alien package # convert .rpm to .deb files
+tar xfvz tarball_name # install tarballs
+
+# 环境变量
+export PATH=$PATH:/ssr-n #临时添加环境变量
+
+uname -r #显示操作系统的发行编号/--release
+
+
+bc #计算器(scale=3 显示小数点后3位，否则默认显示整数)
+cal [month] [year] #显示日历(calendar)
+date #显示日期
+locale #显示目前所支持的语系
+ls #列出文件 -a 包括隐藏文件 -l 详情
+LANG=en_US.utf8 #修改语系为英文语系(当次登录有效)
+ca[tab][tab] #命令补全(指令串的第一个字后):连按两次tab后，ca开头的命令被列出
+
+# 网络相关
+ip addr # 查看网路ip
+```
 
 
 
 
 
+### find / ls
+
+​			
+
+```cmd
+find / -amin -10 # 查找在系统中最后10分钟访问的文件
+find / -atime -2 # 查找在系统中最后48小时访问的文件
+find / -empty # 查找在系统中为空的文件或者文件夹
+find / -group cat # 查找在系统中属于 groupcat的文件
+find / -mmin -5 # 查找在系统中最后5分钟里修改过的文件
+find / -mtime -1 #查找在系统中最后24小时里修改过的文件
+find / -nouser #查找在系统中属于作废用户的文件
+find / -user fred #查找在系统中属于FRED这个用户的文件
+
+
+ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该目录下以.bash开头的文件名
+```
 
 
 
+> https://blog.csdn.net/ydfok/article/details/1486451
+
+### cat
+
+1. 一次显示整个文件:cat filename
+2. 从键盘创建一个文件:cat > filename 只能创建新文件,不能编辑已有文件.
+3. 将几个文件合并为一个文件:cat file1 file2 > file
+
+```cmd
+cat afile.log # 显示文件内容
+cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个文件里
+```
+
+> http://www.cnblogs.com/peida/archive/2012/10/30/2746968.html
 
 
 
+### grep / kill
+
+> https://blog.csdn.net/andy572633/article/details/7211546
+
+```cmd
+# kill
+kill -s 9 pid #传递信号9：强制、尽快终止进程
+pkill -9 firefox #pgrep+kill
+```
+
+- pkill或者pgrep只要给出进程名的一部分就可以终止进程
+
+
+
+# Shortcuts
+
+- Ctrl+Shift+C: console下copy 
+- Ctrl+Shift+V: console下paste
+- Ctrl+Insert: console下复制 或 鼠标选中即为复制
+- Shift+Insert: console下粘贴 或 鼠标中键即为粘贴
+
+- ctrl + c 中断目前正在执行的指令串
+- ctrl + d EOF键盘输入结束，输入时离开命令行，相当于输入exit
+- shift + page up/down 文本页面翻页
+- ctrl+alt+F1~6切换控制台
 

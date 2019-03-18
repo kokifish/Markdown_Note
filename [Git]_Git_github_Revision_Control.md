@@ -390,6 +390,16 @@ $ git pull origin master # 将远程仓库同步到本地
 
 
 
+```cmd
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/pureteap/Ali.git
+git push -u origin master
+```
+
+
+
 
 
 
