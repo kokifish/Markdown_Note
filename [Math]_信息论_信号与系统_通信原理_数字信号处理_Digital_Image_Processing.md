@@ -547,6 +547,24 @@ $$
 
 
 
+## CTFT
+
+> The Continuous Time Fourier Transform
+>
+> spectrum: 光谱；频谱；范围；余象
+
+
+
+
+
+## DTFT
+
+> The Discrete Time Fourier Transform 
+
+
+
+
+
 # 通信原理
 
 

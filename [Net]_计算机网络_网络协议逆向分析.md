@@ -964,12 +964,17 @@ network | 000...0
 
 ### DMZ
 
+> sometimes referred to as a **perimeter network** or screened subnet
+>
+> 边界网络 周边网络 对外网络
+
 - **非军事化区(Demilitarized Zone, DMZ)**是位于内部网络和外部网络之间并为双方提供因特网服务的区域
 - 内网主机可以访问内网主机、DMZ和因特网。内网主机可以使用内部地址或全局地址访问DMZ的服务器。外部主机只能通过全局地址访问DMZ的服务器，不能访问内网主机
+- 将部分用于提供对外服务的服务器主机划分到一个特定的子网——DMZ内，在DMZ的主机能与同处DMZ内的主机和外部网络的主机通信，而同内部网络主机的通信会被受到限制。这使DMZ的主机能被内部网络和外部网络所访问，而内部网络又能避免外部网络所得知。
 
 ![](http://op4fcrj8y.bkt.clouddn.com/18-4-25/73646272.jpg)
 
-
+Any service provided to users on the public internet should be placed in the DMZ network. Some of the most common of these services include web servers and proxy servers, as well as servers for email, domain name system (DNS), File Transfer Protocol (FTP) and voice over IP (VoIP).
 
 
 
@@ -1505,8 +1510,8 @@ DD: Database Description Packet
 - 指定路由器 Designated Router (**DR**): 每个中转网(Transit Network)都要选举一个直连路由器作为指定路由
 - 备份指定路由 Backup Designated Router (BDR)，BDR在DR不可用时，代替DR的工作。DR与BDR并没有任何本质与功能的区别。只有在多路访问的网络环境，才需要DR和BDR，DR与BDR的选举是在一个二层网段内选举的，即在多个路由器互连的接口范围内，与OSPF area没有任何关系，一个区域可能有多个多路访问网段，那么就会存在多个DR和BDR，但一个多路访问网段，只能有一个DR和BDR 
 - Drother: 既不是DR，也不是BDR的路由器。Dother除了和DR互换LSA之外，同时还会和BDR互换LSA
-- 自治系统边界路由器 Autonomous System Border Router (**ASBR**): ASBR位于OSPF自主系统和非OSPF网络之间
-- 区域边界路由器 Area Border Router (**ABR**)：位于一个或多个OSPF area边界上、将这些区域连接到主干网络的路由器。ABR被认为同时是OSPF主干和相连区域的成员。因此，它们同时维护着描述主干拓扑和其他区域拓扑的路由选择表
+- 自治系统边界路由器 Autonomous System Border Router (**ASBR**): ASBR位于OSPF自主系统和非OSPF网络之间
+- 区域边界路由器 Area Border Router (**ABR**)：位于一个或多个OSPF area边界上、将这些区域连接到主干网络的路由器。ABR被认为同时是OSPF主干和相连区域的成员。因此，它们同时维护着描述主干拓扑和其他区域拓扑的路由选择表
 - 发布通告路由器 Advertisement Router(AR)
 
 
@@ -1569,13 +1574,13 @@ DD: Database Description Packet
 
 
 
-###### Port Numbers 端口号
+#### Port Numbers 端口号
 
 位于数据段segment中，属于传输层的数据。
 
 - 知名端口 well-known ports : 0~1023。为提供知名网络服务的系统进程所用。e.g. 80-HTTP，21-ftp Control，20-ftp Data，23-telnet，25-SMTP，110-POP3，53-DNS
 - 注册端口 registered ports : 1024~49151。在IANA注册的专用端口号，为企业软件所用
-- 动态端口 private ports : 49152~65535 (2^15^ + 2^14^ to 2^16^ − 1), 私用、暂用端口号。没有规定用途的端口号，一般用户可以随意使用, dynamic or private ports that cannot be registered with IANA 。
+- 动态端口 private ports : 49152~65535 (2^15^ + 2^14^ to 2^16^ − 1), 私用、暂用端口号。没有规定用途的端口号，一般用户可以随意使用, dynamic or private ports that cannot be registered with IANA 。
 
 
 
@@ -1656,7 +1661,7 @@ TCP协议的运行阶段:
 
 #### TCP Timer 定时器
 
-- **超时定时器 重传定时器 retransmission timer retransmit timer**：每个连接只针对第一个未确认数据段启动重传定时器。每收到一个确认帧都重置。所有数据段都已确认则关闭。超时重传或发送窗口移动时要重启该定时器。(This means that the retransmit timer fires only when the sender has received *no* acknowledgement for a long time.)
+- **超时定时器 重传定时器 retransmission timer retransmit timer**：每个连接只针对第一个未确认数据段启动重传定时器。每收到一个确认帧都重置。所有数据段都已确认则关闭。超时重传或发送窗口移动时要重启该定时器。(This means that the retransmit timer fires only when the sender has received *no* acknowledgement for a long time.)
 - **持续定时器 坚持定时器 persist timer**: 用于保持窗口大小信息流动即使连接的另一端关闭了接收窗口。
 - **保活定时器 keep alive timer:** 在长时间没有交换数据段之后，用于检测连接的另一端是否出了问题。
 
@@ -1817,17 +1822,17 @@ TCP的现代实现包含四种相互影响的拥塞控制算法
 
 > 拥塞窗口 Congestion Window。拥塞窗口由发送方维护。滑动窗口由接收方维护。
 >
-> **congestion window size** (cwnd)
+> **congestion window size** (cwnd)
 
-In TCP, the **congestion window** is one of the factors that determines the number of bytes that can be outstanding at any time. 
+In TCP, the **congestion window** is one of the factors that determines the number of bytes that can be outstanding at any time. 
 
 
 
 ##### Slow Start 慢启动
 
-> **Slow-start** is part of the **congestion control** strategy used by TCP 
+> **Slow-start** is part of the **congestion control** strategy used by TCP 
 
-Slow-start begins initially with a **congestion window size** (cwnd) of 1, 2, 4 or 10 MSS. 
+Slow-start begins initially with a **congestion window size** (cwnd) of 1, 2, 4 or 10 MSS. 
 
 ##### Tahoe & Reno
 
@@ -1847,11 +1852,9 @@ Reno：如果收到三次重复确认，Reno算法则进入快速重传，只将
 
 > three-way handshake, 非对称 初始序号(initial sequence number,ISN) 
 
-
-
 每个TCP连接可以由四元组唯一标识：源IP地址, 源端口号,目的IP地址,目的端口号
 
-TCP uses a three-way handshake(三次握手). Before a client attempts to connect with a server, the server must first bind to and listen at a port to open it up for connections: this is called a passive open. Once the passive open is established, a client may initiate an active open. 
+TCP uses a three-way handshake(三次握手). Before a client attempts to connect with a server, the server must first bind to and listen at a port to open it up for connections: this is called a passive open. Once the passive open is established, a client may initiate an active open. 
 
 ACK报文用来应答的，SYN报文用来同步的
 
@@ -1863,8 +1866,7 @@ ACK报文用来应答的，SYN报文用来同步的
 
 ![](http://op4fcrj8y.bkt.clouddn.com/18-7-9/3806316.jpg)
 
-每一步均采用超时重传，多次重发后将放弃。重发次数与间隔时间依系统不同而不同
-头两个数据段确定的选项：Scale，MSS ，SACK-Permited
+每一步均采用超时重传，多次重发后将放弃。重发次数与间隔时间依系统不同而不同。头两个数据段确定的选项：Scale，MSS ，SACK-Permited
 
 
 
@@ -2458,17 +2460,39 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 选择性重传协议可能会收到落在接收窗口之外的数据帧：因确认帧丢失而重传的帧都会落在接收窗口之外
 
+
+
+
+
+---
+
+# 网络协议逆向分析
+
+> Network Protocol Reverse
+
+
+
+主动分析
+
+被动分析
+
+
+
+### 协议逆向分析系统工作流程
+
+![](<https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Network_Protocol_Reverse_WrokFlow.png>)
+
+
+
+
+
+
+
+
+
 ---
 
 # Windows Network CMD
-
-
-
-
-
-
-
-
 
 ```c
 ip config /all
@@ -2507,26 +2531,6 @@ netsh interface ip show address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 
 # 搜索引擎指令
@@ -2536,8 +2540,6 @@ netsh interface ip show address
 关键词+空格+减号(-)+关键词   不包含减号后的内容
 
 关键词+空格+filetype:+格式    搜索某个格式的文件
-
-
 
 
 
@@ -2559,14 +2561,149 @@ Linux基本上逐步实现了POSIX兼容，但并没有参加正式的POSIX认�
 
 
 
+---
+
+# 改Host
+
+> https://github.com/lennylxx/ipv6-hosts
+
+```c
+tracert www.google.com
+tracert bt.byr.com
+ipconfig -flushdns //刷新dns
+```
+
+### pixiv
+
+```
+##
+210.129.120.41 www.pixiv.net
+210.140.131.144 source.pixiv.net
+210.129.120.41 accounts.pixiv.net
+210.140.131.147 imgaz.pixiv.net
+210.140.131.145 comic.pixiv.net
+210.140.131.145 novel.pixiv.net
+210.129.120.41 factory.pixiv.net
+210.129.120.41 oauth.secure.pixiv.net
+210.129.120.44 en-dic.pixiv.net
+203.210.8.42 sketch.pixiv.net
+210.129.120.40 sensei.pixiv.net
+210.129.120.40 recruit.pixiv.net 
+##以上是后来添加的
+```
 
 
-CPU禁止降频：
 
-进注册表，把下面的
+---
 
-HKEY\_LOCAL\_MACHINESYSTEMCurrentControlSetServicesProcessor
+# Shadowsocks
 
-HKEY\_LOCAL\_MACHINESYSTEMCurrentControlSetServicesIntelppm
 
-把这2个下的Start值从3改成4
+
+### Build on CentOS
+
+```cmd
+cd /etc ;ls
+
+//重启centOS
+reboot
+//打开shadowsocks
+cat  shadowsocks
+
+//开放端口8388的防火墙
+firewall-cmd --permanent --add-port=8388/tcp
+
+//重新加载防火墙
+firewall-cmd --reload
+
+//查看shadowsocks的状态
+systemctl status shadowsocks
+
+//重启shadowsocks
+systemctl restart shadowsocks
+
+//vi打开/etc/shadowsocks.json
+vi /etc/shadowsocks.json
+
+//查看文件类型
+file 文件
+
+esc后
+:wq	//write and quit
+
+//一键安装shadowsocks
+bash <(curl -s http://morning.work/examples/2015-12/install-shadowsocks.sh)
+
+//安装vim
+yum install vim
+
+-------
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+python get-pip.py
+pip install --upgrade pip
+pip install shadowsocks
+-------
+
+systemctl enable shadowsocks
+
+systemctl start shadowsocks
+
+systemctl status shadowsocks
+
+mv config.json shadowsocks.json
+
+
+cd /etc ;ls
+
+//写入服务
+vi /etc/systemd/system/shadowsocks.service
+
+[Unit] 
+
+Description=Shadowsocks 
+
+
+[Service] 
+
+TimeoutStartSec=0 
+ExecStart=/usr/bin/ssserver -c /etc/shadowsocks.json 
+
+[Install] 
+
+WantedBy=multi-user.target
+```
+
+
+
+
+
+---
+
+# ShadowsocksR
+
+
+
+SSR订阅: 
+
+```tx
+https://fatpipe.work/subscribe/v1/7091/474c70a47ee0eaf95b55cad00d0f3e49
+https://raw.githubusercontent.com/AmazingDM/sub/master/ssrshare.com
+```
+
+
+
+### How2Ues
+
+```
+//author: hyhuang1024@outlook.com
+1. 解压
+2. 双击 ShadowsocksR-dotnet4.0.exe 允许通过防火墙等
+3. 在桌面右下角图标处找到SSR的小飞机，右键找到服务器订阅 -> 订阅设置
+4. 在订阅设置的弹出框，点击添加，在订阅网址输入 https://fatpipe.work/subscribe/v1/7091/474c70a47ee0eaf95b55cad00d0f3e49   。然后点击确定
+5. 右键小飞机 -> 服务器订阅 -> 更新订阅节点，一般第二个会失败，选择第三个绕过代理更新节点会成功。如果失败，右键小飞机 -> 模式 -> 不允许系统代理 （第一个）
+6. 更新成功后，右键小飞机 -> 服务器 -> WB-7091 选择服务器，一般地域较近的网速较快，也有国内服务器，在所需网站可以上的情况下优先选择近的，如果上不了，换一个服务器。双击小飞机也可以查看并更换服务器。
+
+```
+
+
+

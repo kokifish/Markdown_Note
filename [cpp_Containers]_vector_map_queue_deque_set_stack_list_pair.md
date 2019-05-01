@@ -360,6 +360,57 @@ b => 300
 
 
 
+---
+
+
+
+# unordered_map
+
+> http://www.cplusplus.com/reference/unordered_map/unordered_map/
+
+- unordered_map: Unordered Map (class template )
+- unordered_multimap: Unordered Multimap (class template )
+
+```cpp
+template < class Key,                                    // unordered_map::key_type
+           class T,                                      // unordered_map::mapped_type
+           class Hash = hash<Key>,                       // unordered_map::hasher
+           class Pred = equal_to<Key>,                   // unordered_map::key_equal
+           class Alloc = allocator< pair<const Key,T> >  // unordered_map::allocator_type
+           > class unordered_map;
+```
+
+Internally, the elements in the `unordered_map` are not sorted in any particular order with respect to either their *key* or *mapped* values, but organized into *buckets* depending on their hash values to allow for fast access to individual elements directly by their *key values* (with a constant average time complexity on average). 在内部，unordered_map不会根据key或mapped values来排序，但组织进的buckets取决于key的hash值，以满足快速获取的能力（常数复杂度）。
+
+`unordered_map` containers are faster than `map` containers to access individual elements by their *key*, although they are generally less efficient for range iteration through a subset of their elements. unordered_map获取单个元素的速度快于map，但他们都在遍历元素的子集时效率较低。
+
+- Associative: Elements in associative containers are referenced by their *key* and not by their absolute position in the container.
+- Unordered: Unordered containers organize their elements using hash tables that allow for fast access to elements by their *key*. 使用hash表来组织元素以实现通过key快速获取元素
+- Map: Each element associates a *key* to a *mapped value*: Keys are meant to identify the elements whose main content is the mapped value. 
+- Unique keys: No two elements in the container can have equivalent *keys*. 容器中不能有相同的key
+- Allocator-aware: The container uses an allocator object to dynamically handle its storage needs. 使用分配器对象来动态处理其存储需求。
+
+
+
+```cpp
+#include <iostream>
+#include <string>
+#include <unordered_map>
+using namespace std;
+int main ()
+{
+  unordered_map<string,int> mymap = {{"a", 100},{"b", 200},{"c", 30000 }};
+  mymap["a"] = 110;
+  mymap.at("b") += 1;
+
+  for (auto& x: mymap) {
+    cout << x.first << ": " << x.second << endl;
+  }
+}
+```
+
+
+
 
 
 

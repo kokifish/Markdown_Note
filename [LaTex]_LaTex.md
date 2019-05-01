@@ -228,7 +228,7 @@ http://liuchengxu.org/blog-cn/posts/quick-latex/ 从零开始 LaTeX 快速入门
 ### 可能用到的commands
 
 ```latex
-%%% tikz %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% tikz %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{tikz} %作图用
 \usetikzlibrary{decorations.pathmorphing} % noisy shapes
 \usetikzlibrary{fit}					% fitting shapes to coordinates
@@ -237,12 +237,4 @@ http://liuchengxu.org/blog-cn/posts/quick-latex/ 从零开始 LaTeX 快速入门
 \usetikzlibrary{calc}
 \tikzset{>=stealth}
 ```
-
-
-
-
-
-
-
-
 

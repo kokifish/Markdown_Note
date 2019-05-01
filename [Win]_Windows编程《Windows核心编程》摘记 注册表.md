@@ -423,7 +423,15 @@ RunOnce key: 系统加载时自动启动执行一次
 
 
 
+### CPU禁止降频
 
+进注册表，把下面的
+
+HKEY\_LOCAL\_MACHINESYSTEMCurrentControlSetServicesProcessor
+
+HKEY\_LOCAL\_MACHINESYSTEMCurrentControlSetServicesIntelppm
+
+把这2个下的Start值从3改成4
 
 
 

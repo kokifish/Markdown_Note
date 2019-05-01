@@ -751,16 +751,6 @@ Debian Series:
 # Command Quick Find
 
 ```cmd
-# apt-get等安装更新卸载相关
-apt-get update # 列举本地更新
-apt-get upgrade # 安装可用更新
-apt-cache search package_name # 查询软件包
-apt-get install package_name # 安装一个软件包
-apt-get remove package # 删除一个软件包
-dpkg -i package_file.deb ,sudo dpkg -r package_filename # install/unstall .deb files
-sudo alien package # convert .rpm to .deb files
-tar xfvz tarball_name # install tarballs
-
 # 环境变量
 export PATH=$PATH:/ssr-n #临时添加环境变量
 
@@ -781,6 +771,28 @@ ip addr # 查看网路ip
 
 
 
+### install / yum
+
+```cmd
+# apt-get等安装更新卸载相关
+apt-get update # 列举本地更新
+apt-get upgrade # 安装可用更新
+apt-cache search package_name # 查询软件包
+apt-get install package_name # 安装一个软件包
+apt-get remove package # 删除一个软件包
+dpkg -i package_file.deb ,sudo dpkg -r package_filename # install/unstall .deb files
+sudo alien package # convert .rpm to .deb files
+tar xfvz tarball_name # install tarballs
+
+yum check-update #检查可更新的rpm包
+yum update #更新所有的rpm包
+yum upgrade #大规模的版本升级,与yum update不同的是,连旧的淘汰的包也升级
+yum list installed #列出已经安装的所有的rpm包
+yum list extras #列出已经安装的但是不包含在资源库中的rpm包
+```
+
+
+
 
 
 ### find / ls
@@ -797,6 +809,7 @@ find / -mtime -1 #查找在系统中最后24小时里修改过的文件
 find / -nouser #查找在系统中属于作废用户的文件
 find / -user fred #查找在系统中属于FRED这个用户的文件
 
+find / -name docker #全盘按照文件名搜索docker
 
 ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该目录下以.bash开头的文件名
 ```
@@ -831,6 +844,31 @@ pkill -9 firefox #pgrep+kill
 ```
 
 - pkill或者pgrep只要给出进程名的一部分就可以终止进程
+
+
+
+### Device Info
+
+- dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
+
+```cmd
+lscpu #cpu的统计信息
+cat /proc/cpuinfo #每个cpu信息，如每个CPU的型号，主频等
+free -m #概要查看内存情况
+cat /proc/meminfo #查看内存详细使用
+dmidecode -t memory #查看内存硬件信息
+lsblk #查看硬盘和分区分布
+fdisk -l #硬盘和分区的详细信息
+lspci | grep -i 'eth' #查看网卡硬件信息
+ifconfig -a #查看系统的所有网络接口
+ip link show
+ethtool eth0 #查看某个网络接口的详细信息，例如eth0的详细参数和指标
+lspci #查看pci信息
+lspci -v / lspci -vv #更详细的PCI信息
+lscpi -t #设备树
+dmidecode -t bios #查看bios信息
+dmidecode -q #查看所有有用信息
+```
 
 
 

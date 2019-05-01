@@ -31,13 +31,16 @@ In simpler words, Docker is a tool that allows developers, sys-admins etc. to ea
 ```cmd
 sudo yum update # 更新yum
 curl -fsSL https://get.docker.com -o get-docker.sh # 执行Docker安装脚本
+bash get-docker.sh
+
+sudo systemctl start docker #开启docker的daemon
 ```
 
 
 
 
 
-# Container
+# Basic Use
 
 ```cmd
 docker pull training/webapp  # 载入镜像 拉取镜像
@@ -56,7 +59,7 @@ docker port bf08b7f2cd89 #查看容器的端口号
 -d # 后台运行
 -P # 容器内部使用的网络端口映射到我们使用的主机上
 -p port1:prot2# 指定端口映射
-docker run busybox echo "hello from busybox" #Output: hello from busybox
+docker run busybox echo "annms" #Output: annms
 ```
 
 
@@ -65,9 +68,9 @@ docker run busybox echo "hello from busybox" #Output: hello from busybox
 
 
 
-# Images
+## Images
 
-- https://hub.docker.com/ Docker Hub 可以在此搜索镜像
+- https://hub.docker.com/ Docker Hub 可以在此搜索镜像
 
 ​		
 
@@ -84,9 +87,9 @@ docker run httpd # 使用镜像
 
 
 
-## Images Creation and Update
+### Images Creation and Update
 
-> http://www.runoob.com/docker/docker-image-usage.html 2019.3.14 15.53 等待继续学习
+> http://www.runoob.com/docker/docker-image-usage.html 2019.3.14 15.53 等待继续学习
 
 
 
@@ -138,12 +141,37 @@ docker tag 860c279d2fec runoob/centos:dev # 为镜像添加新标签
 
 
 
+## Container Connection
 
+- 默认绑定的是TCP端口
+
+```cmd
+docker run -d -p 127.0.0.1:5001:5000 training/webapp python app.py #指定容器绑定的网络地址
+docker run -d -p 127.0.0.1:5000:5000/udp training/webapp python app.py #绑定UDP端口
+
+docker run -p 80:80 --name mynginx -v $PWD/www:/www -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf
+```
+
+- **-p 80:80：**将容器的80端口映射到主机的80端口
+- **--name mynginx：**将容器命名为mynginx
+- **-v $PWD/www:/www：**将主机中当前目录下的www挂载到容器的/www
+- **-v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf：**将主机中当前目录下的nginx.conf挂载到容器的/etc/nginx/nginx.conf
+- **-v $PWD/logs:/wwwlogs：**将主机中当前目录下的logs挂载到容器的/wwwlogs
+
+
+
+
+
+---
 
 # Command Quick Find
 
 ```cmd
+sudo systemctl start docker
+systemctl restart docker
+service docker stop
 docker ps # 查看docker进程 查看我们正在运行的容器
+docker ps -a # 查看所有docker进程 包括结束了的
 docker ps -l # 查看最后一次创建的容器
 docker stop NAMES/CONTAINER_ID 
 docker command --help #更深入的了解指定的 Docker 命令使用方法
@@ -156,5 +184,37 @@ docker rm NAMES/CONTAINER_ID # 删除不需要的容器，但容器必须处于�
 
 docker pull ubuntu:13.10 #下载镜像 拖取镜像
 docker search httpd #搜索镜像
+```
+
+
+
+```cmd
+docker build -t friendlyname .# 使用此目录的 Dockerfile 创建镜像
+docker run -p 4000:80 friendlyname  # 运行端口 4000 到 90 的“友好名称”映射
+docker run -d -p 4000:80 friendlyname         # 内容相同，但在分离模式下
+docker ps                                 # 查看所有正在运行的容器的列表
+docker stop <hash>                     # 平稳地停止指定的容器
+docker ps -a           # 查看所有容器的列表，甚至包含未运行的容器
+docker kill <hash>                   # 强制关闭指定的容器
+docker rm <hash>              # 从此机器中删除指定的容器
+docker rm $(docker ps -a -q)           # 从此机器中删除所有容器
+docker images -a                               # 显示此机器上的所有镜像
+docker rmi <imagename>            # 从此机器中删除指定的镜像
+docker rmi $(docker images -q)             # 从此机器中删除所有镜像
+docker login             # 使用您的 Docker 凭证登录此 CLI 会话
+docker tag <image> username/repository:tag  # 标记 <image> 以上传到镜像库
+docker push username/repository:tag            # 将已标记的镜像上传到镜像库
+docker run username/repository:tag                   # 运行镜像库中的镜像
+```
+
+
+
+### copy/transfer
+
+- 需要注意的是，不管容器有没有启动，拷贝命令都会生效
+
+```python
+docker cp /hostPath/forCopy.file containerID:/some/path #将宿主机的文件拷贝到容器的路径中
+docker cp containerID:/path/to/file.txt /host/path/ #将容器的文件拷贝到宿主机中
 ```
 
