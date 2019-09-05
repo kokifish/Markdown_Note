@@ -379,7 +379,7 @@ git push origin master;
 ```
 
 - 在git中打开
-- `sh ./update.sh`
+- `sh ./update.sh` or `sh update.sh`
 
 ---
 
