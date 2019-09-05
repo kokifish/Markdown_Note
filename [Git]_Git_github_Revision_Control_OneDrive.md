@@ -386,6 +386,7 @@ $ git reset HEAD <file> #把stage中的修改撤销掉(unstage)
 
 $ git config --global core.autocrlf false # global 不自动转换crlf #默认为true
 $ git pull origin master # 将远程仓库同步到本地
+$ gitk # 图像化界面
 ```
 
 
