@@ -367,6 +367,20 @@ https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b
 
 
 
+
+
+### .sh update
+
+```bash
+# update.sh
+git add .;
+git commit -m ".sh update";
+git push origin master;
+```
+
+- 在git中打开
+- `sh ./update.sh`
+
 ---
 
 ## CMD Quick Find
