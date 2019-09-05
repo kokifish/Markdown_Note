@@ -55,6 +55,10 @@
 
 
 
+**网络序是大端的**
+
+
+
 因特网的三个组成部分为: end system, communication links, routers
 
 ---
@@ -418,7 +422,7 @@ PPP协议的六阶段
 
 -   帧校验序列 Frame Check Sequence：对目的地址、源地址、类型/长度和有效载荷（加填充位）字段进行CRC-32校验
 
-    ​
+    
 
 ![](http://op4fcrj8y.bkt.clouddn.com/18-4-12/78515386.jpg)
 
@@ -877,7 +881,7 @@ X 表示该二进制位无特定作用
 
 #### 特殊IP地址
 
--   ​
+-   
 
 ```c
 00000000 00000000 00000000 00000000
@@ -1942,20 +1946,14 @@ FIN报文采用超时自动重发方式。在若干次重发后依然没有收�
 
 -   HTTP 超文本传送协议 hypertext transfer protocol
 
-
-
-
-
 -   无状态的(stateless): server不保留过往客户端的任何信息
 -   HTTP 连接: 持久的(Persistent)，非持久的(Nonpersistent)
-
-
 
 -   网页(Web page)是由对象(objects)构成的
 -   这些对象可以是HTML文件、JPEG图像文件、MP4视频文件等
 -   网页的HTML文件中指出了所需的其他对象
 -   每个对象采用URL指明存放地址
--   ​
+-   HTTP使用统一资源标识符（Uniform Resource Identifiers, URI）URL来传输数据和建立连接
 
 ```c
 //URL的例子
@@ -1985,8 +1983,49 @@ Host: www.sysu.edu.cn
 
 
 //
-
 ```
+
+
+
+#### HTTP 消息结构
+
+- 一旦建立连接后，数据消息就通过类似Internet邮件所使用的格式[RFC5322]和多用途Internet邮件扩展（MIME）[RFC2045]来传送
+
+##### 客户端请求消息
+
+**客户端发送一个HTTP请求到服务器的请求消息包括以下格式：请求行（request line）、请求头部（header）、空行和请求数据四个部分组成**
+
+
+
+
+
+#### HTTP 请求方法
+
+- 根据 HTTP 标准，HTTP 请求可以使用多种请求方法
+- HTTP1.0 定义了三种请求方法： GET, POST 和 HEAD
+- HTTP1.1 新增了六种请求方法：OPTIONS、PUT、PATCH、DELETE、TRACE 和 CONNECT 
+
+
+
+#### HTTP状态码
+
+- HTTP状态码由三个十进制数字组成，第一个十进制数字定义了状态码的类型，后两个数字没有分类的作用
+
+| 分类 | 分类描述                                       |
+| :--- | :--------------------------------------------- |
+| 1**  | 信息，服务器收到请求，需要请求者继续执行操作   |
+| 2**  | 成功，操作被成功接收并处理                     |
+| 3**  | 重定向，需要进一步的操作以完成请求             |
+| 4**  | 客户端错误，请求包含语法错误或无法完成请求     |
+| 5**  | 服务器错误，服务器在处理请求的过程中发生了错误 |
+
+
+
+- 100 Continue - 继续，客户端应继续其请求
+- 200 Accepted - 请求成功
+- 301 Moved Permanently - 资源（网页等）被永久转移到其它URL
+- 404 Not Found - 请求的资源（网页等）不存在
+- 500 Internal Server Error - 内部服务器错误
 
 
 
@@ -2241,7 +2280,7 @@ CELL 信元：53Byte
 -   奇偶校验位parity bit或校验比特check bit是一个表示给定位数的二进制数中1的个数是奇数还是偶数的二进制数
 -   奇偶校验位是最简单的错误检测码
 -   奇偶校验位有两种类型：**偶校验位**与**奇校验位**
--   ​
+-   
 
 
 
@@ -2340,7 +2379,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 # 可靠数据传输原理
 
--   ​
+-   
 
 
 
@@ -2459,32 +2498,6 @@ Two Dimensional Bit Parity 二维奇偶校验
 选择性重传协议需要的最少序号个数与SWS和RWS的关系 ：序号个数>=SWS+RWS。如果接收方收到新的SWS个帧，发回的确认全部丢失，在这种情况下，序号少了就会出现重复错误。
 
 选择性重传协议可能会收到落在接收窗口之外的数据帧：因确认帧丢失而重传的帧都会落在接收窗口之外
-
-
-
-
-
----
-
-# 网络协议逆向分析
-
-> Network Protocol Reverse
-
-
-
-主动分析
-
-被动分析
-
-
-
-### 协议逆向分析系统工作流程
-
-![](<https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Network_Protocol_Reverse_WrokFlow.png>)
-
-
-
-
 
 
 

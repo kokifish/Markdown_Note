@@ -771,7 +771,7 @@ ip addr # 查看网路ip
 
 
 
-### install / yum
+### install/yum/rpm/tar
 
 ```cmd
 # apt-get等安装更新卸载相关
@@ -782,16 +782,30 @@ apt-get install package_name # 安装一个软件包
 apt-get remove package # 删除一个软件包
 dpkg -i package_file.deb ,sudo dpkg -r package_filename # install/unstall .deb files
 sudo alien package # convert .rpm to .deb files
-tar xfvz tarball_name # install tarballs
+```
 
+```python
+# yum rpm (CentOS)
 yum check-update #检查可更新的rpm包
 yum update #更新所有的rpm包
 yum upgrade #大规模的版本升级,与yum update不同的是,连旧的淘汰的包也升级
 yum list installed #列出已经安装的所有的rpm包
 yum list extras #列出已经安装的但是不包含在资源库中的rpm包
+
+yum whatprovides libstdc++.so.6 # 查找哪个安装包有这个库文件
+yum check-update
+yum install code # or code-insiders
+
+rpm -i name.rpm #安装某个rpm包
+yum list installed |grep glibc # 查看安装了的 并且显示包含glibc的
 ```
 
+```python
+#tar 
+tar xfvz tarball_name # install tarballs
+```
 
+> <https://www.tecmint.com/18-tar-command-examples-in-linux/>
 
 
 
@@ -868,6 +882,19 @@ lspci -v / lspci -vv #更详细的PCI信息
 lscpi -t #设备树
 dmidecode -t bios #查看bios信息
 dmidecode -q #查看所有有用信息
+```
+
+
+
+### disk related
+
+```python
+df -h #df命令是linux系统以磁盘分区为单位查看文件系统，可以加上参数查看磁盘剩余空间信息
+fdisk -l # 查看硬盘的分区
+hdparm -i /dev/hda #查看IDE硬盘(hda)信息
+pidstat -d 1 #展示I/O统计，每秒更新一次
+iostat -xdm 1 #系统级IO监控
+iotop #io版的top
 ```
 
 

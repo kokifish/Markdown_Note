@@ -1083,7 +1083,7 @@ while True:
 
 ---
 
-## Generator
+## Generator / yield
 
 >   生成器
 
@@ -1091,6 +1091,29 @@ while True:
 -   generator保存的是算法，每次调用`next(g)`，就计算出`g`的下一个元素的值，直到计算到最后一个元素，没有更多的元素时，抛出`StopIteration`错误
 -   如果一个函数定义中包含`yield`关键字，那么这个函数就不再是一个普通函数，而是一个generator
 -   生成器是一个返回迭代器的函数，只能用于迭代操作
+
+```python
+def gen_example():
+    print('before any yield')
+    yield 'first yield' # yield 1
+    print('between yields')
+    yield 'second yield' # yield 2
+    print('no yield anymore')
+
+gen = gen_example()
+print(gen.__next__()) # 第一次调用next
+# before any yield
+# first yield
+print(gen.__next__()) # 第二次调用next
+# between yields
+# second yield
+print(gen.__next__()) # 第三次调用next
+# no yield anymore
+#Traceback (most recent call last):
+#  File "c:.../generator.py", line 13, in <module>
+#    print(gen.__next__())
+# StopIteration
+```
 
 
 
