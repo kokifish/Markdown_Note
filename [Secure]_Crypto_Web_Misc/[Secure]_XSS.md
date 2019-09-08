@@ -41,6 +41,8 @@ Cross site scripting attacks can be broken down into two types: **stored** and *
 ## Reflected Cross Site Scripting
 
 > 反射型跨站脚本攻击
+>
+> DOM XSS也可作为一种XSS类型，从效果来看也可以说是反射型XSS
 
 
 
