@@ -9,6 +9,8 @@
 # Software
 
 - Python: Django
+- revo uninstaller：卸载软件
+- ddu， display driver uninstaller
 
 # JSON简介
 

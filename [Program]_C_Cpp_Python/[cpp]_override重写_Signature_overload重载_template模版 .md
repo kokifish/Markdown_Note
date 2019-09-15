@@ -5,7 +5,7 @@
 
 
 
-##### Abstract: 重载 != 重定义 != 重写
+##### Abstract – 重载 != 重定义 != 重写
 
 1. 重载 **overload**
 
@@ -13,7 +13,7 @@
 - 函数名字相同，**参数不同**，不依赖于返回值
 - virtual关键字可有可无
 
-2. 重写(覆盖) **override**
+2. 重写(覆盖) **override**(推翻 践踏 覆盖 覆写)
 - 不同的范围，**子类**重新定义父类中**有相同名称和参数的虚函数**(函数签名一致)
 - 重写函数具有相同类型，名称，参数列表
 - 基类函数**必须有virtual**关键字，不可是static
@@ -169,12 +169,6 @@ int main(){
 
 
 
-
-
-
-
-
-
 ---
 
 #### ++ 符号重载
@@ -189,7 +183,7 @@ int main(){
 
 
 
-```c++
+```cpp
 //前置++运算符成员函数重载
 class Coordinate{
 public:
@@ -274,9 +268,9 @@ private:
 	double re, im;
 };  
 // Operator overloaded using a member function//加号的成员函数重载
-Complex Complex::operator+( Complex &other ) {  
-	return Complex( re + other.re, im + other.im );  
-}  
+Complex Complex::operator+( Complex &other ) {
+	return Complex( re + other.re, im + other.im );
+}
 
 int main() {  
 	Complex a = Complex( 1.2, 3.4 );  
@@ -325,7 +319,7 @@ int main(){
 
 #### = 赋值运算符重载
 
--   ​
+-   
 
 
 
@@ -345,7 +339,7 @@ int main(){
 
 
 
--   You should define `ostream& operator<<(ostream&, const A&)` as a **non**-member function, definitely not as a member of a class since it has nothing to do with that class! That is why you should define define  `operator<<` as a friend function.
+-   You should define `ostream& operator<<(ostream&, const A&)` as a **non**-member function, definitely not as a member of a class since it has nothing to do with that class! That is why you should define `operator<<` as a friend function.
 
 ```c++
 //<< 输出运算符友元函数重载
@@ -383,7 +377,7 @@ int main(void){
 
 - warning 索引运算符**不可以**用友元函数重载，**必须使用成员函数重载** 
 
-  ​
+  
 
 - 索引运算符的第一个值必须是this指针，只有第一个参数是this指针，才能传入索引使索引所表达的是当前对象当中的成员
 
@@ -543,7 +537,8 @@ ClassName *pc = &c;
 
 
 ```c++
-template <class 形参名，class 形参名，......> 返回类型 函数名(参数列表){
+template <class 形参名，class 形参名，......>  // 尖括号内class可以替换为typename
+返回类型 函数名(参数列表){ 
 /*函数体*/
 }
 ```
@@ -569,7 +564,7 @@ template <class 形参名，class 形参名，......> 返回类型 函数名(参
 //函数模版声明形式
 template<typename 数据类型参数标识符>
 <返回类型><函数名>(参数表){
-	函数体
+	/*函数体*/
 }
 ```
 
@@ -592,7 +587,7 @@ char cval = max<char>('A', 'B');//指定是char类型，则实例化
 
 ### 类模板
 
-
+- 通用类。数据成员、成员函数的返回值类型和形参类型不具体指定，用一个虚拟的类型来代表
 
 
 
