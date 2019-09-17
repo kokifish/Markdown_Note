@@ -272,7 +272,7 @@ Complex Complex::operator+( Complex &other ) {
 	return Complex( re + other.re, im + other.im );
 }
 
-int main() {  
+int main() {
 	Complex a = Complex( 1.2, 3.4 );  
 	Complex b = Complex( 5.6, 7.8 );  
 	Complex c = Complex( 0.0, 0.0 );  

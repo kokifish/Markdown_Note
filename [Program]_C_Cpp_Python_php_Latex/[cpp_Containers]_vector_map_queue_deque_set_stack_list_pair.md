@@ -567,7 +567,7 @@ template <class T,// multiset::key_type/value_type
           > class multiset;
 ```
 
--   ​
+-   
 
 ```cpp
 //snippet:

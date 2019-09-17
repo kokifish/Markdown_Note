@@ -607,7 +607,7 @@ boy
 string result="10000";
 int n=0;
 stream << result;
-stream >> n;//n等于10000
+stream >> n;//int n等于10000
 string intTranStr(int integer) {//int to string
     stringstream ss;
     ss << integer;
