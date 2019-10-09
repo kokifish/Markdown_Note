@@ -582,25 +582,26 @@ The double value is : 5593.54
 #### getline 后拆分string
 
 ```c++
-#include<iostream> //从标准输入接受字符串，然后进行相关处理
-#include<sstream> 
-#include<string> 
-using namespace std; 
-int main() { 
-    string s; //定义一个stirng对象，从标准输入接受一个字符串 
-    getline(cin,s); 
-    stringstream ss(s); //定义一个string流（使用s实例化） 
-    for(string s1; ss>>s1; cout<<s1<<endl);//将string流里的东西输出
-}//output:
-you are a good boy //输入
-you
-are
-a
-good
-boy
+#include <iostream>  //从标准输入接受多行带空格字符串，然后对每行进行按空格拆分
+#include <sstream>
+#include <string>
+using namespace std;
+int main() {
+    string s;  //定义一个stirng对象，从标准输入接受一个字符串
+    while (getline(cin, s)) {// 遇EOF结束
+        stringstream ss(s);  //定义一个string流（使用s实例化）
+        for (string s1; ss >> s1; cout << s1 << endl);  //将string流里的东西输出
+    }
+}// Input: aa bb cc 
+// Output:
+aa
+bb
+cc
 ```
 
 #### string\<\-\>int
+
+> https://www.systutorials.com/131/convert-string-to-int-and-reverse/
 
 ```c++
 //string到int的转换
@@ -628,8 +629,8 @@ int main() {
         stringstream s_inStr(inStr);//用inStr初始化 stringstream s_inStr
         while( s_inStr >> toPrint ) {//先读入一个char toPrint
             s_inStr >> temp;//预读一个char(紧跟着toPrint的)
-            if( s_inStr.fail() ) {//判断temp是否输入失败
-              //temp输入失败说明toPrint是最后一个字符，则直接放在outStr末尾
+            if( s_inStr.fail() ) {//判断s_inStr是否输入失败
+              //s_inStr输入失败说明toPrint是最后一个字符，则直接放在outStr末尾
                 outStr.push_back(toPrint);
             } else if( isdigit(temp) ) {
                 s_inStr.putback(temp);//将temp(判断为数字)放回流中

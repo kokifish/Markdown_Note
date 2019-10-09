@@ -583,6 +583,20 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
+
+
+### 配置快捷键
+
+- 终端快捷键设置：命令如下，名称随意
+
+```
+/usr/bin/gnome-terminal
+```
+
+
+
+
+
 ### 无sudo配置conda
 
 下载Anaconda3-2018.12-Linux-x86_64.sh    https://repo.continuum.io/archive/index.html

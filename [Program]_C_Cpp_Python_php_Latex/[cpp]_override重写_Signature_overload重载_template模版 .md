@@ -9,7 +9,7 @@
 
 1. 重载 **overload**
 
-- **范围相同**
+- **范围相同**，不涉及父子类
 - 函数名字相同，**参数不同**，不依赖于返回值
 - virtual关键字可有可无
 
@@ -21,7 +21,7 @@
 
 3. 重定义(隐藏) **redefining**
 
-- 子类重新定义父类中有相同名字的**非虚函数**(形参列表可以不同)
+- **子类**重新定义**父类中有相同名字**的**非虚函数**(形参列表可以不同)
 - 如果派生类的函数和基类的函数同名，但是参数不同，不管有无virtual，基类的函数被隐藏
 
 
@@ -337,6 +337,10 @@ int main(){
   - 调用时 perator << (cout, abc);//可知cout是一个 ostream 类型的对象
 - 第一个对象必须是ostream意味着不能是this或当前这个对象
 
+```cpp
+ostream& operator<<(ostream& out, ClassName& obj);
+```
+
 
 
 -   You should define `ostream& operator<<(ostream&, const A&)` as a **non**-member function, definitely not as a member of a class since it has nothing to do with that class! That is why you should define `operator<<` as a friend function.
@@ -366,6 +370,59 @@ int main(void){
 	return 0;
 }//output: 3,5
 ```
+
+
+
+---
+
+#### >> 输入运算符重载
+
+- 使用友元函数重载
+- 第一个参数是引用`istream&`，返回值也是引用`istream&`
+
+```cpp
+istream& operator>>(istream& in, ClassName& obj);
+```
+
+
+
+```cpp
+#include <cstdio>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Pos {
+   private:
+    int x, y;// 友元函数可以访问私有成员
+   public:
+    friend istream& operator>>(istream& in, Pos& pos);
+    friend ostream& operator<<(ostream& out, Pos& pos);
+    void print() { cout << x << "," << y << endl; }
+};
+// 返回引用 istream&；形参列表：(istream&, ClassName&)
+istream& operator>>(istream& in, Pos& pos) {
+    in >> pos.x >> pos.y;// 友元函数可以访问私有成员
+    return in;
+}
+// 返回引用 ostream&
+ostream& operator<<(ostream& out, Pos& pos) {
+    out << pos.x << ";" << pos.y << endl;
+    return out;
+}
+
+int main() {
+    Pos pos;
+    cin >> pos;// Input: 1 2
+    pos.print();// Output: 1,2
+    cout << pos;// Output: 1;2
+}
+```
+
+
+
+
 
 
 
@@ -438,7 +495,7 @@ cout << sum(2,3);//Output: 5
 
 #### -> 向量符号重载
 
-
+- 不可做为友元重载
 
 ```c++
 class obj {

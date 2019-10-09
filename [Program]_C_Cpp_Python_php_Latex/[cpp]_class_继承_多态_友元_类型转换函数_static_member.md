@@ -855,7 +855,7 @@ int main () {
 
 ### 友元成员函数
 
->   在另一个类中定义的函数，与该类friend
+- 在**另一个类中**定义的函数，与该类friend
 
 ```c++
 class a{
@@ -863,8 +863,6 @@ class a{
 	//这个是定义在b中的class a的友元函数//可写在public private protected中
 }
 ```
-
-
 
 
 

@@ -56,12 +56,14 @@ HTTP/1.1是原始HTTP (HTTP/1.0)的修订版。在HTTP/1.0中，对每个资源�
 
 
 
-## Session
+## HTTP Session
 
 - An HTTP session is a sequence of network request-response transactions. 网络请求-响应事务
 - An HTTP client initiates a request by establishing a Transmission Control Protocol (TCP) connection to a particular port on a server (typically port 80, occasionally port 8080). HTTP客户端通过建立到服务器上特定端口(80, 8080, 8008)的TCP连接来发起请求
 - An HTTP server listening on that port waits for a client's request message. HTTP服务器监听对应端口以等待客户端请求报文
 - HTTP服务端接收请求后，服务端返回状态行(e.g. HTTP/1.1 200 OK)以及对应消息。消息主体通常是请求的资源
+- HTTP是无状态协议，无状态协议不需要HTTP服务器在多个请求间保存用户的信息或者状态
+- 一些web应用使用HTTP cookie或web表单中的隐藏变量实现状态或服务器端会话
 
 
 
@@ -70,18 +72,22 @@ HTTP/1.1是原始HTTP (HTTP/1.0)的修订版。在HTTP/1.0中，对每个资源�
 > 持久连接
 
 - In HTTP/0.9 and 1.0, the connection is closed after a single request/response pair. 在HTTP 0.9, 1.0 每次请求-响应对结束后，连接关闭
-- In HTTP/1.1 a keep-alive-mechanism was introduced, where a connection could be reused for more than one request. HTTP 1.1 提出保活机制(持久连接)，连接可被重用，进行多次请求
+- In HTTP/1.1 a **keep-alive-mechanism** was introduced, where a connection could be reused for more than one request. HTTP 1.1 提出**保活机制**(持久连接)，连接可被重用，进行多次请求
 - 持久连接明显减少了请求延迟。第一次请求后，客户端不需要重新协商TCP三次握手连接(TCP 3-Way-Handshake connection)。
 - 另一积极副作用：由于TCP慢启动机制(TCP's slow-start-mechanism)，连接通常会随着时间变快。
 
 HTTP 1.1 比1.0还进行了带宽优化：
 
-- HTTP/1.1 introduced chunked transfer encoding(分块传输编码) to allow content on persistent connections to be streamed rather than buffered. 允许持久连接中的内容可以进行流处理而非缓冲
+- HTTP/1.1 introduced **chunked transfer encoding**(分块传输编码) to allow content on persistent connections to be streamed rather than buffered. 允许持久连接中的内容可以进行流处理而非缓冲
 - HTTP pipelining further reduces lag time, allowing clients to send multiple requests before waiting for each response. Another addition to the protocol was byte serving, where a server transmits just the portion of a resource explicitly requested by a client.
 
 
 
-### Chunked Transfer Encoding
+
+
+
+
+#### Chunked Transfer Encoding
 
 > 分块传输编码 Chunked transfer encoding 是超文本传输协议 HTTP 中的一种数据传输机制
 
@@ -90,4 +96,36 @@ HTTP 1.1 比1.0还进行了带宽优化：
 
 
 
-### 状态码
+
+
+## HTTP Authentication
+
+- challenge-response mechanism质询-响应机制
+
+
+
+## Message Format
+
+
+
+### Request Message
+
+请求报文包含：
+
+- 请求行 request line(e.g. `GET /images/logo.png HTTP/1.1`, 从服务器请求`/images/logo.png`)
+- 请求头域 request header fields (e.g., Accept-Language: en).在HTTP/1.1, 除了`Host`外所有请求头域都是可选的。In the HTTP/1.1 protocol, all header fields except Host are optional.
+- 空行 an empty line. 仅包含`<CR><LF>`，无其他空白
+- 可选的报文体 an optional message body
+
+请求行与别的头部域必须以回车换行结束The request line and other header fields must each end with `<CR><LF> `(that is, a **carriage return** character followed by a **line feed** character).
+
+#### Request Methods
+
+- HTTP定义方法(有时称为谓词，但在规范中没有提到谓词verb，OPTIONS或HEAD也没有提到谓词)来指示要在标识的资源上执行的所需操作
+
+
+
+
+
+##### Safe Methods
+
