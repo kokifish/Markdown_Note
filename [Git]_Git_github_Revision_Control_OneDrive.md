@@ -156,6 +156,35 @@ diff输出内容解析
 
 
 
+```cmd
+# 改动前test.txt
+aaa
+bbb
+# 改动后test.txt
+aaa
+bbbb
+ccc
+```
+
+> 
+
+```cmd
+$ git diff test.txt # 比较工作目录和暂存区域快照之间的差异
+diff --git a/test.txt b/test.txt # Output: 比较的是a版(变动前)和b版(变动后)的区别
+index d39cda9..ca48dab 100644 # 两个版本的git哈希值 # 最后六个数字是对象的模式 100代表普通文件，644表示权限 # index区d39cda9与工作目录区域的ca48dab对象进行比较
+--- a/test.txt # --- 表示变动前版本
++++ b/test.txt # +++ 表示变动后版本
+@@ -1,2 +1,3 @@ # 源文件1~2行与目标文件的1~4行有差异
+ aaa
+-bbb
+\ No newline at end of file # 文件最后一行没有换行
++bbbb
++ccc
+\ No newline at end of file
+```
+
+
+
 ### Revision Control
 
 > 版本控制;
