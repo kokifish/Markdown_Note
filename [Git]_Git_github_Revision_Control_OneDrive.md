@@ -152,9 +152,9 @@ Changes to be committed:
 git diff ~/path/to/file1 ~/path/to/file2 # 比较两个本地文件之间的区别
 ```
 
-diff输出内容解析
 
 
+#### diff输出内容解析
 
 ```cmd
 # 改动前test.txt
@@ -166,7 +166,7 @@ bbbb
 ccc
 ```
 
-> 
+> 上面的是文件的内容，下面的是有关该文件的diff的输出
 
 ```cmd
 $ git diff test.txt # 比较工作目录和暂存区域快照之间的差异
@@ -174,12 +174,12 @@ diff --git a/test.txt b/test.txt # Output: 比较的是a版(变动前)和b版(�
 index d39cda9..ca48dab 100644 # 两个版本的git哈希值 # 最后六个数字是对象的模式 100代表普通文件，644表示权限 # index区d39cda9与工作目录区域的ca48dab对象进行比较
 --- a/test.txt # --- 表示变动前版本
 +++ b/test.txt # +++ 表示变动后版本
-@@ -1,2 +1,3 @@ # 源文件1~2行与目标文件的1~4行有差异
+@@ -1,2 +1,3 @@ # 源文件1~2行与目标文件的1~3行有差异
  aaa
--bbb
+-bbb # - 减少的部分 # 红色
 \ No newline at end of file # 文件最后一行没有换行
-+bbbb
-+ccc
++bbbb # + 增加的部分 # 绿色
++ccc # + 增加的部分 # 绿色
 \ No newline at end of file
 ```
 
