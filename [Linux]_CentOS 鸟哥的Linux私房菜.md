@@ -861,7 +861,7 @@ cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个�
 
 
 
-### grep / kill
+### grep / kill / fuser
 
 > https://blog.csdn.net/andy572633/article/details/7211546
 
@@ -873,9 +873,14 @@ pkill -9 firefox #pgrep+kill
 
 - pkill或者pgrep只要给出进程名的一部分就可以终止进程
 
+```cmd
+fuser -k 443/tcp # 关闭占用443端口的程序
+fuser -k 80/tcp #
+```
 
 
-### Device Info
+
+### Device Info: lscpu ifconfig lsblk lspci
 
 - dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
 
@@ -900,7 +905,49 @@ dmidecode -q #查看所有有用信息
 
 
 
-### disk related
+### File Operation: rm cp
+
+```cmd
+rm -r /path/* # 删除文件夹/path/下所有文件
+rm -rf /path/* # 删除文件夹/path/下所有文件 并且不用确认
+cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注意中间有个 ‘.’ # 如果指定文件夹中有同名文件需要先删除，否则会一个个文件提示进行确认，使用cp -rf 也一样提示
+```
+
+
+
+
+
+
+
+### File Info: stat
+
+```cmd
+stat a # file: size, Device, Access, Modify, Change 
+```
+
+
+
+### Process Info: ps
+
+```cmd
+ps aux | grep nginx # 进程中有nginx字样的
+```
+
+
+
+
+
+### service / systemctl
+
+```cmd
+service nginx status # 查看nginx运行情况
+```
+
+
+
+
+
+### Disk Related
 
 ```python
 df -h #df命令是linux系统以磁盘分区为单位查看文件系统，可以加上参数查看磁盘剩余空间信息
@@ -909,6 +956,20 @@ hdparm -i /dev/hda #查看IDE硬盘(hda)信息
 pidstat -d 1 #展示I/O统计，每秒更新一次
 iostat -xdm 1 #系统级IO监控
 iotop #io版的top
+```
+
+
+
+
+
+### code
+
+```cmd
+code # 启动visual studio code
+code . # 打开当前文件夹
+code . --user-data-dir # 打开当前文件夹(root)
+code /path/to/ # 打开指定文件夹
+ctrl + d # 选中当前单词
 ```
 
 

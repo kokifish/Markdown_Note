@@ -146,6 +146,16 @@ Changes to be committed:
 
 
 
+
+
+```cmd
+git diff ~/path/to/file1 ~/path/to/file2 # 比较两个本地文件之间的区别
+```
+
+diff输出内容解析
+
+
+
 ### Revision Control
 
 > 版本控制;
