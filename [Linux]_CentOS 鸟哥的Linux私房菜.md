@@ -743,6 +743,10 @@ ln oldfile newfile
 
 # Linux Basis
 
+
+
+## Linux发行版
+
 一般著名的Linux分为两大类：
 
 1. RedHat Series: RedHat, CentOS, Fedora
@@ -750,16 +754,16 @@ ln oldfile newfile
 
 > https://blog.51cto.com/494981/1383655
 
-RedHat Series:
+RedHat Series: RHEL(Redhat Enterprise Linux), CentOS, Fedora, Oracle Linux
 
 1. 常见的安装包格式: rpm包,安装rpm包的命令是“rpm -参数” 
 2. 包管理工具 yum 
 3. 支持tar包
 
-Debian Series:
+Debian Series: Debian, Ubuntu, Mint
 
 1. 常见的安装包格式 deb包,安装deb包的命令是“dpkg -参数” 
-2. 包管理工具 apt-get 
+2. 包管理工具 apt-get / dpkg
 3. 支持tar包
 
 # Command Quick Find
@@ -973,6 +977,8 @@ ctrl + d # 选中当前单词
 ```
 
 
+
+---
 
 # Shortcuts
 
