@@ -29,6 +29,14 @@ What Is A.I. ?
 
 
 
+
+
+
+
+
+
+
+
 ## The History of AI
 
 - 1943-70: Early excitement, great expectation
@@ -1512,7 +1520,7 @@ $$
 
 $${\mathbf  {b}}={\mathbf  {a}}-\gamma \nabla F({\mathbf  {a}})$$
 
-对于$${\displaystyle \gamma >0}​$$为一个够小数值时成立($$\gamma \to 0^+​$$)，那么$${\displaystyle F(\mathbf {a} )\geq F(\mathbf {b} )}​$$
+对于$${\displaystyle \gamma >0}$$为一个够小数值时成立($$\gamma \to 0^+$$)，那么$${\displaystyle F(\mathbf {a} )\geq F(\mathbf {b} )}$$
 
 可以从函数$${\displaystyle F}$$的局部极小值的初始估计$${\displaystyle \mathbf {x} _{0}}$$出发，并考虑如下序列 $${\displaystyle \mathbf {x} _{0},\mathbf {x} _{1},\mathbf {x} _{2},\dots }$$使得
 $$\mathbf{x}_{n+1}=\mathbf{x}_n-\gamma_n \nabla F(\mathbf{x}_n),\ n \ge 0$$
