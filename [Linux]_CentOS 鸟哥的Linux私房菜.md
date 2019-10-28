@@ -919,6 +919,17 @@ cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注
 
 
 
+### File zip: tar
+
+```cmd
+tar -xvf file.tar # 解压 tar包
+tar -xzvf file.tar.gz # 解压tar.gz
+tar -xjvf file.tar.bz2 # 解压 tar.bz2
+tar -xZvf file.tar.Z # 解压tar.Z
+unrar e file.rar # 解压rar
+unzip file.zip # 解压zip
+```
+
 
 
 
@@ -945,6 +956,7 @@ ps aux | grep nginx # 进程中有nginx字样的
 
 ```cmd
 service nginx status # 查看nginx运行情况
+
 ```
 
 
@@ -974,6 +986,16 @@ code . # 打开当前文件夹
 code . --user-data-dir # 打开当前文件夹(root)
 code /path/to/ # 打开指定文件夹
 ctrl + d # 选中当前单词
+```
+
+
+
+### su / passwd
+
+```cmd
+# fedora 30 # 修改root密码使得可以使用root登录GUI
+sudo su # 然后回要求输入当前用户的密码
+sudo passwd root # 修改root的密码
 ```
 
 

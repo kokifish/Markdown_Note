@@ -410,6 +410,8 @@ https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b
 
 ### .sh update
 
+- shell文件一句话更新并push
+
 ```bash
 # update.sh
 git add .;
