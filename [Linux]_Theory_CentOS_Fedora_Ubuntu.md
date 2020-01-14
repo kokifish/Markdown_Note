@@ -597,6 +597,18 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
+### 开启root
+
+fedora30:
+
+```cmd
+sudo passwd #配置root密码 #接着要求输入当前账户密码
+```
+
+
+
+
+
 ### 无sudo配置conda
 
 下载Anaconda3-2018.12-Linux-x86_64.sh    https://repo.continuum.io/archive/index.html
@@ -766,6 +778,8 @@ Debian Series: Debian, Ubuntu, Mint
 2. 包管理工具 apt-get / dpkg
 3. 支持tar包
 
+
+
 # Command Quick Find
 
 ```cmd
@@ -789,7 +803,7 @@ ip addr # 查看网路ip
 
 
 
-### install/yum/rpm/tar
+### Software Manager: install/yum/rpm
 
 ```cmd
 # apt-get等安装更新卸载相关
@@ -802,7 +816,7 @@ dpkg -i package_file.deb ,sudo dpkg -r package_filename # install/unstall .deb f
 sudo alien package # convert .rpm to .deb files
 ```
 
-```python
+```cmd
 # yum rpm (CentOS)
 yum check-update #检查可更新的rpm包
 yum update #更新所有的rpm包
@@ -816,20 +830,86 @@ yum install code # or code-insiders
 
 rpm -i name.rpm #安装某个rpm包
 yum list installed |grep glibc # 查看安装了的 并且显示包含glibc的
+
+rpm -ql PKG_NAME # find the installation path for a software
 ```
+
+
+
+
+### cat
+
+1. 一次显示整个文件:cat filename
+2. 从键盘创建一个文件:cat > filename 只能创建新文件,不能编辑已有文件.
+3. 将几个文件合并为一个文件:cat file1 file2 > file
+
+```cmd
+cat afile.log # 显示文件内容
+cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个文件里
+```
+
+> http://www.cnblogs.com/peida/archive/2012/10/30/2746968.html
+
+
+
+## Device
+
+
+
+
+
+### Device Info: lscpu lsblk lspci
+
+- dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
+
+```cmd
+lscpu #cpu的统计信息
+cat /proc/cpuinfo #每个cpu信息，如每个CPU的型号，主频等
+free -m #概要查看内存情况
+cat /proc/meminfo #查看内存详细使用
+dmidecode -t memory #查看内存硬件信息
+lsblk #查看硬盘和分区分布
+fdisk -l #硬盘和分区的详细信息
+lspci #查看pci信息
+lspci -v / lspci -vv #更详细的PCI信息
+lscpi -t #设备树
+dmidecode -t bios #查看bios信息
+dmidecode -q #查看所有有用信息
+```
+
+
+
+### Disk Related
 
 ```python
-#tar 
-tar xfvz tarball_name # install tarballs
+df -h #df命令是linux系统以磁盘分区为单位查看文件系统，可以加上参数查看磁盘剩余空间信息
+fdisk -l # 查看硬盘的分区
+hdparm -i /dev/hda #查看IDE硬盘(hda)信息
+pidstat -d 1 #展示I/O统计，每秒更新一次
+iostat -xdm 1 #系统级IO监控
+iotop #io版的top
 ```
 
-> <https://www.tecmint.com/18-tar-command-examples-in-linux/>
 
 
 
-### find / ls
 
-​			
+## File
+
+
+
+### File Operation: rm cp
+
+```cmd
+rm -r /path/* # 删除文件夹/path/下所有文件
+rm -rf /path/* # 删除文件夹/path/下所有文件 并且不用确认
+cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注意中间有个 ‘.’ # 如果指定文件夹中有同名文件需要先删除，否则会一个个文件提示进行确认，使用cp -rf 也一样提示
+```
+
+
+
+### find / ls / grep
+
 
 ```cmd
 find / -amin -10 # 查找在系统中最后10分钟访问的文件
@@ -850,22 +930,63 @@ ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该�
 
 > https://blog.csdn.net/ydfok/article/details/1486451
 
-### cat
-
-1. 一次显示整个文件:cat filename
-2. 从键盘创建一个文件:cat > filename 只能创建新文件,不能编辑已有文件.
-3. 将几个文件合并为一个文件:cat file1 file2 > file
-
 ```cmd
-cat afile.log # 显示文件内容
-cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个文件里
+grep -r "test"  /path # 在路径 /path 下查找文件内容包含 test 的文件
+grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' / # 在根目录/下查找所有“abcdefg”的字符串，但不在以build_开头的目录、kernel和dirvers中查找，同时忽略所有以out为后缀的文件 
+grep -r --exclude-dir=sys --exclude-dir=proc "nf_conntrack" / # 根目录下除sys proc目录外查找含nf_conntrack的文件
 ```
 
-> http://www.cnblogs.com/peida/archive/2012/10/30/2746968.html
 
 
 
-### grep / kill / fuser
+
+### File Zip: tar unzip
+
+```cmd
+tar -cvf a.tar a # 把文件a打包为a.tar
+tar -xvf file.tar # 解压 tar包
+tar -xzvf file.tar.gz # 解压tar.gz
+tar -xjvf file.tar.bz2 # 解压 tar.bz2
+tar -xZvf file.tar.Z # 解压tar.Z
+tar -xf file.tar.xz
+unrar e file.rar # 解压rar
+unzip file.zip # 解压zip
+```
+
+>  <https://www.tecmint.com/18-tar-command-examples-in-linux/>
+
+| Option | Description                                |
+| ------ | ------------------------------------------ |
+| -v     | 显示打/解包文件过程                        |
+| -c     | 打包                                       |
+| -x     | 解打包                                     |
+| -f     | 指定压缩包的文件名                         |
+| -z     | 压缩和解压缩 ".tar.gz"格式                 |
+| -j     | 压缩和街压缩 ".tar.bz2"格式                |
+| -t     | 测试，就是不解打包，只是査看包中有哪些文件 |
+| -C     | 目录：指定解打包位置                       |
+
+
+
+### File Info: stat
+
+```cmd
+stat FILENAME # file: size, Device, Access, Modify, Change 
+```
+
+
+
+## Process and Service
+
+### Process Info: ps
+
+```cmd
+ps aux | grep nginx # 进程中有nginx字样的
+```
+
+
+
+### kill / fuser
 
 > https://blog.csdn.net/andy572633/article/details/7211546
 
@@ -884,80 +1005,36 @@ fuser -k 80/tcp #
 
 
 
-### Device Info: lscpu ifconfig lsblk lspci
-
-- dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
-
-```cmd
-lscpu #cpu的统计信息
-cat /proc/cpuinfo #每个cpu信息，如每个CPU的型号，主频等
-free -m #概要查看内存情况
-cat /proc/meminfo #查看内存详细使用
-dmidecode -t memory #查看内存硬件信息
-lsblk #查看硬盘和分区分布
-fdisk -l #硬盘和分区的详细信息
-lspci | grep -i 'eth' #查看网卡硬件信息
-ifconfig -a #查看系统的所有网络接口
-ip link show
-ethtool eth0 #查看某个网络接口的详细信息，例如eth0的详细参数和指标
-lspci #查看pci信息
-lspci -v / lspci -vv #更详细的PCI信息
-lscpi -t #设备树
-dmidecode -t bios #查看bios信息
-dmidecode -q #查看所有有用信息
-```
-
-
-
-### File Operation: rm cp
-
-```cmd
-rm -r /path/* # 删除文件夹/path/下所有文件
-rm -rf /path/* # 删除文件夹/path/下所有文件 并且不用确认
-cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注意中间有个 ‘.’ # 如果指定文件夹中有同名文件需要先删除，否则会一个个文件提示进行确认，使用cp -rf 也一样提示
-```
-
-
-
-### File zip: tar
-
-```cmd
-tar -xvf file.tar # 解压 tar包
-tar -xzvf file.tar.gz # 解压tar.gz
-tar -xjvf file.tar.bz2 # 解压 tar.bz2
-tar -xZvf file.tar.Z # 解压tar.Z
-unrar e file.rar # 解压rar
-unzip file.zip # 解压zip
-```
-
-
-
-
-
-### File Info: stat
-
-```cmd
-stat a # file: size, Device, Access, Modify, Change 
-```
-
-
-
-### Process Info: ps
-
-```cmd
-ps aux | grep nginx # 进程中有nginx字样的
-```
-
-
-
-
-
 ### service / systemctl
 
 ```cmd
 service nginx status # 查看nginx运行情况
-
+systemctl status nginx # 查看nginx运行情况
+systemctl restart nginx # 重启nginx
 ```
+
+
+
+
+
+## Network
+
+
+
+### Network Info: netstat ifconfig
+
+```cmd
+netstat -rn # Ketnel IP routing table # 可以查看网关
+lspci | grep -i 'eth' #查看网卡硬件信息
+ifconfig -a #查看系统的所有网络接口
+ip link show
+ethtool eth0 #查看某个网络接口的详细信息，例如eth0的详细参数和指标
+ip r # routing info
+```
+
+
+
+
 
 
 
@@ -975,7 +1052,7 @@ service nginx status # 查看nginx运行情况
 -i：向规则链中插入条目
 -R：替换规则链中的条目
 -L：显示规则链中已有的条目
--F：清楚规则链中已有的条目
+-F：清除规则链中已有的条目
 -Z：清空规则链中的数据包计算器和字节计数器
 -N：创建新的用户自定义规则链
 -P：定义规则链中的默认目标
@@ -984,6 +1061,7 @@ service nginx status # 查看nginx运行情况
 -j<目标>：指定要跳转的目标
 -i<网络接口>：指定数据包进入本机的网络接口
 -o<网络接口>：指定数据包要离开本机所使用的网络接口
+-X [chain] : Delete a user-defined chain 
 ```
 
 iptables命令选项输入顺序：
@@ -1025,23 +1103,77 @@ iptables  -A FORWARD -s ! 192.168.0.1 -j  QUEUE # -A FORWARD: 向FORWARD规则�
 ```
 
 
+### ssh
+
+```cmd
+# 配置ssh服务以实现远程访问
+yum install ssh # ssh软件包安装
+service start sshd  # 开启ssh服务，ssh服务一般叫做 SSHD
+/etc/init.d/sshd start # 与上句等效
+PermitRootLogin yes# /etc/ssh/sshd_config中设置为允许root用户远程登录 
+# 关闭防火墙，或者设置22端口例外
+# 同网段下，即可使用ssh远程访问
+```
 
 
 
-### Disk Related
+### brctl
 
-```python
-df -h #df命令是linux系统以磁盘分区为单位查看文件系统，可以加上参数查看磁盘剩余空间信息
-fdisk -l # 查看硬盘的分区
-hdparm -i /dev/hda #查看IDE硬盘(hda)信息
-pidstat -d 1 #展示I/O统计，每秒更新一次
-iostat -xdm 1 #系统级IO监控
-iotop #io版的top
+>  https://www.thegeekstuff.com/2017/06/brctl-bridge/ 
+
+- ` yum install bridge-utils `
+- brctl stands for Bridge Control. In Linux, this command is used to create and manipulate ethernet bridge.
+- This is typically used when you have multiple ethernet networks on your servers, and you want to combine them and present it as one logical network. 
+- 当服务器上有多个以太网时，brctl 可用于将这些以太网结合成同一个逻辑网络
+
+```cmd
+brctl show # 查看当前网桥 view all available ethernet bridges
+```
+
+
+
+```cmd
+brctl addbr br0 # 增加网桥br0
+brctl addif br0 eth0 # add an interface to an existing ethernet bridge
+brctl showmacs br0 # see all the learned MAC addresses of a bridge
+brctl setaging br0 120 # set the mac address ageing time to 120 seconds on “br0” ethernet bridge
+
+
+```
+
+```cmd
+# Spanning Tree # STP stands for Spanning Tree Protocol
+brctl stp br0 on # enable spanning tree
+brctl stp br0 yes # enable spanning tree
+brctl stp br0 off # turn off spanning tree
+brctl showstp br0 # display the stp parameter and its current value
 ```
 
 
 
 
+
+```cmd
+# 关闭网桥步骤
+brctl delif br0 eth0 # 先删除网桥br0的接口eth0
+brctl delif br0 eth1 # 先删除网桥br0的接口eth1
+ifconfig br0 down # 
+brctl delbr br0 # 删除网桥
+```
+
+
+
+## Account
+
+### su / passwd
+
+```cmd
+# fedora 30 # 修改root密码使得可以使用root登录GUI
+sudo su # 然后回要求输入当前用户的密码
+sudo passwd root # 修改root的密码
+```
+
+## Software
 
 ### code
 
@@ -1052,18 +1184,6 @@ code . --user-data-dir # 打开当前文件夹(root)
 code /path/to/ # 打开指定文件夹
 ctrl + d # 选中当前单词
 ```
-
-
-
-### su / passwd
-
-```cmd
-# fedora 30 # 修改root密码使得可以使用root登录GUI
-sudo su # 然后回要求输入当前用户的密码
-sudo passwd root # 修改root的密码
-```
-
-
 
 ---
 
@@ -1078,4 +1198,24 @@ sudo passwd root # 修改root的密码
 - ctrl + d EOF键盘输入结束，输入时离开命令行，相当于输入exit
 - shift + page up/down 文本页面翻页
 - ctrl+alt+F1~6切换控制台
+
+
+
+# Development
+
+
+
+- `/linux/in.h` 和`/netinet/in.h`所定义的内容有所重复，会导致重定义错误，用户空间层程序建议使用`/netinet/in.h`
+- 将会包含`/linux/in.h`的头文件：`linux/types.h`
+- 将会包含`/netinet/in.h`的头文件：`arpa/inet.h`
+
+
+
+### Autotools
+
+
+
+
+
+
 
