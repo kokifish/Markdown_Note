@@ -26,6 +26,8 @@
 
   
 
+##### URI
+
 HTTP resources are identified and located on the network by **Uniform Resource Locators** (**URL**s)(统一资源定位器), using the **Uniform Resource Identifiers** (**URI**'s)(统一资源标识符) schemes http and https. For example, including all optional components:
 
 ```http
@@ -89,7 +91,7 @@ HTTP 1.1 比1.0还进行了带宽优化：
 
 #### Chunked Transfer Encoding
 
-> 分块传输编码 Chunked transfer encoding 是超文本传输协议 HTTP 中的一种数据传输机制
+> **分块传输编码** Chunked transfer encoding 是超文本传输协议 HTTP 中的一种数据传输机制
 
 - 允许HTTP由网页服务器发送给客户端应用（ 通常是网页浏览器）的数据可以分成多个部分。分块传输编码只在HTTP协议1.1版本（HTTP/1.1）中提供
 - 如果一个HTTP消息（请求消息或应答消息）的`Transfer-Encoding`消息头的值为`chunked`，那么，消息体由数量未定的块组成，并以最后一个大小为0的块为结束
@@ -110,12 +112,14 @@ HTTP 1.1 比1.0还进行了带宽优化：
 
 ### Request Message
 
-请求报文包含：
+> 客户端请求消息
 
-- 请求行 request line(e.g. `GET /images/logo.png HTTP/1.1`, 从服务器请求`/images/logo.png`)
-- 请求头域 request header fields (e.g., Accept-Language: en).在HTTP/1.1, 除了`Host`外所有请求头域都是可选的。In the HTTP/1.1 protocol, all header fields except Host are optional.
-- 空行 an empty line. 仅包含`<CR><LF>`，无其他空白
-- 可选的报文体 an optional message body
+请求报文包含四个部分：
+
+1. 请求行 request line(e.g. `GET /images/logo.png HTTP/1.1`, 从服务器请求`/images/logo.png`)
+2. 请求头域 request header fields (e.g., Accept-Language: en).在HTTP/1.1, 除了`Host`外所有请求头域都是可选的。In the HTTP/1.1 protocol, all header fields except Host are optional.
+3. 空行 an empty line. 仅包含`<CR><LF>`，无其他空白
+4. 可选的报文体 an optional message body; (即请求数据)
 
 请求行与别的头部域必须以回车换行结束The request line and other header fields must each end with `<CR><LF> `(that is, a **carriage return** character followed by a **line feed** character).
 
@@ -128,4 +132,19 @@ HTTP 1.1 比1.0还进行了带宽优化：
 
 
 ##### Safe Methods
+
+
+
+### Response Message
+
+> 服务器响应消息
+
+
+
+HTTP响应也由四个部分组成：
+
+1. 状态行
+2. 消息报头
+3. 空行
+4. 响应正文
 

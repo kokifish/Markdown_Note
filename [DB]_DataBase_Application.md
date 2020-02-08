@@ -53,7 +53,11 @@ systemctl start mysqld.service
 
 
 
-## Login
+## CMD: DB
+
+
+
+### Login
 
 
 
@@ -69,9 +73,15 @@ alter user 'test'@'localhost' identified by 'Ab123,.';
 uninstall plugin validate_password;
 # 现在可以修改为简单密码了
 alter user 'test'@'localhost' identified by '123456';
+
+exit; # 退出数据库
 ```
 
 
+
+
+
+### Create, Show, Delete
 
 ```mysql
 create database db1; # 创建数据库db1
@@ -80,19 +90,39 @@ use db1; # 切换到数据库db1 # use 通告MySQL把db1作为默认（当前）
 # 该数据库保持为默认数据库，直到语段的结尾，或者直到发布一个不同的USE语句
 # Output: Database changed
 show tables; # 显示当前数据库中所有的表
-exit; # 退出数据库
-```
 
-```mysql
 drop database db2; # 删除数据库(必须存在 否则报错)
 drop database if exists db2;
 Query OK, 0 rows affected, 1 warning (0.00 sec) #[Output] 产生一个warning说明此数据库不存在 没有warning说明数据库存在现已被删除
 ```
 
+
+
+### Auxiliary
+
+
 ```mysql
 select version(); # 显示MYSQL版本
 select now(); # 显示当前时间
 ```
+
+
+
+
+
+## CMD: Table
+
+
+
+### Delete
+
+
+```mysql
+DELETE FROM tb1; # 删除表所有数据
+TRUNCATE TABLE table1; # 删除表所有数据
+```
+
+
 
 
 
