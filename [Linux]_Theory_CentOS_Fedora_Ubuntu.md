@@ -1185,6 +1185,50 @@ code /path/to/ # 打开指定文件夹
 ctrl + d # 选中当前单词
 ```
 
+
+
+#### C/C++ Extension
+
+- Extension Name: C/C++ (0.26.3)
+
+```json
+// how to resolve "include file not found" error: // demo
+// C/C++ Edit Configurations(JSON) // c_cpp_properties.json
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${PWD}/**", // added
+                "/opt/Qt5.14.1/5.14.1/gcc_64/include/**" // added // find / -name QProcess
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc"
+        }
+    ],
+    "version": 4
+}
+```
+
+
+
+
+
+#### clang-format ERROR
+
+在使用`clang-format`对代码进行格式化时，出现`libtinfo.so.5 not found`问题的解决方法：
+
+```cmd
+# 1. install clang-format
+dnf install git-clang-format # fedora
+apt install clang-format # ubuntu
+# 2. open setting.json, add:
+"C_Cpp.clang_format_path": "/usr/bin/clang-format"
+```
+
+
+
 ---
 
 # Shortcuts

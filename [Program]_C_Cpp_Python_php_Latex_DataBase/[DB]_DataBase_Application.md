@@ -68,7 +68,7 @@ grep "temporary password" /var/log/mysqld.log
 mysql -u root -p
 # 输入之前查询出来的临时密码
 # 登陆成功之后
-alter user 'test'@'localhost' identified by 'Ab123,.';
+alter user 'test'@'localhost' identified by 'Ab123,.AAA';
 # 修改的密码要足够复杂 否则报错
 uninstall plugin validate_password;
 # 现在可以修改为简单密码了
