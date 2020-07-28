@@ -1,9 +1,3 @@
-
-
-
-
-
-
 [TOC]
 
 
@@ -12,11 +6,61 @@
 
 ---
 
-# random
-
-### 正态分布normal_distribution
+# \<random\>
 
 
+
+
+
+### uniform_real_distribution
+
+- 均匀分布 一致分布 实数版
+
+```cpp
+int main() {
+    const int nrolls = 10000;   // number of experiments
+    const int nstars = 95;      // maximum number of stars to distribute
+    const int nintervals = 10;  // number of intervals
+
+    default_random_engine generator;
+    uniform_real_distribution<double> distribution(0.0, 1.0);
+
+    int p[nintervals] = {};
+
+    for (int i = 0; i < nrolls; ++i) {
+        double number = distribution(generator);
+        ++p[int(nintervals * number)];
+    }
+
+    cout << "uniform_real_distribution (0.0,1.0):" << endl << fixed;
+    cout.precision(1);
+
+    for (int i = 0; i < nintervals; ++i) {
+        cout << float(i) / nintervals << "-" << float(i + 1) / nintervals
+             << ": ";
+        cout << string(p[i] * nstars / nrolls, '*') << endl;
+    }
+}//
+uniform_real_distribution (0.0,1.0):
+0.0-0.1: *********
+0.1-0.2: *********
+0.2-0.3: *********
+0.3-0.4: *********
+0.4-0.5: *********
+0.5-0.6: *********
+0.6-0.7: *********
+0.7-0.8: *********
+0.8-0.9: *********
+0.9-1.0: *********
+```
+
+
+
+
+
+### normal_distribution
+
+- 正态分布
 
 ```cpp
 std::default_random_engine generator;
@@ -32,7 +76,7 @@ double number = distribution(generator);
 
 
 
-###### time()
+#### time()
 
 
 
@@ -46,7 +90,7 @@ double number = distribution(generator);
 
 
 
-###### clock
+#### clock
 
 -   Returns the processor time consumed by the program. 返回当前的CPU时间
 -   To calculate the actual processing time of a program, the value returned by clock shall be compared to a value returned by a previous call to the same function.
@@ -90,7 +134,7 @@ It took me 61 clicks (0.061000 seconds).
 
 
 
-###### struct tm
+#### struct tm
 
 ```cpp
 struct tm {
@@ -112,7 +156,7 @@ struct tm {
 
 
 
-###### difftime
+#### difftime
 
 -   double difftime (time_t end, time_t beginning);
 

@@ -14,6 +14,42 @@
 
 Extension name: C/C++
 
+#### task.json
+
+- Terminal -> Configure Default Build Task
+
+```json
+// 多文件编译时使用
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: g++.exe build active file",
+			"command": "C:\\MinGW\\bin\\g++.exe",
+			"args": [
+				"-g",
+				"${workspaceFolder}\\*.cpp", // 工作目录下所有cpp
+				"-o",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true // 默认配置
+			}
+		},
+	]
+}
+```
+
+
+
 #### Getting Started
 
 1. Open VS Code
@@ -346,7 +382,7 @@ eject -rf -v /dev/cdrom
 
 ###### 查看class内存布局
 
-- ​项目 ➡️ [项目]属性 ➡️ C/C++ ➡️ 命令行 ➡️ 其它选项 ➡️ /d1reportSingleClassLayout[Class]
+- 项目 ➡️ [项目]属性 ➡️ C/C++ ➡️ 命令行 ➡️ 其它选项 ➡️ /d1reportSingleClassLayout[Class]
 - demo: /d1reportSingleClassLayoutTest
 - 查看: 输出(下方) ➡️ 输出来源：生成
 

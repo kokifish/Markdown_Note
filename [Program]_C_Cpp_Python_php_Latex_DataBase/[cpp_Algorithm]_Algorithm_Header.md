@@ -6,23 +6,22 @@
 
 
 - In the C++ Standard Library , algorithms are components(组件) that perform algorithmic(算法) operations on containers(容器) and other sequences(序列).
-- <numeric>中还有一些算法
-- All algorithms are in the std namespace.
+- \<numeric\>中还有一些算法
+- All algorithms are in the `std` namespace.
+
+
+
+---
+
+## \<algorithm\> Member Functions
+
 
 
 
 
 ---
 
-## <algorithm>成员函数
-
-
-
-
-
----
-
-###all_of  		
+### all_of  		
 
 - Test condition on all elements in range  	[c++11]
 
@@ -160,7 +159,7 @@ int main () {
 ### copy
 
 -   Copies the elements in the range `[first,last)` into the range beginning at result.
--   ​
+-   
 
 
 

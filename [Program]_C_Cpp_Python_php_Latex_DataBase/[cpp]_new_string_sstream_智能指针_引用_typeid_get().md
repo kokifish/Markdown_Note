@@ -102,28 +102,7 @@ double c3 = refcube(side + 10);//ra is temporary variable
 
 > edge 虽然是变量，但是类型不正确，double引用不能指向long，虽然side + 10类型是double，但是没有名字，故编译器都将创建一个临时匿名变量，让ra指向她
 
-### 右值引用rvalue reference
 
-> c++11 新增
-
-这种引用可指向右值，使用 &&声明
-
-```c++
-double && rref = std::sqrt(36.00);//not allowed for double &
-double j = 15.0;
-double && jref = 2.0 * j + 18.5;//nout allowed for double &
-std::cout << rref << ' ' <<jref << '\n';//display 6.0 48.5
-```
-
-右值引用的主要目的是让库设计人员能够提供有些操作的更有效实现
-
-使用&声明的引用称为左值引用
-
----
-
-# 移动语义
-
-> move semantics
 
 ---
 
@@ -804,8 +783,6 @@ public:
 ```
 
 > RTTI (Run-Time Type Information)
-
->
 
 > 通过运行时类型信息程序能够使用基类的指针或引用来检查这些指针或引用所指的对象的实际派生类型
 

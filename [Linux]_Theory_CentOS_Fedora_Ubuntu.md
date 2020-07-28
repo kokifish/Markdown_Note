@@ -599,7 +599,7 @@ su #Once the root password is set, you can login as root by using the su command
 
 ### 开启root
 
-fedora30:
+fedora30/31/32:
 
 ```cmd
 sudo passwd #配置root密码 #接着要求输入当前账户密码
@@ -827,6 +827,7 @@ yum list extras #列出已经安装的但是不包含在资源库中的rpm包
 yum whatprovides libstdc++.so.6 # 查找哪个安装包有这个库文件
 yum check-update
 yum install code # or code-insiders
+yum install yum-utils
 
 rpm -i name.rpm #安装某个rpm包
 yum list installed |grep glibc # 查看安装了的 并且显示包含glibc的
@@ -1011,6 +1012,10 @@ fuser -k 80/tcp #
 service nginx status # 查看nginx运行情况
 systemctl status nginx # 查看nginx运行情况
 systemctl restart nginx # 重启nginx
+
+systemctl stop firewalld.service # fedora 关闭防火墙
+systemctl start firewalld.service
+systemctl restart  firewalld.service
 ```
 
 
@@ -1173,9 +1178,35 @@ sudo su # 然后回要求输入当前用户的密码
 sudo passwd root # 修改root的密码
 ```
 
-## Software
 
-### code
+
+---
+
+# Shortcuts
+
+- Ctrl+Shift+C: console下copy 
+- Ctrl+Shift+V: console下paste
+- Ctrl+Insert: console下复制 或 鼠标选中即为复制
+- Shift+Insert: console下粘贴 或 鼠标中键即为粘贴
+
+- ctrl + c 中断目前正在执行的指令串
+- ctrl + d EOF键盘输入结束，输入时离开命令行，相当于输入exit
+- shift + page up/down 文本页面翻页
+- ctrl+alt+F1~6切换控制台
+
+
+
+# Development Softwares
+
+
+
+- `/linux/in.h` 和`/netinet/in.h`所定义的内容有所重复，会导致重定义错误，用户空间层程序建议使用`/netinet/in.h`
+- 将会包含`/linux/in.h`的头文件：`linux/types.h`
+- 将会包含`/netinet/in.h`的头文件：`arpa/inet.h`
+
+
+
+### VS Code
 
 ```cmd
 code # 启动visual studio code
@@ -1229,37 +1260,29 @@ apt install clang-format # ubuntu
 
 
 
----
-
-# Shortcuts
-
-- Ctrl+Shift+C: console下copy 
-- Ctrl+Shift+V: console下paste
-- Ctrl+Insert: console下复制 或 鼠标选中即为复制
-- Shift+Insert: console下粘贴 或 鼠标中键即为粘贴
-
-- ctrl + c 中断目前正在执行的指令串
-- ctrl + d EOF键盘输入结束，输入时离开命令行，相当于输入exit
-- shift + page up/down 文本页面翻页
-- ctrl+alt+F1~6切换控制台
-
-
-
-# Development
-
-
-
-- `/linux/in.h` 和`/netinet/in.h`所定义的内容有所重复，会导致重定义错误，用户空间层程序建议使用`/netinet/in.h`
-- 将会包含`/linux/in.h`的头文件：`linux/types.h`
-- 将会包含`/netinet/in.h`的头文件：`arpa/inet.h`
-
-
-
 ### Autotools
 
 
 
+### snap
+
+Snap是一个全新的软件包架构,它与其它包管理器的区别在于snap安装的app互相之间是高度隔离的,减少了互相引用. 避免了很多冲突问题. 不过这也导致了其占用的磁盘比较多.
+
+```sh
+sudo dnf install snapd # install
+sudo ln -s /var/lib/snapd/snap /snap # to enable classic snap support #  create a symbolic link between
+sudo snap install hello-world # test # after install, ex cmd: hello-world
+```
+
+```sh
+snap search abc
+snap install abc
+snap list
+snap remove
+```
 
 
 
 
+
+****

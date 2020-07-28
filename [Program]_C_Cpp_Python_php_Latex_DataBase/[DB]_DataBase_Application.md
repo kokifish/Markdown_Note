@@ -130,5 +130,6 @@ TRUNCATE TABLE table1; # 删除表所有数据
 
 ```mysql
 select * from TB1; # 显示表TB1的所有元组(行)
+select * from TB1 limit 0,20; # 显示0~20行
 ```
 

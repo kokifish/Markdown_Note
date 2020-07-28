@@ -79,8 +79,7 @@ Non-member function overloads
 - relational operators Relational operators for vector (function template )
 - swap Exchange contents of vectors (function template )
 
-
-###### constructor
+#### constructor
 
 ```cpp
 vector<vector<int> > adj_arr(vertex_num, vector<int>(vertex_num, 9999999));
@@ -111,9 +110,7 @@ int main() {
 }
 ```
 
-
-
-###### erase + push_back
+#### erase push_back
 
 ```c++
 #include <iostream>
@@ -140,7 +137,7 @@ myvector contains: 4 5 7 8 9 10
 
 
 
-###### reserve
+#### reserve
 
 -   reserve(n); 表示vector capacity至少要能容纳n个元素
 -   If *n* is greater than the current vector capacity, the function causes the container to reallocate its storage increasing its capacity to *n* (or greater).
@@ -193,6 +190,29 @@ capacity changed: 100
 ```
 
 
+
+#### 4D array
+
+```cpp
+// create a 4D array named array4D
+vector<vector<vector<vector<double>>>> array4D(
+        D0, vector<vector<vector<double>>>(
+        D1, vector<vector<double>>(
+        D2, vector<double>(D3))));
+    default_random_engine generator;
+    uniform_real_distribution<double> distribution(0.0, 1.0);
+    for (int i = 0; i < D0; ++i) {
+        for (int j = 0; j < D1; ++j) {
+            for (int k = 0; k < D2; ++k) {
+                for (int l = 0; l < D3; ++l) {
+                    array4D[i][j][k][l] = distribution(generator);
+                }
+            }
+        }
+    }
+// 对一个4D vector求和：
+accumulate(A[i][j][k].cbegin(), A[i][j][k].cend(), 0.0);
+```
 
 
 
@@ -741,7 +761,7 @@ mylist contains: one Three two
 
 # pair
 
-
+> 在\<utility\>头中， 不属于容器
 
 ```c++
 #include <utility>// std::pair// make_pair example

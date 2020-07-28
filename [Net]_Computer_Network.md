@@ -67,11 +67,20 @@
 
 -   TCP/IP协议簇并不定义数据链路层和物理层，所以可以把它们合并在一起看成物理网络
 
-![](http://op4fcrj8y.bkt.clouddn.com/17-7-24/66536647.jpg)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/TCP_IP_Protocol_Suite.gif)
 
 -   第一层为物理层
 -   每一抽象层建立在低一层提供的服务上，并且为高一层提供服务
 
+
+
+### 五元组
+
+- 源IP地址，源端口，目的IP地址，目的端口，传输层协议
+
+五元组能够区分不同会话，并且对应的会话是唯一的
+
+- 例如：192.168.1.1 10000 TCP 121.14.88.76 80 就构成了一个五元组。其意义是，一个IP地址为192.168.1.1的终端通过端口10000，利用TCP协议，和IP地址为121.14.88.76，端口为80的终端进行连接
 
 
 
@@ -79,7 +88,7 @@
 
 
 
-1.  (数据传输)速率 数据率data rate, 比特率bit rate: 连接在计算机网络上的主机在数字信道上传送数据的速率
+1.  (数据传输)速率 数据率data rate, 比特率**bit rate**: 连接在计算机网络上的主机在数字信道上传送数据的速率
 2.  **带宽 bandwidth**: 网络的通信线路传送数据的能力。网络带宽表示单位时间内从网络中某一点到另一点所能通过的"最高数据率" 比特每秒 b/s
 3.  **吞吐量 throughput(bps, b/s)**: 一条链路或通道的实际数据传送速率(bps)。单位时间内通过某个网络(或信道、接口)的数据量。有时吞吐量还可以用每秒传送的字节数或帧数来表示。一个100Mb/s的以太网，额定速率是100Mb/s，这是吞吐量的绝对上限值，对于100Mb/s的以太网，典型的吞吐量可能只有70Mb/s
 4.  时延delay/latency 延迟 迟延。总时延 = 发送时延 + 传播时延 + 处理时延 + 排队时延
@@ -2033,12 +2042,14 @@ Host: www.sysu.edu.cn
 
 ### FTP
 
--   FTP 文件传输协议 **F**ile **T**ransfer **P**rotocol
+> FTP 文件传输协议 **F**ile **T**ransfer **P**rotocol
+
 -   用于在网络上进行文件传输的一套标准协议，使用客户/服务器模式 (C/S)
 -   FTP server 使用 2 个端口，数据端口和命令端口(控制端口)
 -   the FTP server command port : 21 命令端口
 -   the FTP server data port: 20 数据端口
 -   FTP 命令都有由 3 or 4 个字母组成，命令后面跟参数，用空格分开。每个命令都以 "\r\n"结束
+-   FTP uses TCP because the file transfer has to be correct.
 
 FTP实现的目标:
 
@@ -2616,10 +2627,6 @@ ipconfig -flushdns //刷新dns
 ### Build on CentOS
 
 ```cmd
-cd /etc ;ls
-
-//重启centOS
-reboot
 //打开shadowsocks
 cat  shadowsocks
 
@@ -2698,7 +2705,7 @@ WantedBy=multi-user.target
 
 SSR订阅: 
 
-```tx
+```shell
 https://fatpipe.work/subscribe/v1/7091/474c70a47ee0eaf95b55cad00d0f3e49
 https://raw.githubusercontent.com/AmazingDM/sub/master/ssrshare.com
 ```
@@ -2708,14 +2715,12 @@ https://raw.githubusercontent.com/AmazingDM/sub/master/ssrshare.com
 ### How2Ues
 
 ```
-//author: hyhuang1024@outlook.com
 1. 解压
 2. 双击 ShadowsocksR-dotnet4.0.exe 允许通过防火墙等
 3. 在桌面右下角图标处找到SSR的小飞机，右键找到服务器订阅 -> 订阅设置
 4. 在订阅设置的弹出框，点击添加，在订阅网址输入 https://fatpipe.work/subscribe/v1/7091/474c70a47ee0eaf95b55cad00d0f3e49   。然后点击确定
 5. 右键小飞机 -> 服务器订阅 -> 更新订阅节点，一般第二个会失败，选择第三个绕过代理更新节点会成功。如果失败，右键小飞机 -> 模式 -> 不允许系统代理 （第一个）
 6. 更新成功后，右键小飞机 -> 服务器 -> WB-7091 选择服务器，一般地域较近的网速较快，也有国内服务器，在所需网站可以上的情况下优先选择近的，如果上不了，换一个服务器。双击小飞机也可以查看并更换服务器。
-
 ```
 
 
