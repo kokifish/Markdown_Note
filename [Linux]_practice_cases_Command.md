@@ -4,19 +4,11 @@
 
 ---
 
-# Ubuntu
-
-```python
-sudo -i #sudo whoami
-sudo passwd #change the default blank root password and set root password
-su #Once the root password is set, you can login as root by using the su command
-```
 
 
 
 
-
-# Case
+# Cases
 
 
 
@@ -26,20 +18,8 @@ su #Once the root password is set, you can login as root by using the su command
 
 - 终端快捷键设置：命令如下，名称随意
 
-```
-/usr/bin/gnome-terminal
-```
-
-
-
-
-
-### 开启root
-
-fedora30/31/32:
-
-```cmd
-sudo passwd #配置root密码 #接着要求输入当前账户密码
+```shell
+/usr/bin/gnome-terminal  # gnome-terminal
 ```
 
 
@@ -62,76 +42,9 @@ conda --version 检查是否安装成功，如果command not found: export PATH=
 
 
 
-### Linux系统信息 硬件信息
 
 
 
-```cmd
-cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
-#    24  Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz    #核心数 型号名 版本名 主频
-
-cat /proc/cpuinfo      # 查看CPU信息
-# 输出信息十分详细
-
-top #查看 CPU 使用状况 q退出
-# 输出信息实时刷新
-top -u annms #查看annms用户的进程CPU内存等使用信息
-```
-
-
-
-
-
-### 后台执行命令
-
-解决在后台执行作业，远程连接掉线后作业不受影响
-
-#### &
-
-**&**: Terminal运行程序时会被运行的作业占据，可以在命令后面加上&实现后台运行。e.g. sh a.sh &
-
-使用&后，作业被提交到后台运行，当前terminal没有被占用，但是一旦把当前terminal断开后，比如远程连接时掉线，作业就会停止。
-
-#### nohup
-
-> no hang up  不挂起
-
-nohup命令使得退出账户后，相应作业继续执行，不会被挂起通常形式如下
-
-```cmd
-nohup command
-nohup command &
-nohup command > out.file 2>&1 & #最后一个& 让该命令在后台执行
-# command>out.file 将command的输出重定向到out.file文件，即不输出到terminal，而输出到out.file
-# 2>&1 将标准出错重定向到标准输出。标准输出已经重定向到了out.file文件，即将标准出错也输出到out.file文件中
-# 2>: 2与>结合代表错误重定向，&1: &与1结合代表标准输出. 2>&1就变成错误重定向到标准输出
-```
-
-nohup --help 部分信息
-
-```cmd
-hyhuang@inpluslab-ThinkStation-P900:~$ nohup --help
-Usage: nohup COMMAND [ARG]...
-  or:  nohup OPTION
-Run COMMAND, ignoring hangup signals.   # 忽略hangup信号，实现后台运行，不挂断地运行命令
-
-      --help     display this help and exit
-      --version  output version information and exit
-
-If standard input is a terminal, redirect it from /dev/null.
-If standard output is a terminal, append output to 'nohup.out' if possible,
-'$HOME/nohup.out' otherwise.
-If standard error is a terminal, redirect it to standard output.
-To save output to FILE, use 'nohup COMMAND > FILE'.  # 保存输出至文件
-
-NOTE: your shell may have its own version of nohup, which usually supersedes
-the version described here.  Please refer to your shell's documentation
-for details about the options it supports.
-```
-
-setsid  disown  screen让进程在后台可靠运行，其中disown可以让已经运行了的作业免受hup信号影响
-
-https://www.ibm.com/developerworks/cn/linux/l-cn-nohup/index.html
 
 
 
@@ -238,9 +151,22 @@ ca[tab][tab] #命令补全(指令串的第一个字后):连按两次tab后，ca�
 ip addr # 查看网路ip
 ```
 
+### cat
+
+1. 一次显示整个文件:cat filename
+2. 从键盘创建一个文件:cat > filename 只能创建新文件,不能编辑已有文件.
+3. 将几个文件合并为一个文件:cat file1 file2 > file
+
+```cmd
+cat afile.log # 显示文件内容
+cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个文件里
+```
+
+> http://www.cnblogs.com/peida/archive/2012/10/30/2746968.html
 
 
-### Software Manager
+
+## Software Manager
 
 
 
@@ -302,22 +228,19 @@ snap remove
 
 
 
-### cat
 
-1. 一次显示整个文件:cat filename
-2. 从键盘创建一个文件:cat > filename 只能创建新文件,不能编辑已有文件.
-3. 将几个文件合并为一个文件:cat file1 file2 > file
-
-```cmd
-cat afile.log # 显示文件内容
-cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个文件里
-```
-
-> http://www.cnblogs.com/peida/archive/2012/10/30/2746968.html
 
 
 
 ## Device
+
+```shell
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+#    24  Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz    #核心数 型号名 版本名 主频
+cat /proc/cpuinfo      # 查看CPU信息 # 输出信息十分详细
+top #查看 CPU 使用状况 q退出 # 输出信息实时刷新
+top -u usr #查看usr用户的进程CPU内存等使用信息
+```
 
 
 
@@ -373,7 +296,13 @@ cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注
 
 
 
-### find / ls / grep
+### find / grep / ls 
+
+
+
+lsof(list open files)是一个列出当前系统打开文件的工具
+
+
 
 
 ```cmd
@@ -451,6 +380,55 @@ ps aux | grep nginx # 进程中有nginx字样的
 
 
 
+
+
+### & / nohup
+
+**&**: Terminal运行程序时会被运行的作业占据，可以在命令后面加上&实现后台运行。e.g. sh a.sh &
+
+使用&后，作业被提交到后台运行，当前terminal没有被占用，但是一旦把当前terminal断开后，比如远程连接时掉线，作业就会停止。
+
+> no hang up  不挂起
+
+nohup命令使得退出账户后，相应作业继续执行，不会被挂起通常形式如下
+
+```cmd
+nohup command
+nohup command &
+nohup command > out.file 2>&1 & #最后一个& 让该命令在后台执行
+# command>out.file 将command的输出重定向到out.file文件，即不输出到terminal，而输出到out.file
+# 2>&1 将标准出错重定向到标准输出。标准输出已经重定向到了out.file文件，即将标准出错也输出到out.file文件中
+# 2>: 2与>结合代表错误重定向，&1: &与1结合代表标准输出. 2>&1就变成错误重定向到标准输出
+```
+
+nohup --help 部分信息
+
+```cmd
+$ nohup --help
+Usage: nohup COMMAND [ARG]...
+  or:  nohup OPTION
+Run COMMAND, ignoring hangup signals.   # 忽略hangup信号，实现后台运行，不挂断地运行命令
+
+      --help     display this help and exit
+      --version  output version information and exit
+
+If standard input is a terminal, redirect it from /dev/null.
+If standard output is a terminal, append output to 'nohup.out' if possible,
+'$HOME/nohup.out' otherwise.
+If standard error is a terminal, redirect it to standard output.
+To save output to FILE, use 'nohup COMMAND > FILE'.  # 保存输出至文件
+
+NOTE: your shell may have its own version of nohup, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+```
+
+setsid  disown  screen让进程在后台可靠运行，其中disown可以让已经运行了的作业免受hup信号影响
+
+https://www.ibm.com/developerworks/cn/linux/l-cn-nohup/index.html
+
+
+
 ### kill / fuser
 
 > https://blog.csdn.net/andy572633/article/details/7211546
@@ -502,6 +480,12 @@ ip r # routing info
 ```
 
 
+
+### port info
+
+```shell
+lsof -i:port_num # 查看某个端口的占用情况
+```
 
 
 
@@ -636,11 +620,22 @@ brctl delbr br0 # 删除网桥
 
 ### su / passwd
 
+
+
 ```cmd
-# fedora 30 # 修改root密码使得可以使用root登录GUI
+#fedora 30/31/32: # 修改root密码使得可以使用root登录GUI
 sudo su # 然后回要求输入当前用户的密码
 sudo passwd root # 修改root的密码
 ```
+
+```shell
+# Ubuntu # 启用root
+sudo -i #sudo whoami
+sudo passwd #change the default blank root password and set root password
+su #Once the root password is set, you can login as root by using the su command
+```
+
+
 
 
 
