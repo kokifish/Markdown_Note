@@ -31,12 +31,6 @@ What Is A.I. ?
 
 
 
-
-
-
-
-
-
 ## The History of AI
 
 - 1943-70: Early excitement, great expectation
@@ -46,7 +40,7 @@ What Is A.I. ?
   - Answers are displayed on a screen.
   - The computer passes the test if the interrogator cannot reliably decide computer / person.
 - 1955: Newell & Simon wrote a reasoning program: Logic Theorist,  proved theorems from Principia Mathematica.
-- 1956: The field of AI research was born at  workshop at Dartmouth College.
+- 1956: The field of AI research was born at  workshop at Dartmouth College. 达特茅斯会议
 - 1965: Robinson's complete algorithm for logical reasoning(逻辑推导).
 - 1970-90s: “Knowledge is power”: knowledge-based:
   - 1974-80: So many difficulties that progress slowed, governments  cut off exploratory research in AI  —— AI “Winter”
@@ -89,17 +83,13 @@ Mainly three schools: 主要是三个流派
 | Bayesians 贝叶斯派      | 统计学      | Probabilistic inference 概率推理 |
 | Analogizer 类推比较     | 心理学      | Kernel machines 核机器           |
 
-1. 符号主义: 逻辑运算。专家系统
-2. 联结主义: ANN, 深度学习，
-3. 行为主义: 强化学习，控制领域(钱学森 工程控制学)，遗传算法。Actionism, also known as Evolutionism or Cybernetics, is an intelligent simulation method of behavior based on "perception-action"(知觉行为, 感知行为).
+1. 符号主义: 逻辑主义，心理学派或计算机学派。逻辑运算。专家系统。功能模拟方法。
+2. 联结主义: 仿生学派，心理学派。源于仿生学，特别是人脑的研究。ANN, 深度学习。结构模拟方法。
+3. 行为主义: 进化主义，控制论学派。认为智能取决于感知和行动。强化学习，控制领域(钱学森 工程控制学)，遗传算法。Actionism, also known as Evolutionism or Cybernetics, is an intelligent simulation method of behavior based on "perception-action"(知觉行为, 感知行为). 行为模拟方法。
 4. 贝叶斯: 常被前三个流派当作一种工具，邮件过滤。
 5. 类推比较: 推荐系统，核心思想：新旧知识间的相似性。Recommender Systems. 
 
 ![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_bayes_formula.jpg)
-
-
-
-
 
 
 
@@ -133,8 +123,8 @@ Mainly three schools: 主要是三个流派
 - 该算法综合了Best-First Search和Dijkstra算法的优点：在进行启发式搜索提高算法效率的同时，可以保证找到一条最优路径（基于评估函数）
 - The secret to its success is that it combines the pieces of information that Dijkstra’s Algorithm uses (favoring vertices that are close to the starting point 倾向于选择靠近起始点的点) and information that Greedy Best-First-Search uses (favoring vertices that are close to the goal 倾向于选择靠近目标的点).
 - In the standard terminology used when talking about A\*, **g(n)** represents the **exact cost** of the path from the starting point to any vertex n, and **h(n)** represents the **heuristic estimated cost** from vertex `n`to the goal. A\* balances the two as it moves from the starting point to the goal. Each time through the main loop, it examines the vertex n that has the **lowest** `f(n) = g(n) + h(n)`.
-- g(n): 起始点到当前点n的实际距离
-- h(n): 从当前点n到终点的启发式估计距离
+- g(n): **起始点**到当前点n的实际距离
+- h(n): 从当前点n到**终点**的启发式估计距离
 - f(n) = g(n) + h(n) : 主循环每次都选择最低的f(n)
 
 
@@ -673,7 +663,7 @@ PDP Model: Parallel Distributed Processing Model
 
 
 
-### Backpropagation
+### **B**ack **P**ropagation
 
 > 反向传播算法
 
@@ -911,6 +901,40 @@ Key Modifications:
 3. updating the discriminator using a history of refined images 使用精炼过的图片更新判别器：用精炼图像而非当前Refiner中现有的图像强化判别器(Discriminator)，以提高训练稳定性。
 
 Contributions:
+
+
+
+
+
+
+
+## RNN
+
+
+
+- RNN结构共享一组(U, W, b)
+- 在(U, W, b)不变的情况下，梯度在bp过程中不断连乘，数值不是越来越大就是越来越小，会出现梯度爆炸或梯度消失问题
+
+
+
+## LSTM
+
+> Long Short-Term Memory LSTM 长短期记忆网络
+
+RNN梯度爆炸的问题我们可以通过gradient clipping的方法来进行优化，但梯度消失问题依然是难点。因此，有学者提出了LSTM和GRU（LSTM的简化版）来尽量避免梯度消失的问题，以及让RNN获得长记忆的能力
+
+- 传统的RNN无法长期记忆信息，由于梯度消失等原因。
+- LSTM用于解决RNN梯度消失的问题，有长记忆和短记忆。
+- LSTM拥有从cell中擦除、写入和读出信息的功能。
+- LSTM由gates来控制上述操作，这些门（向量）长度也是n。在每一个时间步长上，门的每一个元素都可以是open(1)，也可以是closed(0)，或在之间。
+- 门（gates）是动态变化的，计算出来的
+- 遗忘门 输出门 输入门 都有各自的(U, W, b)
+
+
+
+
+
+
 
 
 

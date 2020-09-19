@@ -174,6 +174,18 @@ void copyVecFast(const vec<int>& original){
 
 
 
+#### vector to set
+
+```cpp
+int main() {
+    vector<int> input({1, 2, 2, 1, 3, 1, 4});
+    unordered_set<int> set;
+    copy(input.begin(), input.end(), inserter(set, set.end()));
+}// set: 4 3 2 1
+```
+
+
+
 ---
 
 ### sort

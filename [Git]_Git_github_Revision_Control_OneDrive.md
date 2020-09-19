@@ -335,12 +335,12 @@ HEAD is now at 02ae281 readme refresh #已回到原本的最新版 readme refres
 GitHub提供Git仓库托管服务，本地Git仓库与GitHub之间的传输通过SSH加密
 
 1. 创建SSH Key
-2. GitHub: Add SSH Key:`id_rsa.pub`文件的内容(公钥)
-
-
+2. GitHub: New SSH Key:`id_rsa.pub`文件的内容(公钥)
 
 ```python
 $ ssh-keygen -t rsa -C "youremail@example.com" #创建SSH Key
+then copy id_rsa.pub file content, like:
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2LFS0Myajvaqj00aRt6+E1HPrPhGO14nwEf/wrZFG/bOa6f3gH2mv32uvyipy4zM8rsEDt37qs5mMVrmk0lB1b7yHYI+G6UkuCVugcmVb2EELWWazfN1CwLFD8kl0z1qtvHosKVVWjavsKvZoOHRW6aOm4bdvv+wnI6SwRrFpvIld4pmF/cNs8jl6FNrYHg4GsSnLmphw88HObZKn7FSB9KqoUkWhWjw3SsJxyTnVFVkegtmK71NfxFZ9cCGQc4Ng3aYobxxrAGGb63FasSenobFrkdHXwD5CT9W1wfILhrgWJDA6h/0LfKDtVqmb+4rWomnbKr1cui3ArcmO3ySzPBPBLcEkmpiaFYrwy8SpoGmE+jSwgtaksArAlsGczVqLDRsfwa/2ZEtgogAnGoyd8RZE5/sPhH+bkqlwkgI5gW6pM/61/4J7+RUBq/BruVrXlkDQ6yaeqy7XP4u5ZHjqJDNh8zctx16CyL+P8PFcSB3ru88OosoRo6tn2yemtmE=
 ```
 
 > 若需要在多台电脑上访问远程库，需要将每台电脑的公钥都添加到GitHub
@@ -350,7 +350,7 @@ $ ssh-keygen -t rsa -C "youremail@example.com" #创建SSH Key
 远程库的名字是`origin`，是Git默认的叫法，也可以改成别的，但是`origin`这个名字一看就知道是远程库
 
 ```python
-$ git remote add origin git@github.com:pureteap/repo-name.git #把本地仓库与远程仓库关联，关联错了没有关系，因为SSH Key公钥不在账户列表中时，无法推送
+$ git remote add origin git@github.com:pureteap/repo-name.git # 第一次添加时使用 #把本地仓库与远程仓库关联，关联错了没有关系，因为SSH Key公钥不在账户列表中时，无法推送
 ```
 
 
@@ -366,7 +366,7 @@ $ git push -u origin master #-u #第一次推送master分支的所有内容时�
 由于远程库是空的，我们第一次推送`master`分支时，加上了`-u`参数，Git不但会把本地的`master`分支内容推送到远程新的`master`分支，还会把本地的`master`分支和远程的`master`分支关联起来，在以后的推送或者拉取时就可以简化命令
 
 ```python
-$ git push origin master #把本地master分支的最新修改推送至GitHub
+$ git push origin master # 把本地master分支的最新修改推送至GitHub
 ```
 
 

@@ -74,8 +74,21 @@
 -   空间效率：空间复杂度 space complexity
 
 
+$$
+\lim_{N\rightarrow \infin}\frac{T(N)-\tilde{T}(N)}{T(N)}\rightarrow 0
+$$
+
+> T(N)为算法A的时间复杂性函数
+
+若满足上述表达式，则称$\tilde{T}(N)$为$T(N)$当$N\rightarrow \infin$时的渐近性态
 
 
+
+上界
+
+### 平均时间复杂度
+
+> 加权平均时间复杂度 期望时间复杂度
 
 
 
@@ -595,7 +608,7 @@ Sample output:
 # 查找
 
 -   在给定集合中找一个特定的key(查找键(search key))
--   ​
+-   
 
 
 

@@ -42,7 +42,7 @@ $ chmod a+x hello.py#通过命令给hello.py以执行权限
 
 ---
 
-## Data Type & Name & Related Method
+# Data Type & Name & Related Method
 
 >   数据类型与标识符
 
@@ -129,7 +129,7 @@ mutable: 容器类对象通常是可变对象
 
 
 
-### Number
+## Number
 
 >   Python3 支持 **int、float、bool、complex复数**
 
@@ -157,7 +157,7 @@ mutable: 容器类对象通常是可变对象
 
 
 
-### str & encode
+## str & encode
 
 -   字符串是以单引号`'`或双引号`"`括起来的任意文本 # e.g. `'abc'`，`"xyz"`
 -   如果`'`本身也是一个字符，可以用`""`括起来，也可以用转义字符' \ '转义 ' 和 "  # e.g.  `"I'm OK"`包含的字符是`I`，`'`，`m`，空格，`O`，`K`这6个字符
@@ -328,7 +328,7 @@ print('%.2f' % 3.1415926)
 
 
 
-### 容器类对象
+## 容器类对象
 
 -   容器类对象通常是可变的mutable
 -   容器实际存储的是对象的reference
@@ -544,7 +544,7 @@ s1 | s2 # 集合运算: 并集
 
 
 
-### Data Type Conversion
+## Data Type Conversion
 
 -   
 
@@ -575,7 +575,7 @@ str(100) # '100'
 
 
 
-### Starred Expression 星号表达式
+## Starred Expression 星号表达式
 
 > https://www.python.org/dev/peps/pep-3132/
 >
@@ -626,7 +626,7 @@ print(*range(5),)
 
 
 
-### Comprehension 推导式
+## Comprehension 推导式
 
 
 
@@ -676,7 +676,7 @@ s = {i+1 for i in range(9)} # 1~9的set
 
 
 
-### The **Scope** of a Name Binding
+## The **Scope** of a Name Binding
 
 
 
@@ -684,7 +684,9 @@ s = {i+1 for i in range(9)} # 1~9的set
 
 
 
-### shallow and deep copy
+## shallow and deep copy
+
+> 浅拷贝 深拷贝
 
 ```python
 def f(a):
@@ -719,7 +721,7 @@ id(re_a):  2376741096840 re_a: [1, 2]
 
 ---
 
-## Operational Character
+# Operational Character
 
 >   操作符
 
@@ -780,7 +782,7 @@ else:
 
 
 
-###### Division & Mod
+### Division & Mod
 
 -   Python中，有两种除法: 精确除   /    和   取整除   //
 -   求模: % 取模，保证出来的数大于等于0
@@ -800,7 +802,7 @@ else:
 
 
 
-###### is & is not
+### is & is not
 
 >   身份运算符
 
@@ -826,7 +828,7 @@ x is y == true
 
 
 
-###### in & not in
+### in & not in
 
 >   成员运算符
 
@@ -853,7 +855,7 @@ True
 
 ---
 
-## Conditions & Loops
+# Conditions & Loops
 
 >   条件判断与循环
 
@@ -1029,7 +1031,7 @@ Good bye!
 
 ---
 
-## Iterator
+# Iterator
 
 >   迭代器
 
@@ -1083,7 +1085,7 @@ while True:
 
 ---
 
-## Generator / yield
+# Generator / yield
 
 >   生成器
 
@@ -1217,7 +1219,7 @@ for i in ge:
 
 ---
 
-## Functions
+# Functions
 
 
 
@@ -1257,7 +1259,7 @@ def add_end(L=None):
 
 
 
-##### parameters
+### parameters
 
 可更改(mutable)与不可更改(immutable)对象
 
@@ -1283,7 +1285,7 @@ python 函数的参数传递：
 
 
 
-#### main()
+### main()
 
 > http://codingpy.com/article/guido-shows-how-to-write-main-function/
 
@@ -1317,7 +1319,7 @@ if __name__ == "__main__":
 
 ---
 
-### Built-in Functions
+## Built-in Functions
 
 
 
@@ -1438,13 +1440,36 @@ d.update({key: value/2 for key,value in d.items()})
 
 
 
+###### open
+
+```python
+f = open("work/test.txt",'r')  #变量名=open（文件路径和文件名，打开模式） 模式：w:写，r:只写；a:追加写
+print(f.read())     #f.read():从文件中读入整个文件内容，结果为字符串
+print(f.readline()) #f.readline():从文件中读入一行内容，结果为字符串 
+print(f.readlines()) #f.readlines():从文件中读取所有行，以每行元素形成一个列表
+f.close()
+```
+
+使用open()函数打开的文件对象，必须手动进行关闭，Python 垃圾回收机制无法自动回收打开文件所占用的资源。
+
+因此，推荐以下写法：
+
+```python
+with open("work/test.txt",'a') as  f:
+    f.write("PaddlePaddle")
+    f.write("\nokokok")
+```
+
+
+
+
+
 ---
 
-## Module
+# Module
 
->   模块
+>   模块. Python内置了很多模块
 >
->   Python内置了很多模块
 
 -   一个.py文件就是一个module
 
@@ -1454,54 +1479,6 @@ import numpy as np
 ```
 
 
-
-
-
-### pip 
-
--   a package management system used to install and manage software packageswritten in Python
-
->   https://pypi.org/project/pip/
-
-```python
-pip <command> [options]
-
-pip -V #查看pip版本
-pip --version #查看pip版本
-pip #查看使用帮助
-pip list #查看已安装的package and version
-pip install numpy #安装numpy package
-
-python -m pip install -U pip #Win: Upgrading pip
-pip install -U pip #Linux: Upgrading pip
-
-pip list --outdated #检查哪些packet需要更新
-pip install --upgrade numpy #更新numpy
-pip uninstall numpy #卸载
-
-pip install matplotlib==2.0.0 #安装指定版本的包
-#↓使用whl文件安装第三方模块
-pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
-```
-
-安装pip: //在安装python时可以选择安装pip
-
-1.  官网下载Source (e.g. pip-10.0.1.tar.gz)
-2.  python运行: win: python setup.py install  Linux: sudo python setup.py install
-3.  测试是否安装成功 pip -version //查看版本
-
-
-安装pip:
-
-1.  download get-pip.py  //https://pip.pypa.io/en/stable/installing/
-2.  python get-pip.py
-
-#### pip批处理相关
-
-```python
-pip freeze >requirements.txt #在当前目录下，将当前环境下pip list能列出的几乎所有包列出，除去pip, setuptools等 
-pip install -r requirements.txt #根据requirements.txt安装需要的包，注意-r参数
-```
 
 
 
@@ -1684,7 +1661,7 @@ print(__name__)
 
 ---
 
-## ipython与魔法命令
+# ipython与魔法命令
 
 > http://blog.hszofficial.site/TutorialForPython/%E5%B7%A5%E5%85%B7%E9%93%BE%E7%AF%87/%E4%BA%A4%E4%BA%92%E7%8E%AF%E5%A2%83jupyter/ipython%E4%B8%8E%E9%AD%94%E6%B3%95%E5%91%BD%E4%BB%A4/ipython%E4%B8%8E%E9%AD%94%E6%B3%95%E5%91%BD%E4%BB%A4.html
 
@@ -1696,7 +1673,7 @@ print(__name__)
 
 ---
 
-## IO
+# IO
 
 
 
@@ -1715,7 +1692,7 @@ print("%+5d" % (a))#强制带符号,填充空格至5位
 
 ---
 
-## Concurrent Execution 并发执行
+# Concurrent Execution 并发执行
 
 > 并发执行
 >
@@ -1749,7 +1726,7 @@ else:#main process
 
 
 
-### Module multiprocessing
+## Module multiprocessing
 
 > `multiprocessing`: 跨平台版本的多进程模块
 >
@@ -1778,7 +1755,7 @@ if __name__=='__main__':
 
 
 
-### Module threading
+## Module threading
 
 > Python Module: threading, `_thread`的高级模块，对`_thread`进行了封装
 >
@@ -1829,6 +1806,60 @@ def run_thread(n):
 ```
 
 > 用`try...finally`确保锁一定会被释放
+
+
+
+
+
+# pip 
+
+-   a package management system used to install and manage software packageswritten in Python
+
+>   https://pypi.org/project/pip/
+
+```python
+pip <command> [options]
+
+pip -V #查看pip版本
+pip --version #查看pip版本
+pip #查看使用帮助
+pip list #查看已安装的package and version
+pip install numpy #安装numpy package
+
+python -m pip install -U pip #Win: Upgrading pip
+python -m pip install --upgrade pip # upgrade pip
+
+pip install -U pip #Linux: Upgrading pip
+
+pip list --outdated #检查哪些packet需要更新
+pip install --upgrade numpy #更新numpy
+pip uninstall numpy #卸载
+
+pip install matplotlib==2.0.0 #安装指定版本的包
+#↓使用whl文件安装第三方模块
+pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
+```
+
+安装pip: //在安装python时可以选择安装pip
+
+1.  官网下载Source (e.g. pip-10.0.1.tar.gz)
+2.  python运行: win: python setup.py install  Linux: sudo python setup.py install
+3.  测试是否安装成功 pip -version //查看版本
+
+
+安装pip:
+
+1.  download get-pip.py  //https://pip.pypa.io/en/stable/installing/
+2.  python get-pip.py
+
+#### pip批处理相关
+
+```python
+pip freeze >requirements.txt #在当前目录下，将当前环境下pip list能列出的几乎所有包列出，除去pip, setuptools等 
+pip install -r requirements.txt #根据requirements.txt安装需要的包，注意-r参数
+```
+
+
 
 
 

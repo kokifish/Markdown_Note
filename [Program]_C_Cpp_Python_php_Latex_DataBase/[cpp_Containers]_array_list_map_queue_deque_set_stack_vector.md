@@ -590,12 +590,7 @@ template <class T,// multiset::key_type/value_type
 -   
 
 ```cpp
-//snippet:
-#include <iostream>
-#include <set>
-
-using namespace std;
-
+// snippet:
 int main(){
 	std::multiset<int> myset;
 
@@ -609,6 +604,31 @@ int main(){
 	}
 	cout << endl << myset.size() << endl;
 	system("PAUSE");
+}
+```
+
+```cpp
+// snippet: constructor
+bool fncomp(int lhs, int rhs) {
+    return lhs < rhs;
+}
+
+struct classcomp {
+    bool operator()(const int& lhs, const int& rhs) const { return lhs < rhs; }
+};
+
+int main() {
+    int myints[] = {10, 20, 30, 40, 50};
+    set<int> second(myints, myints + 5);  // range
+
+    set<int> third(second);  // a copy of second
+
+    set<int> fourth(second.begin(), second.end());  // iterator ctor.
+
+    set<int, classcomp> fifth;  // class as Compare
+
+    bool (*fn_pt)(int, int) = fncomp;
+    set<int, bool (*)(int, int)> sixth(fn_pt);  // function pointer as Compare
 }
 ```
 

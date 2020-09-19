@@ -2415,7 +2415,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 #### ARQ 自动重传请求
 
->   **自动重传请求**(Automatic Repeat-reQuest，ARQ)
+>   **自动重传请求**(**Automatic Repeat-reQuest**，ARQ)
 >
 >   repeat 重复 复制 背诵 副本
 >
@@ -2435,6 +2435,8 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 ##### Stop-and-Wait 停等协议
+
+> 停止等待协议
 
 -   停等协议的接收、发送双方仅需设置一个帧的缓冲存储空间和帧序号只取0或1的两个状态标志位，便可有效地实现数据重发并确保接收方接受的数据不会重份
 

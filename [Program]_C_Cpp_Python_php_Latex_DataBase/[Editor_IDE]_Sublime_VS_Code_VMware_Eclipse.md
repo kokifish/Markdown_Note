@@ -14,37 +14,74 @@
 
 Extension name: C/C++
 
-#### task.json
+##### `task.json`
 
-- Terminal -> Configure Default Build Task
+- `Terminal` -> `Configure Default Build Task`
 
 ```json
-// 多文件编译时使用
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "shell",
-			"label": "C/C++: g++.exe build active file",
-			"command": "C:\\MinGW\\bin\\g++.exe",
-			"args": [
-				"-g",
-				"${workspaceFolder}\\*.cpp", // 工作目录下所有cpp
-				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true // 默认配置
-			}
-		},
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "g++.exe build active file",
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "${workspaceFolder}\\*.cpp", // -g ${workspaceFolder}\\*.cpp仅可在当前目录下仅有一个main函数时使用
+                "-std=c++17",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
+```
+
+
+
+##### `launch.json`
+
+- `Run`-> `Open Configurations` -> `launch.json`
+
+```cpp
+{   // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(Windows) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe", // gdb Path
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "g++.exe build active file" // corresponding to task.json's label
+        }
+    ]
 }
 ```
 
@@ -81,6 +118,163 @@ Auto Closing Brackets: 是否自动加右括号, close brackets.
     "C_Cpp.clang_format_style":
     "{ BasedOnStyle: Chromium, IndentWidth: 4}"
 ```
+
+
+
+##### setting.json
+
+- 20200813 backup `VScode setting.json`
+
+```json
+{
+    "window.zoomLevel": 1,
+    "files.autoSave": "afterDelay",
+    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+    "editor.autoClosingBrackets": "always",
+    "editor.rulers": [
+        90,
+        120
+    ],
+    "editor.minimap.enabled": true,
+    "editor.renderWhitespace": "none",
+    "files.eol": "\n",
+    "editor.formatOnSave": true,
+    "C_Cpp.clang_format_style": "{ BasedOnStyle: Chromium, IndentWidth: 4, MaxEmptyLinesToKeep: 2, SortIncludes: true, UseTab: Never, ReflowComments: false, ColumnLimit: 90}",
+    "workbench.activityBar.visible": true,
+    "workbench.colorCustomizations": {
+        "terminal.foreground": "#b5e08f",
+    },
+    "breadcrumbs.enabled": false,
+    // "python.dataScience.sendSelectionToInteractiveWindow": true,
+    "python.formatting.provider": "none",
+    "http.proxySupport": "off",
+    "matlab.matlabpath": "E:\\MatlabR2020a\\bin",
+    "matlab.mlintpath": "E:\\MatlabR2020a\\bin\\win64",
+    "latex-workshop.latex.recipes": [ //----------- latex-workshop -----------//
+        // {
+        //     "name": "PDFLaTeX",
+        //     "tools": [
+        //         "pdflatex"
+        //     ]
+        // },
+        {
+            "name": "pdflatex -> bibtex -> pdflatex*2",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "xelatex -> xelatex",
+            "tools": [
+                "xelatex",
+                "bibtex",
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            "name": "xelatex",
+            "tools": [
+                "xelatex"
+            ]
+        },
+        {
+            "name": "latexmk",
+            "tools": [
+                "latexmk"
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.view.pdf.viewer": "tab"
+}
+```
+
+
+
+
+
+------
+
+# Visual Studio
+
+
+
+```cpp
+#pragma warning(disable:4996)//禁止4996的warning
+```
+
+
+
+
+
+### 快捷键
+
+- 显示代码提示 alt + ->
+- 开始调试 F5
+- 构建工程 F7
+- 设置断点、取消断点 F9
+- 单步跟踪 F10
+- 单步步入 F11
+- 转到定义 F12
+- 新建文件ctrl + N
+- 查找 ctrl + F
+- 转为小写 ctrl + U
+- 转为大写 ctrl + shilt + U
+- 注释所在行 ctrl + K      ctrl + C
+- 设置文档格式 ctrl + K      ctrl + D
+
+
+
+
+
+### 查看class内存布局
+
+- 项目 ➡️ [项目]属性 ➡️ C/C++ ➡️ 命令行 ➡️ 其它选项 ➡️ /d1reportSingleClassLayout[Class]
+- demo: /d1reportSingleClassLayoutTest
+- 查看: 输出(下方) ➡️ 输出来源：生成
 
 
 
@@ -345,46 +539,7 @@ eject -rf -v /dev/cdrom
 
 
 
-------
 
-# visual studio使用
-
-
-
-```cpp
-#pragma warning(disable:4996)//禁止4996的warning
-```
-
-
-
-
-
-### 快捷键
-
-- 显示代码提示 alt + ->
-- 在MSDN中搜索  F1
-- 开始调试 F5
-- 构建工程 F7
-- 设置断点、取消断点 F9
-- 单步跟踪 F10
-- 单步步入 F11
-- 转到定义 F12
-- 新建文件ctrl + N
-- 查找 ctrl + F
-- 转为小写 ctrl + U
-- 转为大写 ctrl + shilt + U
-- 注释所在行 ctrl + K      ctrl + C
-- 设置文档格式 ctrl + K      ctrl + D
-
-
-
-
-
-###### 查看class内存布局
-
-- 项目 ➡️ [项目]属性 ➡️ C/C++ ➡️ 命令行 ➡️ 其它选项 ➡️ /d1reportSingleClassLayout[Class]
-- demo: /d1reportSingleClassLayoutTest
-- 查看: 输出(下方) ➡️ 输出来源：生成
 
 
 
