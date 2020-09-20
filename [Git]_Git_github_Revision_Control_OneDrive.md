@@ -433,7 +433,7 @@ $ git add .  #将当前目录的所有文件添加至仓库中
 $ git commit -m "test commit node"  #将文件提交到仓库，-m后问提交说明
 $ git push origin master #push files to online repository #推送至远程master分支
 
-$ git clone git@github.com:pureteap/StupidLog.git#将远程仓库clone到本地
+$ git clone git@github.com:hex-16/pictures.git #将远程仓库clone到本地
 $ git status  #查看仓库当前状态
 $ git remote -v #列出所有远程仓库
 $ git checkout -- file #撤销工作区文件的修改至上次add/commit
