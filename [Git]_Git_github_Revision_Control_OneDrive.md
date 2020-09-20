@@ -339,7 +339,7 @@ GitHub提供Git仓库托管服务，本地Git仓库与GitHub之间的传输通�
 
 ```python
 $ ssh-keygen -t rsa -C "youremail@example.com" #创建SSH Key
-then copy id_rsa.pub file content, like:
+# then copy id_rsa.pub file content, like:
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2LFS0Myajvaqj00aRt6+E1HPrPhGO14nwEf/wrZFG/bOa6f3gH2mv32uvyipy4zM8rsEDt37qs5mMVrmk0lB1b7yHYI+G6UkuCVugcmVb2EELWWazfN1CwLFD8kl0z1qtvHosKVVWjavsKvZoOHRW6aOm4bdvv+wnI6SwRrFpvIld4pmF/cNs8jl6FNrYHg4GsSnLmphw88HObZKn7FSB9KqoUkWhWjw3SsJxyTnVFVkegtmK71NfxFZ9cCGQc4Ng3aYobxxrAGGb63FasSenobFrkdHXwD5CT9W1wfILhrgWJDA6h/0LfKDtVqmb+4rWomnbKr1cui3ArcmO3ySzPBPBLcEkmpiaFYrwy8SpoGmE+jSwgtaksArAlsGczVqLDRsfwa/2ZEtgogAnGoyd8RZE5/sPhH+bkqlwkgI5gW6pM/61/4J7+RUBq/BruVrXlkDQ6yaeqy7XP4u5ZHjqJDNh8zctx16CyL+P8PFcSB3ru88OosoRo6tn2yemtmE=
 ```
 

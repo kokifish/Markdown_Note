@@ -1123,7 +1123,12 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 
 ### ICMP Protocol
 
--   **因特网控制消息协议** 因特网控制报文协议 **Internet Control Message Protocol**
+>  **因特网控制消息协议** 因特网控制报文协议 **Internet Control Message Protocol**
+>
+> ping用的就是这个协议
+>
+> 解析ping在不同网段之间的过程，包括MAC解析，ARP请求应答 https://www.geeksforgeeks.org/packet-flow-in-different-network/ 
+
 -   用于Host或Router之间发布传递网络级别的控制消息 //错误侦测与回报机制
 -   The **Internet Control Message Protocol** (**ICMP**) is a **supporting protocol** in the Internet protocol suite. It is used by network devices, including routers, to **send error messages and operational information** indicating, for example, that a requested service is not available or that a host or router could not be reached. ICMP differs from transport protocols such as TCP and UDP in that it is not typically used to exchange data between systems, nor is it regularly employed by end-user network applications (with the exception(例外) of some diagnostic(诊断的) tools like **ping** and **traceroute**) //https://tools.ietf.org/html/rfc792
 -   控制消息是指网络通通、Host是否可达、Router是否可用等网络本身的消息，提供可能发生在通信环境中的各种问题的反馈。这些控制消息不传输用户数据，但对于用户数据的传递起着重要的作用。对网络安全有重要意义
@@ -1163,26 +1168,26 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 
 常用Type & Code
 
-| Type                                     | Code | Description                              |
-| ---------------------------------------- | ---- | ---------------------------------------- |
-| 0 - Echo reply 回显应答                      | 0    | [Query] Echo reply 回显应答(Ping应答)          |
-| 8 - Echo request 回显请求                    | 0    | [Query] Echo request 请求回显(Ping请求)        |
-| 3 - Destination Unreachable 目标不可达        | 0    | [Error] Destination network unreachable 网络不可达 |
-|                                          | 1    | [Error] Destination host unreachable目的主机不可达 |
-|                                          | 2    | [Error] Destination protocol unreachable |
-|                                          | 3    | [Error] Destination port unreachable     |
-|                                          | 4    | [Error] Fragmentation required, and DF flag set 需要分组但不可分段 |
-|                                          | 5    | [Error] Source route failed 源站选路失败       |
-| 5 -  Redirect Message 重定向                | 0    | [Error] Redirect Datagram for the Network |
-|                                          | 1    | [Error] Redirect Datagram for the Host 对主机重定位 |
-| 11 - Time Exceeded 超时                    | 0    | [Error] TTL expired in transit 传输期间TTL=0 |
-|                                          | 1    | [Error] Fragment reassembly time exceeded数据报重组超时 |
-| 12  – Parameter Problem: Bad IP header 参数问题 | 0    | [Error] Pointer indicates the error      |
-|                                          | 1    | [Error] Missing a required option 缺少必要的选项 |
-|                                          | 2    | [Error] Bad length                       |
-| 13 – Timestamp                           | 0    | [Query] Timestamp 时间戳请求                  |
-| 14 – Timestamp Reply                     | 0    | [Query] Timestamp reply 时间戳应答            |
-|                                          |      |                                          |
+| Type                                            | Code | Description                                                  |
+| ----------------------------------------------- | ---- | ------------------------------------------------------------ |
+| 0 - Echo reply 回显应答                         | 0    | [Query] Echo reply 回显应答(**Ping应答**)                    |
+| 8 - Echo request 回显请求                       | 0    | [Query] Echo request 请求回显(**Ping请求**)                  |
+| 3 - Destination Unreachable 目标不可达          | 0    | [Error] Destination network unreachable 网络不可达           |
+|                                                 | 1    | [Error] Destination host unreachable目的主机不可达           |
+|                                                 | 2    | [Error] Destination protocol unreachable                     |
+|                                                 | 3    | [Error] Destination port unreachable                         |
+|                                                 | 4    | [Error] Fragmentation required, and DF flag set 需要分组但不可分段 |
+|                                                 | 5    | [Error] Source route failed 源站选路失败                     |
+| 5 -  Redirect Message 重定向                    | 0    | [Error] Redirect Datagram for the Network                    |
+|                                                 | 1    | [Error] Redirect Datagram for the Host 对主机重定位          |
+| 11 - Time Exceeded 超时                         | 0    | [Error] TTL expired in transit 传输期间TTL=0                 |
+|                                                 | 1    | [Error] Fragment reassembly time exceeded数据报重组超时      |
+| 12  – Parameter Problem: Bad IP header 参数问题 | 0    | [Error] Pointer indicates the error                          |
+|                                                 | 1    | [Error] Missing a required option 缺少必要的选项             |
+|                                                 | 2    | [Error] Bad length                                           |
+| 13 – Timestamp                                  | 0    | [Query] Timestamp 时间戳请求                                 |
+| 14 – Timestamp Reply                            | 0    | [Query] Timestamp reply 时间戳应答                           |
+|                                                 |      |                                                              |
 
 
 
@@ -1233,6 +1238,8 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 
 ###### Destination Unreachable
 
+> Type=3
+
 -   Destination unreachable is generated by the host or its inbound gateway(Router) to inform the client that the destination is unreachable for some reason. 
 
 ```c
@@ -1269,13 +1276,15 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 
 ###### Redirect Message 
 
+> Type=5
+
 -   当路由器检测到一台机器使用非优化路由的时候，它会向该主机发送一个ICMP重定向报文，请求主机改变路由。路由器也会把初始数据包向它的目的地转发
 -   发送ICMP Redirect Message 后依旧会转发原始IP packet
 
 对于路由器来说，只有当如下条件同时满足的时候，才进行重定向：
 
-1.  数据包的入接口和路由后的指定的出接口是同一个接口
-2.  数据包的源IP地址和该包应走的下一跳IP地址属于同一个网段
+1.  数据包的入接口和路由后的指定的出接口是**同一个接口**
+2.  数据包的源IP地址和该包应走的下一跳IP地址属于**同一个网段**
 3.  数据报非源路由的（这种情况应该比较少见了，源路由多见于Token Ring）
 4.  系统开启重定向功能。
 
