@@ -465,9 +465,19 @@ HMM的状态变迁示意图：
 
 `x(t+1)`和`x(t)`有关，`x(t)`和`x(t-1)`有关，而每个`y(t)`只和`x(t)`有关
 
-- 隐藏变量 hidden variable: 指图中的x(t)，是观察者无法得知的变量。
+- 隐藏变量 hidden variable: 指图中的x(t)，是观察者无法得知的变量
+- x(t)之间的关系：假设隐藏状态的值对应到的空间有$N$个元素，也就是说在时间 $t$ 时，隐藏状态会有$N$种可能，同样，$t+1$也会有$N$种可能的值，所以从$t$到$t+1$间的关系会有$ N^{2}$种可能
+- 每组x(t), y(t)之间的关系：若观察到的$y(t)$有$M$种可能的值，则从$x(t)$到$y(t)$的输出模型复杂度为$O(NM)$。如果$y(t)$是一个$M$维的向量，则从$x(t)$到$y(t)$的输出模型复杂度为$O(NM^{2})$
+- 
 
 
 
+HMM有三个典型(canonical)问题:
 
+1. 预测(filter)：已知模型参数和某一特定输出序列，求最后时刻各个隐含状态的概率分布，即求$ {\displaystyle P(x(t)\ |\ y(1),\dots ,y(t))}{\displaystyle P(x(t)\ |\ y(1),\dots ,y(t))}$. 通常使用前向算法解决.
 
+2. 平滑(smoothing)：已知模型参数和某一特定输出序列，求中间时刻各个隐含状态的概率分布，即求$ {\displaystyle P(x(k)\ |\ y(1),\dots ,y(t)),k<t}{\displaystyle P(x(k)\ |\ y(1),\dots ,y(t)),k<t}$. 通常使用前向-后向算法解决.
+
+3. 解码(most likely explanation): 已知模型参数，寻找最可能的能产生某一特定输出序列的隐含状态的序列. 即求 ${\displaystyle P([x(1)\dots x(t)]|[y(1)\dots ,y(t)]),}{\displaystyle P([x(1)\dots x(t)]|[y(1)\dots ,y(t)])}$ , 通常使用Viterbi算法解决.
+
+> 此外，已知输出序列，寻找最可能的状态转移以及输出概率.通常使用Baum-Welch算法以及Viterbi algorithm解决. 另外,最近的一些方法使用联结树算法来解决这三个问题
