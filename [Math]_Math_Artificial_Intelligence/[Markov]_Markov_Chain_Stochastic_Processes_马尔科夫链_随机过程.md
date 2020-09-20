@@ -481,3 +481,84 @@ HMM有三个典型(canonical)问题:
 3. 解码(most likely explanation): 已知模型参数，寻找最可能的能产生某一特定输出序列的隐含状态的序列. 即求 ${\displaystyle P([x(1)\dots x(t)]|[y(1)\dots ,y(t)]),}{\displaystyle P([x(1)\dots x(t)]|[y(1)\dots ,y(t)])}$ , 通常使用Viterbi算法解决.
 
 > 此外，已知输出序列，寻找最可能的状态转移以及输出概率.通常使用Baum-Welch算法以及Viterbi algorithm解决. 另外,最近的一些方法使用联结树算法来解决这三个问题
+
+
+
+
+
+
+
+
+
+## Viterbi 维特比算法
+
+> 一种动态规划算法
+>
+> https://en.wikipedia.org/wiki/Viterbi_algorithm
+
+- 用于寻找最有可能产生观测事件序列的**维特比路径**——隐含状态序列，特别是在马尔可夫信息源上下文和隐马尔可夫模型中
+
+
+
+- 病人连续三天看医生，医生发现第一天他感觉正常，第二天感觉冷，第三天感觉头晕。Viterbi求解最可能导致这一观察序列的状态序列：
+
+```python
+# python 3 code, Viterbi demo # 第一天正常，第二天冷，第三天头晕，求最有可能的状态序列
+states = ('Healthy', 'Fever')  # 状态（不可观测）
+observations = ('normal', 'cold', 'dizzy')  # 观测到的输出
+start_probability = {'Healthy': 0.6, 'Fever': 0.4}  # 起始概率
+transition_probability = {'Healthy': {'Healthy': 0.7, 'Fever': 0.3}, 'Fever': {
+    'Healthy': 0.4, 'Fever': 0.6}, }  # 转移概率
+emission_probability = {'Healthy': {'normal': 0.5, 'cold': 0.4, 'dizzy': 0.1}, 'Fever': {
+    'normal': 0.1, 'cold': 0.3, 'dizzy': 0.6}, }  # 放射概率
+
+
+# Helps visualize the steps of Viterbi.
+def print_dptable(V):
+    print("        ", end="")
+    for i in range(len(V)):
+        print("%7d" % i, end=" ")
+    print()
+
+    for y in V[0].keys():
+        print("%.5s: " % y, end=" ")
+        for t in range(len(V)):
+            print("%.7s" % ("%f" % V[t][y]), end=" ")
+        print()
+
+
+def viterbi(obs, states, start_p, trans_p, emit_p):
+    V = [{}]
+    path = {}
+
+    for y in states:  # Initialize base cases (t == 0)
+        V[0][y] = start_p[y] * emit_p[y][obs[0]]
+        path[y] = [y]
+
+    for t in range(1, len(obs)):  # Run Viterbi for t > 0
+        V.append({})
+        newpath = {}
+
+        for y in states:
+            (prob, state) = max(
+                [(V[t-1][y0] * trans_p[y0][y] * emit_p[y][obs[t]], y0) for y0 in states])
+            V[t][y] = prob
+            newpath[y] = path[state] + [y]
+
+        path = newpath  # Don't need to remember the old paths
+
+    print_dptable(V)
+    (prob, state) = max([(V[len(obs) - 1][y], y) for y in states])
+    return (prob, path[state])
+
+
+def example():
+    return viterbi(observations, states, start_probability, transition_probability, emission_probability)
+
+
+print(example())
+
+```
+
+
+

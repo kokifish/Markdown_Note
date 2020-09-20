@@ -123,11 +123,11 @@ Auto Closing Brackets: 是否自动加右括号, close brackets.
 
 ##### setting.json
 
-- 20200813 backup `VScode setting.json`
+- 20200920 backup `VScode setting.json`
 
 ```json
 {
-    "window.zoomLevel": 1,
+    "window.zoomLevel": -0.5,
     "files.autoSave": "afterDelay",
     "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
     "editor.autoClosingBrackets": "always",
@@ -145,11 +145,14 @@ Auto Closing Brackets: 是否自动加右括号, close brackets.
         "terminal.foreground": "#b5e08f",
     },
     "breadcrumbs.enabled": false,
-    // "python.dataScience.sendSelectionToInteractiveWindow": true,
-    "python.formatting.provider": "none",
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=300"
+    ],
+    "python.linting.pylintEnabled": true,
     "http.proxySupport": "off",
-    "matlab.matlabpath": "E:\\MatlabR2020a\\bin",
-    "matlab.mlintpath": "E:\\MatlabR2020a\\bin\\win64",
+    "matlab.matlabpath": "C:\\Matlab\\bin",
+    "matlab.mlintpath": "C:\\Matlab\\bin\\win64",
     "latex-workshop.latex.recipes": [ //----------- latex-workshop -----------//
         // {
         //     "name": "PDFLaTeX",
@@ -228,7 +231,9 @@ Auto Closing Brackets: 是否自动加右括号, close brackets.
             ]
         }
     ],
-    "latex-workshop.view.pdf.viewer": "tab"
+    "latex-workshop.view.pdf.viewer": "tab",
+    "debug.onTaskErrors": "debugAnyway",
+    "todo-tree.tree.showScanModeButton": false
 }
 ```
 
