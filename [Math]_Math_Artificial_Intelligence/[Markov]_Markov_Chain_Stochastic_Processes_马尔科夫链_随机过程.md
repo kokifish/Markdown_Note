@@ -500,6 +500,19 @@ HMM有三个典型(canonical)问题:
 
 
 
+
+
+假定HMM状态空间为$S$，共有k个状态，初始状态i的概率为$\pi_{i}$，从状态i到状态j的转移概率为$a_{i,j}$，令观察到的输出为$y_1, y_2, ...,y_{T}$，产生观察结果最有可能的的状态序列$x_1, x_2,..., x_T$由递推关系给出：
+$$
+\begin{array}{rcl}V_{1,k}&=&\mathrm {P} {\big (}y_{1}\ |\ k{\big )}\cdot \pi _{k}\\V_{t,k}&=&\max _{x\in S}\left(\mathrm {P} {\big (}y_{t}\ |\ k{\big )}\cdot a_{x,k}\cdot V_{t-1,x}\right)\end{array}
+$$
+
+- $V_{t,k}$是前t个最终状态为k的观测结果 最有可能对应的状态序列 的概率
+
+
+
+> 算法复杂度$O(T\times|S|^2)$
+
 - 病人连续三天看医生，医生发现第一天他感觉正常，第二天感觉冷，第三天感觉头晕。Viterbi求解最可能导致这一观察序列的状态序列：
 
 ```python
@@ -532,8 +545,8 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
     path = {}
 
     for y in states:  # Initialize base cases (t == 0)
-        V[0][y] = start_p[y] * emit_p[y][obs[0]]
-        path[y] = [y]
+        V[0][y] = start_p[y] * emit_p[y][obs[0]] # 起始概率*放射概率
+        path[y] = [y] # 记录路径起始点的上一个节点为起始点本身
 
     for t in range(1, len(obs)):  # Run Viterbi for t > 0
         V.append({})
