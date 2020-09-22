@@ -188,7 +188,7 @@ $$\exists n_{ij} \ge0,  {\displaystyle \Pr(X_{n_{ij}}=j\mid X_{0}=i)=p_{ij}^{(n_
 > 一个状态i，可以是常返或非常返，常返分为正常返和零常返
 
 - **首达时间**：首次返回i的时间$$T = \min\{n>0; X_n =i\}$$.
-- **首达概率**：由i出发经n步首次到达j的概率：({$$f_{ij}^{(n)}, n\ge 1$$}构成一概率分布)
+- **首达概率**：由 $i$ 出发经 $n$步首次到达 $j$ 的概率：(  {$$f_{ij}^{(n)}, n\ge 1$$}构成一概率分布  )
 
 $$f_{ij}^{(n)} = P\{X_{m+v}\neq j,1\le v\le n-1,X_{m+n}=j |X_m=i \},(n\ge 1)$$
 
@@ -455,9 +455,15 @@ $$P\{X(t) - X(0) = n\} =e^{-\lambda t} \frac{(\lambda t)^n}{n!}$$
 > 统计模型，它用来描述一个含有隐含未知参数的马尔可夫过程。常被用来解决有未知条件的数学问题
 >
 > 状态不是直接可见的，但能观察到某些受状态影响
+>
+> 经典论文：A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition
 
 - 在正常的马尔可夫模型中，状态对于观察者来说是直接可见的。这样状态的转换概率便是全部的参数
 - 而在隐马尔可夫模型中，状态并不是直接可见的，但受状态影响的某些变量则是可见的。每一个状态在可能输出的符号上都有一概率分布。因此输出符号的序列能够透露出状态序列的一些信息
+
+> ~~可以视作一个HMM中存在有两种随机过程，一种是状态和状态之间变化的随机过程，还有一种是状态到观测值的随机过程。~~
+
+
 
 HMM的状态变迁示意图：
 
@@ -474,11 +480,11 @@ HMM的状态变迁示意图：
 
 HMM有三个典型(canonical)问题:
 
-1. 预测(filter)：已知模型参数和某一特定输出序列，求最后时刻各个隐含状态的概率分布，即求$ {\displaystyle P(x(t)\ |\ y(1),\dots ,y(t))}{\displaystyle P(x(t)\ |\ y(1),\dots ,y(t))}$. 通常使用前向算法解决.
+1. 预测(filter)：已知模型参数和某一特定输出序列，求最后时刻各个隐含状态的概率分布，即求$  P(x(t)\ |\ y(1),\dots ,y(t))$. 通常使用前向算法解决.
 
-2. 平滑(smoothing)：已知模型参数和某一特定输出序列，求中间时刻各个隐含状态的概率分布，即求$ {\displaystyle P(x(k)\ |\ y(1),\dots ,y(t)),k<t}{\displaystyle P(x(k)\ |\ y(1),\dots ,y(t)),k<t}$. 通常使用前向-后向算法解决.
+2. 平滑(smoothing)：已知模型参数和某一特定输出序列，求中间时刻各个隐含状态的概率分布，即求$  P(x(k) |  y(1),\dots  , y(t) ), \ k<t$. 通常使用前向-后向算法解决.
 
-3. 解码(most likely explanation): 已知模型参数，寻找最可能的能产生某一特定输出序列的隐含状态的序列. 即求 ${\displaystyle P([x(1)\dots x(t)]|[y(1)\dots ,y(t)]),}{\displaystyle P([x(1)\dots x(t)]|[y(1)\dots ,y(t)])}$ , 通常使用Viterbi算法解决.
+3. 解码(most likely explanation): 已知模型参数，寻找最可能的能产生某一特定输出序列的隐含状态的序列. 即求 $P([x(1)\dots x(t)] | [y(1)\dots ,y(t)])$ , 通常使用Viterbi算法解决.
 
 > 此外，已知输出序列，寻找最可能的状态转移以及输出概率.通常使用Baum-Welch算法以及Viterbi algorithm解决. 另外,最近的一些方法使用联结树算法来解决这三个问题
 
@@ -486,13 +492,43 @@ HMM有三个典型(canonical)问题:
 
 
 
+### parameters
+
+- N: 模型的状态数量。对于实际问题，可能无法确定N。定义各个状态为 $ S=\{S_1, S_2,...,S_N\} $，$t$时刻的状态定义为$q_t$.
+- M: 每个状态不同观测值的数量。定义单个符号( individual symbols )为$V=\{v_1, v_2, ... , V_M\}$. 
+- A: 状态转移概率分布(矩阵) $A=\{a_{ij}\}$，$a_{ij}$ 表时从状态 $i$ 转移到状态 $j$ 的概率
+
+$$
+a_{ij}=P[q_{t+1}=S_{j} | q_{t}=S_{i}], \ 1\le i,j\le N.
+$$
+
+> 对于具有遍历性的HMM来说（即 每个状态都可以通过单步转移到任意的另一个状态），$a_{ij}>0$ for all $i, j$ ，对于其他类型的HMM，可能存在一个或多个 $a_{ij}$ 为0
+
+- B: 观测符号概率分布 $B=\{b_{j}(k)\}$. $b_{j}(k)$ 表示在状态为 $j$ 时，观测值为 $k$ 的概率
+
+$$
+b_{j}(k) = P[v_{k} \text{ at }t|q_{t}=S_{j}]. \ 1 \le j \le N, 1\le k \le M.
+$$
+
+- $\pi$: 初始状态分布 $\pi=\{\pi_{i}\}$
+
+$$
+\pi_{i} = P[q_1 = S_{i}], \ 1 \le i \le N
+$$
+
+HMM的完整描述需要两个模型参数N和M，观测符号和三个概率描述$A, B, \pi$，为方便起见，使用紧凑记号
+$$
+\lambda = (A, B, \pi)
+$$
+ 
+
 
 
 
 
 ## Viterbi 维特比算法
 
-> 一种动态规划算法
+> 一种动态规划算法，用于寻找HMM模型下，一个特定观测序列最有可能对应的状态序列
 >
 > https://en.wikipedia.org/wiki/Viterbi_algorithm
 
@@ -520,10 +556,10 @@ $$
 states = ('Healthy', 'Fever')  # 状态（不可观测）
 observations = ('normal', 'cold', 'dizzy')  # 观测到的输出
 start_probability = {'Healthy': 0.6, 'Fever': 0.4}  # 起始概率
-transition_probability = {'Healthy': {'Healthy': 0.7, 'Fever': 0.3}, 'Fever': {
-    'Healthy': 0.4, 'Fever': 0.6}, }  # 转移概率
-emission_probability = {'Healthy': {'normal': 0.5, 'cold': 0.4, 'dizzy': 0.1}, 'Fever': {
-    'normal': 0.1, 'cold': 0.3, 'dizzy': 0.6}, }  # 放射概率
+transition_probability = {'Healthy': {'Healthy': 0.7, 'Fever': 0.3},
+                          'Fever': {'Healthy': 0.4, 'Fever': 0.6}, }  # 转移概率
+emission_probability = {'Healthy': {'normal': 0.5, 'cold': 0.4, 'dizzy': 0.1},
+                        'Fever': {'normal': 0.1, 'cold': 0.3, 'dizzy': 0.6}, }  # 放射概率
 
 
 # Helps visualize the steps of Viterbi.
@@ -533,10 +569,10 @@ def print_dptable(V):
         print("%7d" % i, end=" ")
     print()
 
-    for y in V[0].keys():
-        print("%.5s: " % y, end=" ")
+    for x in V[0].keys():
+        print("%.5s: " % x, end=" ")
         for t in range(len(V)):
-            print("%.7s" % ("%f" % V[t][y]), end=" ")
+            print("%.7s" % ("%f" % V[t][x]), end=" ")
         print()
 
 
@@ -544,24 +580,27 @@ def viterbi(obs, states, start_p, trans_p, emit_p):
     V = [{}]
     path = {}
 
-    for y in states:  # Initialize base cases (t == 0)
-        V[0][y] = start_p[y] * emit_p[y][obs[0]] # 起始概率*放射概率
-        path[y] = [y] # 记录路径起始点的上一个节点为起始点本身
+    for x in states:  # Initialize base cases (t == 0)
+        # 起始概率*放射概率. 表示：观测序列为obs[0]的，状态为x的概率
+        V[0][x] = start_p[x] * emit_p[x][obs[0]]
+        path[x] = [x]  # 记录路径起始点的上一个节点为起始点本身
 
     for t in range(1, len(obs)):  # Run Viterbi for t > 0
         V.append({})
         newpath = {}
 
-        for y in states:
+        for x in states:
+            # 遍历所有状态，找出
             (prob, state) = max(
-                [(V[t-1][y0] * trans_p[y0][y] * emit_p[y][obs[t]], y0) for y0 in states])
-            V[t][y] = prob
-            newpath[y] = path[state] + [y]
+                [(V[t-1][x0] * trans_p[x0][x] * emit_p[x][obs[t]], x0)
+                 for x0 in states])
+            V[t][x] = prob
+            newpath[x] = path[state] + [x]
 
         path = newpath  # Don't need to remember the old paths
 
     print_dptable(V)
-    (prob, state) = max([(V[len(obs) - 1][y], y) for y in states])
+    (prob, state) = max([(V[len(obs) - 1][x], x) for x in states])
     return (prob, path[state])
 
 
