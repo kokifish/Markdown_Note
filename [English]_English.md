@@ -2,6 +2,12 @@
 
 
 
+- success without applause, diligence without reward. 没有掌声地成功，没有回报的勤勉——人月神话 代序
+
+
+
+
+
 
 
 ### 系动词
@@ -54,3 +60,6 @@
 They suggest he (should) write more books. // suggest: 表建议时，使用虚拟语气，should可省
 
 They suggest (that) he writes more books. // suggest: 表暗示时，不使用虚拟语气，宾语从句的that可以省略 
+
+
+
