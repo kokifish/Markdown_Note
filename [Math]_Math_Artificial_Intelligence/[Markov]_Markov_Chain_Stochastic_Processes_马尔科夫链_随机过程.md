@@ -510,8 +510,7 @@ $$
 
 
 
-
-### The Three Basic Problems for HMMs
+## The Three Basic Problems for HMMs
 
 HMM有三个典型(canonical)问题:
 
@@ -525,6 +524,39 @@ HMM有三个典型(canonical)问题:
 
 
 
+### Prob 1:预测
+
+
+
+
+
+#### 前向变量 forward  variable
+
+- requires on the order of $N^2T$ calculations
+
+$$
+\text{(1) Initialization: } \alpha_{1}(i) = \pi_i b_i (O_1), 1\le i \le N\\
+\text{(2) Induction: } \alpha_{t+1}(j) = [\ \sum_{i=1}^{N}\alpha_t(i)a_{ij} \ ] b_j(O_{t+1}), 1 \le t \le T+1, 1 \le j \le N\\
+\text{(3) Termination: } P(O| \lambda) = \sum_{i=1}^{N} \alpha_{T}(i).
+$$
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/HMM_forward_variable.png)
+
+
+
+
+
+#### 后向变量 backward variable
+
+- 解决Prob 1 不需要使用到后向变量
+
+
+
+
+
+
+
+### Prob 2. 
 
 
 
