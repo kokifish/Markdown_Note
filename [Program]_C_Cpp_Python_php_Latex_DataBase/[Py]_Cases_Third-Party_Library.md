@@ -1023,7 +1023,7 @@ plt.show()
 
 
 
-###### task written by dennis
+###### task written
 
 ```python
 #author: 黄海宇 student_id = 16337087 信息安全专业 SDCS SYSU

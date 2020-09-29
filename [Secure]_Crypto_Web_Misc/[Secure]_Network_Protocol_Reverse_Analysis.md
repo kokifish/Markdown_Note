@@ -111,7 +111,7 @@ n-1层通道的性质对n层协议的构成有非常重要的影响，主要包�
 
 
 
-### 协议元素
+### 协议元素（一般6种）
 
 第一章介绍了，从语言的角度看，协议包括三个要素：语法、语义、同步。
 
@@ -286,3 +286,42 @@ p58说明了HTTP请求报文的格式
 
 
 
+在网络协议工程领域，有两大类常见的形式描述技术(Formal Description Techniques, FDT): 
+
+1. 形式描述模型 Formal Description Model, FDM.  有限状态机；扩展的有限状态机；Petri网模型；时序逻辑/时态逻辑；通信系统演算；通信顺序进程
+2. 形式描述语言 Formal Description Language, FDL. ( Specification and Description Language, SDL ), ( Language of Temporal Ordering Specification, LOTOS ), (Extended State Transition Language, ESTELLE), 抽象语法记法(Abstract Syntax Notation One, ASN.1), 各种高级程序设计语言如Pascal, C
+
+
+
+协议报文数据可划分为若干个字段。
+
+- 字段：具有特定语义的最小不可分割的子序列
+
+字段间结构关系：
+
+1. 顺序
+2. 并列
+3. 层次
+
+构建合法报文的关键：
+
+1. 协议格式中字段边界
+2. 报文结构
+3. 字段语义
+4. 取值约束
+
+
+
+p64 
+
+字段语义可分为静态语义和动态语义两类：
+
+1. 静态语义
+2. 动态语义
+
+
+
+静态语义所蕴含的上下文相关性可以分为两类：
+
+1. 语义与符号特征相关
+2. 语义与结构相关
