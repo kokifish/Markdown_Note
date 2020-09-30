@@ -4,6 +4,64 @@
 
 
 
+# Cases
+
+
+
+##### 皮尔森相关系数
+
+>  皮尔逊相关系数
+
+- pearson是对定距变量的统计 
+
+```python
+from scipy.stats import pearsonr
+r_val, p_val = pearsonr(x1, x2)
+```
+
+
+
+##### Kendall rank correlation coefficient
+
+> Kendall's τ coefficient (after the Greek letter τ, tau);  Kendall秩相关系数; 肯德尔系数
+
+- a statistic used to measure the ordinal association between two measured quantities. 测量两个被测量之间的有序关联
+- A τ test is a non-parametric hypothesis test for statistical dependence based on the τ coefficient. 非参数假设检验
+- Kendall相关系数是对于定类变量的统计
+
+```python
+from scipy import stats
+x1 = [12, 2, 1, 12, 2]
+x2 = [1, 4, 7, 1, 0]
+tau, p_value = stats.kendalltau(x1, x2)
+```
+
+
+
+
+
+
+
+#####  Spearman's rank correlation coefficient
+
+> 斯皮尔曼等级相关系数; Spearman's ρ; Spearman秩相关系数
+
+- In statistics, **Spearman's rank correlation coefficient** or **Spearman's ρ**, named after Charles Spearman and often denoted by the Greek letter $\rho $(rho) or as $r_{s}$, is a nonparametric measure of rank correlation (statistical dependence between the [rankings](https://en.wikipedia.org/wiki/Ranking) of two variables). 秩相关性的非参数度量（两个变量的秩之间的统计依赖性） 衡量两个变量的依赖性的 非参数 指标
+- 在 统计学中, 以查尔斯·斯皮尔曼命名的斯皮尔曼等级相关系数， 经常用希腊字母 ρ或者 $r_{s}$ 表示。 它是衡量两个变量的依赖性的 无母数 指标。 它利用单调方程评价两个统计变量的相关性
+- 如果数据中没有重复值， 并且当两个变量完全单调相关时，斯皮尔曼相关系数则为 +1 或 −1
+- It assesses how well the relationship between two variables can be described using a [monotonic](https://en.wikipedia.org/wiki/Monotonic) function. 评估两个变量间用单调函数来描述的合适程度
+- 斯皮尔曼相关系数被定义成等级变量之间的皮尔逊相关系数
+- spearman是对定序变量的统计
+
+```python
+from scipy import stats
+stats.spearmanr([1,2,3,4,5], [5,6,7,8,7]) # (0.82078268166812329, 0.088587005313543798)
+```
+
+
+
+
+
 ------
 
 # numpy
@@ -533,7 +591,8 @@ df.describe() #部分数据统计: count(sum), mean, 标准差, min, 25% ...
 df[df.rain_octsep < 3] #保留满足条件的record
 df[(df.tollgate_id > 0) & (df.tollgate_id < 3)] #保留满足条件的record#不可用keyword 'and'
 df[df.starting_time.str.startswith('105#2016-07-19')]
-
+df1[df1['A'].isin([1])]  #选取df1中A列包含数字1的行
+data[np.logical_and(data['col1']> n,data['col2']>m)] #使用numpy的logical_and函数
 
 t = df.loc[:,['travel_seq']] #由一行行Series组成的DataFrame
 type(t) #<class 'pandas.core.frame.DataFrame'>
@@ -873,7 +932,7 @@ plt.savefig(‘plot123_2.png’, dpi=200)#指定分辨率
 
 
 
-###### plot()
+##### plot
 
 - 画线
 
@@ -907,7 +966,7 @@ plt.show()
 
 
 
-###### imshow
+##### imshow
 
 ```python
 matplotlib.pyplot.imshow(X, cmap=None, norm=None, aspect=None, interpolation=None, alpha=None, vmin=None, vmax=None, origin=None, extent=None, shape=None, filternorm=1, filterrad=4.0, imlim=None, resample=None, url=None, hold=None, data=None, **kwargs)[source]
@@ -924,6 +983,46 @@ matplotlib.pyplot.imshow(X, cmap=None, norm=None, aspect=None, interpolation=Non
   MxN arrays are mapped to colors based on the `norm`(mapping scalar to scalar) and the `cmap` (mapping the normed scalar to a color).
 
   Elements of RGB and RGBA arrays represent pixels of an MxN image. All values should be in the range [0 .. 1] for floats or [0 .. 255] for integers. Out-of-range values will be clipped to these bounds.
+
+
+
+
+
+##### subplots
+
+```python
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+
+dict_pics = {}
+
+for filepath,dirnames,filenames in os.walk('./work/pics/'):
+    if(len(filenames) >= 4): # 根据爬取的图片， 选取照片较多的来展示
+        star_name = filepath[filepath.rfind('/')+1:]
+        dict_pics[star_name] = []
+        for filename in filenames:
+            print("", end="")
+            img_temp = mpimg.imread(filepath+"/"+filename)
+            dict_pics[star_name].append(img_temp)
+
+print("name, pic count=", [(k, len(da)) for k, da in dict_pics.items()])
+name_pics = [(k, da) for k, da in dict_pics.items()]
+del name_pics[0]
+fig, ax = plt.subplots(nrows=3, ncols=3, figsize=(12, 10)) # sharex=True, sharey=True,
+for i in range(len(fig.axes)):
+    fig.axes[i].xaxis.set_visible(False) # 对每一个子图，让x轴不可见
+    fig.axes[i].yaxis.set_visible(False) # 对每一个子图，让y轴不可见
+
+for col in range(3):
+    name, pic_l = name_pics[col]
+    ax[0,col].set_title(name)
+    for row in range(3):
+        ax[row,col].imshow(pic_l[row])
+
+plt.show()
+```
+
+
 
 
 
