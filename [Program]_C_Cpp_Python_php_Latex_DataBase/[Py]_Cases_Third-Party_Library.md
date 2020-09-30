@@ -411,7 +411,7 @@ Pandas 基于两种数据类型，series 和 dataframe
 
 dataframe 是一个二维的、表格型的数据结构。Pandas 的 dataframe 可以储存许多不同类型的数据，并且每个轴都有标签。可以把它当作一个 series 的字典 
 
-###### Series
+### Series
 
 > <class 'pandas.core.series.Series'>
 
@@ -533,7 +533,7 @@ dtype: float64
 
 
 
-###### DataFrame
+### DataFrame
 
 > pandas.DataFrame 横行为index，竖列为columns
 
@@ -792,7 +792,7 @@ sp.integrate(f, (x,-float("inf"),float("inf")) #求无穷限广义积分 3.14159
 
 选择机器学习方法的流程:
 
-![]()
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Machine_Learning_map.png)
 
 
 
@@ -1122,7 +1122,7 @@ plt.show()
 
 
 
-###### task written
+##### task written
 
 ```python
 #author: 黄海宇 student_id = 16337087 信息安全专业 SDCS SYSU
