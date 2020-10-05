@@ -136,8 +136,9 @@
 
 ---
 
-
 # Physical Layer 物理层
+
+> 第一层，TCP/IP四层模型中将物理层和数据链路层视为一层
 
 
 
@@ -341,7 +342,7 @@ LLC提供了两种无连接和一种面向连接的三种操作方式
 
 ---
 
-### PPP 点对点协议 
+## PPP 点对点协议
 
 -   Point - to - Point Protocol 点对点协议
 -   PPP包含: 基本的成帧功能 网络控制协议 NCP (Network Control Protocol)   
@@ -400,8 +401,7 @@ PPP协议的六阶段
 
 ---
 
-
-### Ethernet 以太网
+## Ethernet 以太网
 
 -   以太网：一种计算机局域网技术
 -   IEEE 802.3标准制定了以太网的技术标准(涉及物理层 MAC子层)
@@ -628,7 +628,7 @@ address size（地址字段长） 48比特
 
 
 
-### VLAN
+## VLAN
 
 > 虚拟局域网, Virtual LAN, VLAN
 
@@ -636,10 +636,86 @@ address size（地址字段长） 48比特
 
 一个VLAN的帧只能转发到属于同一个VLAN的端口或者干道端口。**只有发往干道trunk端口的帧才需要加上VLAN ID，非trunk端口的按照端口属于哪个VLAN确定VLAN ID，帧中不含VLAN ID**。从干道收到的帧中如果没有VLAN ID，则认为是本征VLAN(Native VLAN)，默认为VLAN 1。发往干道的Native VLAN的帧不加VLAN ID。
 
+
+
+## MPLS 多协议标签交换
+
+> Multi-Protocol Label Switching  一种高效的数据传输的技术     2.5层协议
+>
+> https://zhuanlan.zhihu.com/p/27232535
+
+- MPLS是利用标记（label）进行数据转发的。当分组进入网络时，要为其分配固定长度的短的标记，并将标记与分组封装在一起，在整个转发过程中，交换节点仅根据标记进行转发
+- MPLS 独立于第二和第三层协议，诸如ATM 和IP。它提供了一种方式，将IP地址映射为简单的具有固定长度的标签，用于不同的包转发和包交换技术。它是现有路由和交换协议的接口，如IP、ATM、帧中继、资源预留协议（RSVP）、开放最短路径优先（OSPF）等等
+
+
+
+- 在MPLS网络中，路由决策是基于Label的，路由器不需要对数据包进行解包
+- Label：是一个整数，可达到O(1)的查找时间，在MPLS网络里作为网络数据包的一部分传输
+- MPLS的核心就是，一旦进入了MPLS网络，那么网络数据包的内容就不再重要，路由决策（包括FEC归属的计算，next hop的查找）都是基于Label来进行的
+- MPLS把Label作为IP协议报文的一部分，存储在IP协议报文中。通常情况下，MPLS操作在OSI的2层（数据链路层）和3层（网络层）之间，因此也常常被认为是2.5层协议。这也就是MPLS能支持Multiprotocol的原因。Label不依赖于任何协议，直接定义在2-3层之间
+
+
+
+
+
+- FEC（Forwarding Equivalence Class）：交换等价类，同样的转发路径的网络数据包的集合。
+
+- MPLS网络：由支持MPLS的，相连的设备的构成。
+
+- LSH（Label Switching hop）：IP协议报文从一个MPLS设备发送到另一个MPLS设备，区别于传统的路由交换，LSH是基于Label的转发。
+
+- **NHLFE**（Next Hop Label Forwarding Entry）：LSR中用来转发条目，相当于路由表之于路由器。包含了：
+
+- - 下一跳：nexthop
+
+  - 对数据包的当前label需要做的操作，包括了：
+
+  - - 替换（SWAP）
+    - 删除（POP）
+    - 添加（PUSH）
+
+- LER（Label Edge Router）：有的地方也叫做 MPLS edge node。顾名思义，MPLS网络的边缘设备。
+
+- - MPLS ingress node：进入MPLS网络的节点，也就是MPLS网络的入口路由器。该设备计算出IP协议报文归属的FEC，并把相应的Label放入IP协议报文。
+  - MPLS egress node：出MPLS网络的节点，也就是MPLS的出口路由器。IP协议报文在这里回到传统的路由系统中。
+
+- LSR（Label Switching Router）：支持MPLS转发的路由器。如果一个LSR有一个邻接的节点在MPLS网络之外，那么这个LSR就是LER。注意，这里的MPLS网络之外可以是：1.传统路由网络，2.另一个MPLS网络。
+
+- LSP（Label Switching Path）：特定的FEC中的IP协议报文所经过的LSR的集合。LSP通常也被称为MPLS tunnel。
+
+
+
+
+
+### MPLS 协议格式
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_MPLS_packet_MPLS_Label.jpg)
+
+- Label：20bit的整数，容量是百万级的
+- TC：之前的EXP，改名成TC，由[RFC5462](https://link.zhihu.com/?target=https%3A//tools.ietf.org/html/rfc5462)定义。
+- S：bottom of stack。什么是stack，一种常见的数据结构类型，特点是后进先出。S为1表明这已经是栈底了，即当前Label是IP协议报文最后一个MPLS标签。再执行一个POP操作，就能变成正常的IP协议报文了
+- TTL：TTL在IP协议里面的作用主要是防止环路和用于traceroute等工具。在之前的文章[Traceroute](https://zhuanlan.zhihu.com/p/24982540)里详细介绍过。MPLS里面的TTL作用是一样的。当数据包进入MPLS网络，网络层中的TTL会被拷贝至MPLS的TTL，每一次LSH，TTL减1，数据包出MPLS网络，MPLS中的TTL会拷贝至网络层
+
+
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_MPLS_Multi_Label.png)
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 # Network Layer 网络层
 
+> 第3层
+>
 > 同一个互联网络中要求网络层协议相同而链路层协议可不同
 
 -   **网际层** internet layer 或 IP层 //是TCP/IP协议族中的网络互连层internet layer
@@ -1572,6 +1648,14 @@ DD: Database Description Packet
 -   通过维护IP路由表或‘前缀’表来实现自治系统(AS)之间的可达性，属于矢量路由协议
 -   BGP不使用传统的内部网关协议(IGP)的指标，而使用基于路径、网络策略或规则集来决定路由。因此，它更适合被称为矢量性协议，而不是路由协议
 -   BGP使用TCP作为传输协议，端口号179。ospf、igrp、eigrp运行于ip层。Is-is在网络层，rip用udp协议 
+
+
+
+
+
+
+
+
 
 
 
