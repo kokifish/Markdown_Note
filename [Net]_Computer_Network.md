@@ -1680,6 +1680,12 @@ DD: Database Description Packet
 
 
 
+
+
+
+
+
+
 #### Port Numbers 端口号
 
 位于数据段segment中，属于传输层的数据。
@@ -1687,6 +1693,14 @@ DD: Database Description Packet
 - 知名端口 well-known ports : 0~1023。为提供知名网络服务的系统进程所用。e.g. 80-HTTP，21-ftp Control，20-ftp Data，23-telnet，25-SMTP，110-POP3，53-DNS
 - 注册端口 registered ports : 1024~49151。在IANA注册的专用端口号，为企业软件所用
 - 动态端口 private ports : 49152~65535 (2^15^ + 2^14^ to 2^16^ − 1), 私用、暂用端口号。没有规定用途的端口号，一般用户可以随意使用, dynamic or private ports that cannot be registered with IANA 。
+
+
+
+### Error Control in Transport Layer
+
+- Transport layer protocol (e.g. TCP) sends segments across network and performs end-to-end error checking & retransmission
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_Error%20control%20in%20Data%20Link%20Layer.png)
 
 
 
@@ -2520,13 +2534,20 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
+Basic elements of ARQ:
+
+- Error-detecting code with high error coverage
+- ACKs (positive acknowledgments): 肯定确认
+- NAKs (negative acknowledgments): 否定确认
+- Timeout mechanism: 超时机制
+
 
 
 由于发送方使用了计时器，所以当发送方收到了当前分组的上一个分组的ACK的时候（即当前分组传输损坏）或者回馈分组损坏的时候（这两个操作都不会重置计时器），并不会立即发送当前分组，而是等到计时器超时才重新发送当前分组???
 
 
 
-#### Stop-and-Wait 停等协议
+#### Stop-and-Wait ARQ
 
 > 停止等待协议
 
@@ -2566,7 +2587,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-##### go back N (GBN)
+#### Go-Back N ARQ (GBN)
 
 -   **Go-Back-N ARQ** is a specific instance of the automatic repeat request(ARQ) protocol
 -   发送多个帧，若其中一个帧丢失，则返回到丢失帧重传丢失帧及其后面的所有帧。
@@ -2580,7 +2601,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-##### Selective-Repeat 选择性重传
+#### Selective Repeat ARQ 选择性重传
 
 > Selective-Repeat 选择性重传
 
