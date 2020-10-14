@@ -103,6 +103,371 @@ $$
 
 
 
+## 动态规划
+
+> Dynamic programming, DP
+
+- 动态规划常常适用于有重叠子问题和最优子结构性质的问题。只能应用于有最优子结构的问题
+- 动态规划在查找有很多重叠子问题的情况的最优解时有效。它将问题重新组合成子问题。为了避免多次解决这些子问题，它们的结果都逐渐被计算并被保存，从简单的问题直到整个问题都被解决。因此，动态规划保存递归时的结果，因而不会在解决同样的问题时花费时间
+
+
+
+- 最优子结构性质：如果问题的最优解所包含的子问题的解也是最优的，我们就称该问题具有最优子结构性质（即满足最优化原理）。一旦要用到子问题的解，就只用子问题的最优解
+- 无后效性：子问题的解一旦确定，就不再改变，不受在这之后、包含它的更大的问题的求解决策影响
+- 子问题重叠性质：在用递归算法自顶向下对问题进行求解时，每次产生的子问题并不总是新问题，有些子问题会被重复计算多次。动态规划算法正是利用了这种子问题的重叠性质，对每一个子问题只计算一次，然后将其计算结果保存在一个表格中，当再次需要计算已经计算过的子问题时，只是在表格中简单地查看一下结果，从而获得较高的效率，降低了时间复杂度
+
+
+
+### 最长公共子序列
+
+> LCS, Longest Common Subsequence
+
+- 标准的求解方法：需要注意一般伪代码中，字符串的下标从1开始，但是这里传参时，字符串下标从0开始，所以部分地方的index会比伪代码的 `-1` 
+- 这一版本时最原始的版本，要用到两个`m*n`的辅助矩阵
+
+```cpp
+// example: assume X.size=3, Y.size=4, array c(to calculate LCS length):
+// X= "CBA" Y= "EDCA"
+//Xi \ Yj   Y4:A    Y3:C    Y2:D    Y1:E    Y0:non
+//3:A       2       1       0       0       0
+//2:B       1       1       0       0       0
+//1:C       0       1       0       0       0
+//0:non     0       0       0       0       0
+
+// m: size of x; n: size of y; c, b: size=(m+1, n+1)
+// O(m, n)
+void LCSLength(const int m,
+               const int n,
+               const char* x,
+               const char* y,
+               vector<vector<int>>& c,
+               vector<vector<int>>& b) {
+    for (int i = 0; i <= m; ++i) {
+        c[i][0] = 0;  // y串长为0，则公共子序列的长度也为0
+    }
+    for (int j = 0; j <= n; ++j) {
+        c[0][j] = 0;  // x串长为0，则公共子序列的长度也为0
+    }
+    for (int i = 1; i <= m; ++i) {       // row: bottom to up
+        for (int j = 1; j <= n; ++j) {   // col: right to left
+            if (x[i - 1] == y[j - 1]) {  // 匹配到一个字符相同 注意index-1
+                // 伪代码表示中，char*下标从1开始，而实际传参时，char*下标从0开始
+                c[i][j] = c[i - 1][j - 1] + 1;
+                b[i][j] = 1;                         // record: 匹配到相同字符
+            } else if (c[i - 1][j] > c[i][j - 1]) {  // x[i] != y[j] and bottom>right
+                c[i][j] = c[i - 1][j];
+                b[i][j] = 2;  // record: 表示c[i][j]结果与c[i-1][j]相同
+                // 即char* x可以去掉一个字符了，这个字符x[i]不参与到LCS中
+            } else {  // x[i] != y[j] and right >= bottom
+                c[i][j] = c[i][j - 1];
+                b[i][j] = 3;  // record: 表示c[i][j]结果与c[i][j-1]相同
+                // 即char* y可以去掉一个字符了，这个字符y[j]不参与到LCS中
+            }
+        }
+    }
+}
+
+// 输出最长公共子序列 // O(m+n)
+void LCS(const int i, const int j, const char* x, vector<vector<int>>& b) {
+    if (i == 0 || j == 0) {
+        return;
+    }
+    if (b[i][j] == 1) {
+        LCS(i - 1, j - 1, x, b);  // x[i]==y[j]为LCS的一个元素
+        cout << x[i - 1];         // x下标从1开始，与伪代码不同
+    } else if (b[i][j] == 2) {    // x[i]不参与LCS, 去掉
+        LCS(i - 1, j, x, b);
+    } else {  // y[j]不参与LCS, 去掉
+        LCS(i, j - 1, x, b);
+    }
+}
+
+void printVec2D(const vector<vector<int>> vec_2D) {//左上角是坐标最大的，右下角是[0][0]
+    for (int i = vec_2D.size() - 1; i >= 0; --i) {
+        for (int j = vec_2D[i].size() - 1; j >= 0; --j) {
+            cout << vec_2D[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    string str1("Algorithm");
+    const int m = str1.size();
+    const char* x = str1.data();
+
+    string str2("logrithm");
+    const int n = str2.size();
+    const char* y = str2.data();
+    vector<vector<int>> c(m + 1, vector<int>(n + 1));
+    vector<vector<int>> b(m + 1, vector<int>(n + 1));
+    LCSLength(m, n, x, y, c, b);
+    printVec2D(c);
+    cout << "above is c, bottom is b" << endl;
+    printVec2D(b);
+    cout << "length of " << str1 << " and " << str2 << " is " << c[m][n] << endl;
+    LCS(m, n, x, b);
+}// Output:
+7 6 5 4 3 2 2 1 0
+6 6 5 4 3 2 2 1 0
+5 5 5 4 3 2 2 1 0
+4 4 4 4 3 2 2 1 0
+3 3 3 3 3 2 2 1 0
+2 2 2 2 2 2 2 1 0
+2 2 2 2 2 2 1 1 0
+1 1 1 1 1 1 1 1 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+above is c, bottom is b
+1 2 2 2 2 3 2 2 0
+3 1 2 2 2 3 2 2 0
+3 3 1 2 2 3 2 2 0
+3 3 3 1 2 3 2 2 0
+3 3 3 3 1 3 2 2 0
+3 3 3 3 3 3 1 2 0
+3 3 3 3 3 1 3 2 0
+3 3 3 3 3 3 3 1 0
+3 3 3 3 3 3 3 3 0
+0 0 0 0 0 0 0 0 0
+length of Algorithm and logrithm is 7
+lorithm
+```
+
+
+
+#### (m*n) array ver
+
+- 只用一个m*n的辅助矩阵来存储LCS长度信息
+
+```cpp
+// m: size of x; n: size of y; c.size=(m+1, n+1)
+// O(m*n) // c[m][n]==LCS.size
+void LCSLength(const int m,
+               const int n,
+               const char* x,
+               const char* y,
+               vector<vector<int>>& c) {
+    for (int i = 0; i <= m; ++i) {
+        c[i][0] = 0;  // y串长为0，则公共子序列的长度也为0
+    }
+    for (int j = 0; j <= n; ++j) {
+        c[0][j] = 0;  // x串长为0，则公共子序列的长度也为0
+    }
+    for (int i = 1; i <= m; ++i) {       // row: bottom to up
+        for (int j = 1; j <= n; ++j) {   // col: right to left
+            if (x[i - 1] == y[j - 1]) {  // 匹配到一个字符相同 注意index-1
+                // 伪代码表示中，char*下标从1开始，而实际传参时，char*下标从0开始
+                c[i][j] = c[i - 1][j - 1] + 1;
+            } else if (c[i - 1][j] > c[i][j - 1]) {  // x[i] != y[j] and bottom>right
+                c[i][j] = c[i - 1][j];
+            } else {  // x[i] != y[j] and right >= bottom
+                c[i][j] = c[i][j - 1];
+            }
+        }
+    }
+}
+
+// 返回最长公共子序列
+// 原理：if x[i]==y[j]: c[i][j]==c[i-1][j-1]+1
+// and c[i][j]!=c[i-1][j] and c[i][j]!=c[i][j-1]
+// c[i][j] 相比下方 右方 右下方的元素都 +1
+string LCS(const int m, const int n, const char* x, vector<vector<int>>& c) {
+    string str_lcs;
+    int i = m, j = n;
+    while (i > 0 && j > 0) {
+        if (c[i][j] == c[i - 1][j - 1] + 1 && c[i][j] != c[i - 1][j] &&
+            c[i][j] != c[i][j - 1]) {
+            str_lcs = x[i - 1] + str_lcs;  // x下标从0开始，伪代码一般从1开始
+            --i, --j;
+        } else if (c[i][j] == c[i - 1][j]) {  // x[i]不参与
+            --i;
+        } else {  // y[j]不参与
+            --j;
+        }
+    }
+    return str_lcs;
+}
+
+void printVec2D(const vector<vector<int>>& vec_2D) {
+    for (int i = vec_2D.size() - 1; i >= 0; --i) {
+        for (int j = vec_2D[i].size() - 1; j >= 0; --j) {
+            cout << vec_2D[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    string str1("Algorithm");
+    const int m = str1.size();
+    const char* x = str1.data();
+
+    string str2("logrithm");
+    const int n = str2.size();
+    const char* y = str2.data();
+    vector<vector<int>> c(m + 1, vector<int>(n + 1));
+    LCSLength(m, n, x, y, c);
+    cout << "array c: lower right corner is 0,0" << endl;
+    printVec2D(c);
+
+    cout << "LCS length of " << str1 << " and " << str2 << " is " << c[m][n] << endl;
+    cout << "LCS: " << LCS(m, n, x, c);
+}// Output:
+array c: lower right corner is 0,0
+7 6 5 4 3 2 2 1 0
+6 6 5 4 3 2 2 1 0
+5 5 5 4 3 2 2 1 0
+4 4 4 4 3 2 2 1 0
+3 3 3 3 3 2 2 1 0
+2 2 2 2 2 2 2 1 0
+2 2 2 2 2 2 1 1 0
+1 1 1 1 1 1 1 1 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+LCS length of Algorithm and logrithm is 7
+LCS: lgrithm
+```
+
+
+
+
+
+#### 2*n array ver
+
+- 只用一个`2*n`的辅助矩阵，但是这个无法实现LCS的输出
+
+```cpp
+// m: size of x; n: size of y; // c.size = 2*n
+void LCSLength(const int m,
+               const int n,
+               const char* x,
+               const char* y,
+               vector<vector<int>>& c) {
+    int now = 0;
+    c[0][0] = 0, c[1][0] = 0;
+    for (int i = 1; i <= m; ++i) {       // row: bottom to up
+        for (int j = 1; j <= n; ++j) {   // col: right to left
+            if (x[i - 1] == y[j - 1]) {  // 匹配到一个字符相同 注意index-1
+                // 伪代码表示中，char*下标从1开始，而实际传参时，char*下标从0开始
+                c[now][j] = c[!now][j - 1] + 1;
+            } else {  // x[i] != y[j]
+                c[now][j] = max(c[now][j - 1], c[!now][j]);
+            }
+        }
+        now = !now;
+    }
+}
+
+void printVec2D(const vector<vector<int>>& vec_2D) {
+    for (int i = vec_2D.size() - 1; i >= 0; --i) {
+        for (int j = vec_2D[i].size() - 1; j >= 0; --j) {
+            cout << vec_2D[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    string str1("Algorithm");
+    const int m = str1.size();
+    const char* x = str1.data();
+    string str2("logrithm");
+    const int n = str2.size();
+    const char* y = str2.data();
+    vector<vector<int>> c(2, vector<int>(n + 1));
+    LCSLength(m, n, x, y, c);
+    cout << "array c: lower right corner is 0,0" << endl;
+    printVec2D(c);
+
+    cout << "length of " << str1 << " and " << str2 << " is " << max(c[0][n], c[1][n]);
+}
+```
+
+
+
+#### 1*n array ver
+
+- 仅用`1*n`大小的数组，其中n是两个字串长度中较短的一个
+- 该方法无法输出LCS(Largest Common Subsequence)，只可输出LCS的长度
+
+
+
+> 对于c[i][j]来说，在判断完x[i]与y[j]的关系之后，计算c[i][j]需要知道c[i-1][j-1], c[i][j-1], c[i-1][j]的数据。c[i-1][j]和c[i-1][j-1]的第一维坐标都是i-1，这是上一次递归中i的赋值。
+> c[i][j-1]就是c[i][j]同一行的元素，可以直接在一个一维数组中存储。
+> 现在讨论c[i-1][j]和c[i][j]的关系。想象一个打印机不停的在一张纸条上从右到左清楚原本内容并覆盖打印字母。那么，在打印机刚刚打印到的左边就是打印机上次打印的内容（i-1轮打印），当打印机往左边扫的时候，就会打印上新的内容（i轮打印）。对于本报告中的问题来说，借助打印机的形象理解，我们可以将c[i-1][j]理解为第i-1轮打印机在位置j打印的内容，那么在第i轮，打印机打印j位置时需要用到第i-1轮在j位置打印的内容（并且至多用一次）。因此，很自然的，对于这个c[i-1][j]和c[i][j]来说，完全可以存在一个一维数组c[n]中（j<n），i轮打印c[j]时，先读取i-1轮打印出来的c[j]，然后再覆盖打印。
+> 现在讨论c[i-1][j-1]和c[i][j]的关系。同样，借用上一段打印机的形象理解。c[i-1][j-1]就是打印机在i轮打印c[j]时，上一轮（i-1轮）打印在位置[j-1]的内容，也就是打印机的右侧，已经被覆盖打印的位置。由于j-1位置紧挨着j，并且是上一次打印字母的地方。那么，在打印j-1位置前，完全可以用一个临时变量来记录j-1位置的内容，然后打印完j-1，准备打印位置j时，就可以从这个临时变量读取被覆盖前的c[i][j-1]的内容。
+> 再回到c[i][j-1]和c[i][j]的关系，套用打印机场景，c[i][j-1]的值就是i轮打印j位置时，右边（j-1）的值，这是刚刚覆盖打印下去的，不需要额外存储。整个纸片，就是一个一维数组，数组的长度为两个字符串中任意一个字符串的长度+1（为了编码方便，+1有利于简化程序）。
+
+```cpp
+#include <algorithm>
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+void printVec(const vector<int>& vec_1D) {
+    for (int i = vec_1D.size() - 1; i >= 0; --i) {
+        cout << vec_1D[i] << " ";
+    }
+    cout << endl;
+}
+
+
+// m: size of x; n: size of y;
+// c.size = 2*n // c[0]用于计算LCS len; c[1][j]用于记录y[j]是否为LCS的一个元素
+// 伪代码表示中，char*下标从1开始，而实际传参时，char*下标从0开始
+// 想象有个打印机不停的从右向左打印 c[i][j]就是第i轮打印位置j的值
+// c[i][j-1]为i轮打印位置j右侧的值,c[i-1][j]为i-1轮打印位置j的值
+void LCSLength(const int m, const int n, const char* x, const char* y, vector<int>& c) {
+    for (int i = 0; i < c.size(); ++i) {
+        c[i] = 0;
+    }
+    // 上一轮(i-1)打印的位置j右侧(j-1)的元素
+    int c_i_minus1_j_minus1 = 0;  // 用于记录原本在m*n矩阵中右下角的元素值
+    int c_cur_ori = 0;  // 用于记录当前需要修改的原始的值，对应c[i-1][j]
+    for (int i = 1; i <= m; ++i) {  // row: bottom to up
+        // 准备新一轮(i)打印，提前记录上一轮在位置0的值
+        c_i_minus1_j_minus1 = c[0];     // initialization //原本的 c[i-1][0]==0
+        for (int j = 1; j <= n; ++j) {  // col: right to left
+            // 打印位置j前记录一下即将被覆盖掉的位置j的值(i-1轮)
+            c_cur_ori = c[j];  // 现在对应原本矩阵的c[i-1][j] // 下一轮变成c[i-1][j-1]
+            if (x[i - 1] == y[j - 1]) {  // 匹配到一个字符相同 注意index-1
+                c[j] = c_i_minus1_j_minus1 + 1;
+            } else {                         // x[i] != y[j]
+                c[j] = max(c[j - 1], c[j]);  // 覆盖打印新值
+            }
+            // 上一轮(i-1)的在位置j-1的值(在当前为j, 下一轮变j-1)
+            c_i_minus1_j_minus1 = c_cur_ori;  // 下一轮变成c[i-1][j-1]
+        }
+        printVec(c);
+    }
+}
+
+int main() {
+    string str1("TBBPROT");
+    const int m = str1.size();
+    const char* x = str1.data();
+
+    string str2("BXPXRO");
+    const int n = str2.size();
+    const char* y = str2.data();
+    vector<int> c(n + 1);
+    LCSLength(m, n, x, y, c);
+    cout << "array c: lower right corner is 0,0" << endl;
+    printVec(c);
+
+    cout << "LCS length of " << str1 << " and " << str2 << " is " << c[n] << endl;
+    return 0;
+}
+
+```
+
+
+
+
+
 
 
 

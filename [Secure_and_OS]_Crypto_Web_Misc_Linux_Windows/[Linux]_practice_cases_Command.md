@@ -560,11 +560,12 @@ iptables  -A FORWARD -s ! 192.168.0.1 -j  QUEUE # -A FORWARD: 向FORWARD规则�
 
 ```cmd
 # 配置ssh服务以实现远程访问
-yum install ssh # ssh软件包安装
+yum install openssh # ssh软件包安装
 service start sshd  # 开启ssh服务，ssh服务一般叫做 SSHD
 /etc/init.d/sshd start # 与上句等效
 PermitRootLogin yes# /etc/ssh/sshd_config中设置为允许root用户远程登录 
 # 关闭防火墙，或者设置22端口例外
+iptables -I INPUT -p tcp --dport 22 -j ACCEPT
 # 同网段下，即可使用ssh远程访问
 ```
 
@@ -634,6 +635,8 @@ sudo -i #sudo whoami
 sudo passwd #change the default blank root password and set root password
 su #Once the root password is set, you can login as root by using the su command
 ```
+
+
 
 
 

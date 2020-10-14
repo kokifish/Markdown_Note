@@ -2505,8 +2505,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-
-#### ARQ 自动重传请求
+## ARQ 自动重传请求
 
 >   **自动重传请求**(**Automatic Repeat-reQuest**，ARQ)
 >
@@ -2527,7 +2526,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-##### Stop-and-Wait 停等协议
+#### Stop-and-Wait 停等协议
 
 > 停止等待协议
 
@@ -2539,8 +2538,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-
-##### 连续ARQ & Sliding Window Protocol
+#### 连续ARQ & Sliding Window Protocol
 
 -   滑动窗口协议 Sliding Window Protocol
 -   回退n帧ARQ和选择性重传ARQ协议是滑动窗口技术与ARQ请求重发技术的结合
@@ -2568,8 +2566,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-
-###### go back N (GBN)
+##### go back N (GBN)
 
 -   **Go-Back-N ARQ** is a specific instance of the automatic repeat request(ARQ) protocol
 -   发送多个帧，若其中一个帧丢失，则返回到丢失帧重传丢失帧及其后面的所有帧。
@@ -2583,7 +2580,7 @@ Two Dimensional Bit Parity 二维奇偶校验
 
 
 
-###### Selective-Repeat 选择性重传
+##### Selective-Repeat 选择性重传
 
 > Selective-Repeat 选择性重传
 

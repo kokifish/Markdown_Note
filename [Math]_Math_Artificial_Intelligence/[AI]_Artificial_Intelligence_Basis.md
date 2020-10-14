@@ -685,7 +685,6 @@ PDP Model: Parallel Distributed Processing Model
 
 
 ##### Sigmoid
-
 $$
 \sigma(x) = \frac{1}{1+e^{-x}}
 $$
