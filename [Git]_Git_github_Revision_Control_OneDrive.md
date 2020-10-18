@@ -91,14 +91,14 @@ Initialized empty Git repository in /Users/test/learngit/.git/
 - commit将暂存区的所有修改提交到当前分支
 - 每次修改，如果不用`git add`到stage，那就不会加入到`commit`中
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/lifecycle.png)
+![](https://raw.githubusercontent.com/pureteap/pictures/main/Code_pic/lifecycle.png)
 
 ```python
 $ git add readme.txt   #add file to repository
 $ git add .   #添加当前目录下所有文件至 repository #没有任何输出
 $ git commit -m "wrote a readme file"  #把文件提交到 repository
-On branch master
-Your branch is up to date with 'origin/master'.
+On branch main
+Your branch is up to date with 'origin/main'.
 
 Changes not staged for commit:
         modified:   README.md
@@ -125,10 +125,10 @@ $ git diff readme.md  #查看文件difference #格式: Unix通用diff格式
 $ git status #以下为可能出现的状态信息
 
 ### clean: 自上次commit后没有更改
-On branch master #当前所在分支
+On branch main #当前所在分支
 nothing to commit, working tree clean #当前没有需要提交的修改,工作目录是干净的 #说明所有已跟踪文件在上次提交后都未被更改过，且当前目录下没有出现任何处于未跟踪状态的新文件
 ### untracked: 未跟踪
-On branch master
+On branch main
 Untracked files: #以下将列出未跟踪的文件
   (use "git add <file>..." to include in what will be committed)
 
@@ -137,7 +137,7 @@ Untracked files: #以下将列出未跟踪的文件
 nothing added to commit but untracked files present (use "git add" to track)
 
 ### Changes to be committed: 暂存状态
-On branch master
+On branch main
 Changes to be committed:
   (use "git reset HEAD <file>..." to unstage)
 
@@ -191,11 +191,11 @@ index d39cda9..ca48dab 100644 # 两个版本的git哈希值 # 最后六个数字
 
 - commit id: SHA1计算得出的提交id，作为版本号
 - `HEAD`表示当前版本，上一个版本是`HEAD^`，上100个版本为`HEAD~100`
-- `HEAD`是指向master的指针，master指向提交(commit)，回退版本相当于指针指向旧版本的master，然后更新工作区文件
+- `HEAD`是指向main的指针，main指向提交(commit)，回退版本相当于指针指向旧版本的main，然后更新工作区文件
 
 
 
-![wiki git](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/760px-Git_operations.svg.png)
+![wiki git](https://raw.githubusercontent.com/pureteap/pictures/main/Code_pic/760px-Git_operations.svg.png)
 
 撤销修改的几种场景：
 
@@ -230,7 +230,7 @@ $ git log --pretty=oneline #单行显示log
 
 ```python
 $ git log #
-commit 02ae2815bbb01694d60630d6bbda3abf46b01df9 (HEAD -> master, origin/master, origin/HEAD)#当前版本号
+commit 02ae2815bbb01694d60630d6bbda3abf46b01df9 (HEAD -> main, origin/main, origin/HEAD)#当前版本号
 Author: pureteap <pureteap@gmail.com>
 Date:   Sun Aug 26 02:04:09 2018 +0800
 
@@ -249,10 +249,10 @@ commit ... # omited
 
 ```python
 $ git reflog #查看历史操作
-02ae281 (HEAD -> master, origin/master, origin/HEAD) HEAD@{0}: reset: moving to 02ae2
+02ae281 (HEAD -> main, origin/main, origin/HEAD) HEAD@{0}: reset: moving to 02ae2
 5ed70f6 HEAD@{1}: reset: moving to HEAD^
-02ae281 (HEAD -> master, origin/master, origin/HEAD) HEAD@{2}: reset: moving to HEAD
-02ae281 (HEAD -> master, origin/master, origin/HEAD) HEAD@{3}: commit: readme refresh
+02ae281 (HEAD -> main, origin/main, origin/HEAD) HEAD@{2}: reset: moving to HEAD
+02ae281 (HEAD -> main, origin/main, origin/HEAD) HEAD@{3}: commit: readme refresh
 5ed70f6 HEAD@{4}: commit: readme add
 fe2b859 HEAD@{5}: commit: pictures ini
 c7b48fb HEAD@{6}: commit: ini
@@ -274,7 +274,7 @@ f31bd10 HEAD@{7}: clone: from git@github.com:pureteap/CN.git
 
 ```python
 $ git log # 查看log
-commit 02ae2815bbb01694d60630d6bbda3abf46b01df9 (HEAD -> master, origin/master, origin/HEAD)#当前版本号
+commit 02ae2815bbb01694d60630d6bbda3abf46b01df9 (HEAD -> main, origin/main, origin/HEAD)#当前版本号
 Author: pureteap <pureteap@gmail.com>
 Date:   Sun Aug 26 02:04:09 2018 +0800
 
@@ -295,7 +295,7 @@ $ git reset --hard HEAD^ #回退到上一个版本
 HEAD is now at 5ed70f6 readme add
 
 $ git log # 查看log
-commit 5ed70f6671e475916695f893c5807729ffe9a90c (HEAD -> master)#此时最新版已变成上一个版本，原本的最新版02ae281已经没有显示了
+commit 5ed70f6671e475916695f893c5807729ffe9a90c (HEAD -> main)#此时最新版已变成上一个版本，原本的最新版02ae281已经没有显示了
 Author: pureteap <pureteap@gmail.com>
 Date:   Sat Aug 25 23:31:54 2018 +0800
 
@@ -357,16 +357,16 @@ $ git remote add origin git@github.com:pureteap/repo-name.git # 第一次添加�
 
 #### push
 
-- `git push`： 把本地库的内容推送到远程，实际上是把当前分支`master`推送到远程。
+- `git push`： 把本地库的内容推送到远程，实际上是把当前分支`main`推送到远程。
 
 ```python
-$ git push -u origin master #-u #第一次推送master分支的所有内容时使用
+$ git push -u origin main #-u #第一次推送main分支的所有内容时使用
 ```
 
-由于远程库是空的，我们第一次推送`master`分支时，加上了`-u`参数，Git不但会把本地的`master`分支内容推送到远程新的`master`分支，还会把本地的`master`分支和远程的`master`分支关联起来，在以后的推送或者拉取时就可以简化命令
+由于远程库是空的，我们第一次推送`main`分支时，加上了`-u`参数，Git不但会把本地的`main`分支内容推送到远程新的`main`分支，还会把本地的`main`分支和远程的`main`分支关联起来，在以后的推送或者拉取时就可以简化命令
 
 ```python
-$ git push origin master # 把本地master分支的最新修改推送至GitHub
+$ git push origin main # 把本地main分支的最新修改推送至GitHub
 ```
 
 
@@ -399,8 +399,8 @@ $ git clone git@github.com:user_name/repo_name.git
 
 ### branching and merging
 
-- master: 主分支
-- `HEAD`:指向master，master指向提交commit
+- main: 主分支
+- `HEAD`:指向main，main指向提交commit
 
 https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/001375840038939c291467cc7c747b1810aab2fb8863508000 廖雪峰，创建与合并分支
 
@@ -416,7 +416,7 @@ https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b
 # update.sh
 git add .;
 git commit -m ".sh update";
-git push origin master;
+git push origin main;
 ```
 
 - 在git中打开
@@ -431,7 +431,7 @@ $ git init   #初始化Git repository #创建.git文件夹 #解决: fatal: Not a
 $ git add file.txt  #添加文件到仓库
 $ git add .  #将当前目录的所有文件添加至仓库中
 $ git commit -m "test commit node"  #将文件提交到仓库，-m后问提交说明
-$ git push origin master #push files to online repository #推送至远程master分支
+$ git push origin main #push files to online repository #推送至远程main分支
 
 $ git clone git@github.com:hex-16/pictures.git #将远程仓库clone到本地
 $ git status  #查看仓库当前状态
@@ -440,7 +440,7 @@ $ git checkout -- file #撤销工作区文件的修改至上次add/commit
 $ git reset HEAD <file> #把stage中的修改撤销掉(unstage)
 
 $ git config --global core.autocrlf false # global 不自动转换crlf #默认为true
-$ git pull origin master # 将远程仓库同步到本地
+$ git pull origin main # 将远程仓库同步到本地
 $ gitk # 图像化界面
 ```
 
@@ -453,7 +453,7 @@ git init
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/pureteap/Ali.git
-git push -u origin master
+git push -u origin main
 ```
 
 
