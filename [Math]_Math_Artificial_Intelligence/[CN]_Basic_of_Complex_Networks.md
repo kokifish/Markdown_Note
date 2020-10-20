@@ -33,7 +33,7 @@ $$
 \overline {X}  \\
 \sigma _{X}
 $$
-分别是对$$X_{i}$$样本的标准分数、样本平均值和样本标准差 
+分别是对$X_{i}$样本的标准分数、样本平均值和样本标准差 
 
 总体和样本皮尔逊系数的绝对值小于或等于1 
 
@@ -59,7 +59,7 @@ $$
 
 
 
-edge degree: $$ suppose k~ij~ is the edge degree of link e~ij~ , then
+edge degree:  suppose k~ij~ is the edge degree of link e~ij~ , then
 $$
 k_{ij} = \sqrt {k_i\times k_j}
 $$
@@ -350,7 +350,7 @@ Therefore, betweenness centrality is traditionally determined in two steps:
 1. Compute the length and number of shortest paths between all pairs.
 2. Sum all pair-dependencies
 
-邻接矩阵：The adjacency matrix of a graph is the n x n-matrix A = $$(a_{uv})_{u,v\in V}$$ with a~uv~ = 1 if {u, v} $$\in$$ E, and a~uv~ = 0 otherwise.
+邻接矩阵：The adjacency matrix of a graph is the n x n-matrix A = $(a_{uv})_{u,v\in V}$ with a~uv~ = 1 if {u, v} $$\in$$ E, and a~uv~ = 0 otherwise.
 
 LEMMA: Algebraic path counting: Let A^k^ = $$(a^{(k)}_{uv})_{u, v \in V}$$ be the k-th power of the adjacency matrix of an unweighted graph. Then  $$a^{(k)}_{uv}$$ equals the number of paths from u to v of length exactly k. 邻接矩阵的k次幂的元素a~uv~表示u到v是否有长度恰好为k的路径。
 
@@ -366,7 +366,7 @@ $$
 $$
 Dijkstra's algorithm runs in time O(m + n log n), if the priority queue is implemented with a Fibonacci heap.
 
-Corollary(推论): Given a source s $$\in$$ V, both the length and number of all shortest paths to other vertices can be determined in time O(m + n log n) for weighted, and in time O(m)for unweighted graphs. Consequently, $$\sigma_{st}, s, t \in V$$, can be computed in time O(mn) for unweighted and in time O(nm + n^2^log n) for weighted graphs.
+Corollary(推论): Given a source s  $\in$  V, both the length and number of all shortest paths to other vertices can be determined in time O(m + n log n) for weighted, and in time O(m)for unweighted graphs. Consequently, $ \sigma_{st}, s, t \in V $, can be computed in time O(mn) for unweighted and in time O(nm + n^2^log n) for weighted graphs.
 
 Corollary 4 implies that running time is dominated by the O(n^3^) time it takes to sum pair-dependencies.
 

@@ -8,6 +8,20 @@
 
 
 
+
+
+
+
+## flow
+
+> https://en.wikipedia.org/wiki/Traffic_flow_(computer_networking)
+
+- Applied to Internet routers, a flow may be a host-to-host communication path, or a socket-to-socket communication identified by a unique combination of source and destination addresses and port numbers, together with transport protocol (for example, UDP or TCP). In the TCP case, a flow may be a virtual circuit, also known as a virtual connection or a byte stream.
+- 应用于Internet路由器，流可以是host-to-host的通信路径，也可以是socket-to-socket的通信，它是由**源地址**、**目标地址**、**端口号**以及**传输协议**（e.g. UDP, TCP）。 在TCP情况下，流可以是虚拟电路，也称为虚拟连接或字节流。
+- In packet switches, the flow may be identified by IEEE 802.1Q **Virtual LAN tagging** in Ethernet networks, or by a **Label Switched Path** in MPLS tag switching
+
+
+
 ## DPI payload-based
 
 > Deep Packet Inspection 深度包检测
