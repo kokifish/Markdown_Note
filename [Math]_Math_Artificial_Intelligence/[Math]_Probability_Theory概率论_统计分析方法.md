@@ -63,10 +63,10 @@ $$
 
 服从指数分布的随机变量X的分布函数为
 $$
-F(x) = \left\{{\begin{matrix}
+F(x) = \left\{  {\begin{matrix}
 1 - e^{-\lambda x} , x > 0, \\
-0,其他,
-\end{matrix}}\right.
+0,其他, 
+\end{matrix}  }\right.
 $$
 
 - 期望：$$\theta = \frac{1}{\lambda}$$
@@ -221,7 +221,7 @@ $$
 
 样本间**马氏平方距离**，样本到总体G的**马氏平方距离**，总体G1和总体G2间的**马氏平方距离**：
 $$
-d^2(\mathbf{x}, \mathbf{y}) = (\mathbf{x} - \mathbf{y})^{T}\mathbf{\Sigma^{-1}}(\mathbf{x}-\mathbf{y})\\
+d^2(\mathbf{x}, \mathbf{y}) = (\mathbf{x} - \mathbf{y})^{T}\mathbf{\Sigma^{-1} }(\mathbf{x}-\mathbf{y})\\
 d^2(\mathbf{x}, G) = (\mathbf{x} - \mathbf{\mu})^{T}\mathbf{\Sigma^{-1}}(\mathbf{x}-\mathbf{\mu})\\
 d^2(G_1, G_2) = (\mu_1 - \mathbf{\mu_2})^{T}\mathbf{\Sigma^{-1}}(\mu_1-\mathbf{\mu_2})\\
 $$
@@ -234,7 +234,7 @@ $$
 
 **距离判别准则**：使用马氏距离，样本到哪个总体的均值向量马氏距离越小，就属于哪个总体
 $$
-\left\{ \begin{matrix} 
+\left\{  \begin{matrix} 
 \mathbf{x} \in G_1, \text{if }d(\mathbf{x}, G_1) \le d(\mathbf{x}, G_2) \\
 \mathbf{x} \in G_2, \text{if }d(\mathbf{x}, G_1) > d(\mathbf{x}, G_2) 
 \end{matrix}
@@ -310,13 +310,13 @@ $$
 - 欧式距离 2-norm距离, L~2~距离: 
 
 $$
-d(x_i, x_j) = [\sum_{k=1}^{p}(x_{ik} - x_{jk})^{2}]^{\frac{1}{2}}
+d(x_i, x_j) = [\sum_{k=1}^{p}(x_{ik} - x_{jk})^{2}]^{\frac{1}{2} }
 $$
 
 - Minkowski 距离: m>=1, 又称L~m~距离，L~2~距离即欧式距离
 
 $$
-d(x_i, x_j) = [\sum_{k=1}^{p}(x_{ik} - x_{jk})^{m}]^{\frac{1}{m}}
+d(x_i, x_j) = [\sum_{k=1}^{p}(x_{ik} - x_{jk})^{m}]^{\frac{1}{m} }
 $$
 
 
