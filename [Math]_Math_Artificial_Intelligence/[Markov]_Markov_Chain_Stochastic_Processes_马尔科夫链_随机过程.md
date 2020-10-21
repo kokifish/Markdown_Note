@@ -370,10 +370,10 @@ $$
 
 转移概率：Poisson过程{$$X(t), t\ge 0$$}的转移概率矩阵$$P(t) = (p_{ij}(t))$$为：$$p_{ij}(t)$$表示经过时间t从i到j的概率
 $$
-p_{ij}(t) = \left\{{\begin{matrix}
+p_{ij}(t) = \left\{  {\begin{matrix}
 e^{-\lambda t} \frac{(\lambda t)^{j-i}}{(j-i)!}, 当j-i \ge 0 \\
 0,其他
-\end{matrix}}\right.
+\end{matrix}  }\right.
 $$
 
 
