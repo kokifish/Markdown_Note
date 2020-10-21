@@ -54,10 +54,10 @@ $$\operatorname {E}\left(X^{n}\right)=M_{X}^{{(n)}}(0)=\left.{\frac  {{\mathrm  
 
 若连续型随机变量X的概率密度为
 $$
-f(x) = \left\{{\begin{matrix}
+f(x) = \left\{  {\begin{matrix}
 \lambda e^{-\lambda x} , x > 0, \\
 0,其他,
-\end{matrix}}\right.
+\end{matrix}  }\right.
 $$
 其中$$\lambda$$> 0为常数，则称X服从参数为$$\lambda$$的**指数分布**,$$\frac{1}{\theta} = \lambda$$为率参数，每单位时间内发生某事件的次数的均值。
 
