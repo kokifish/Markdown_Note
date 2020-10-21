@@ -419,7 +419,7 @@ Internally, the elements in the `unordered_map` are not sorted in any particular
 using namespace std;
 int main ()
 {
-  unordered_map<string,int> mymap = {{"a", 100},{"b", 200},{"c", 30000 }};
+  unordered_map<string,int> mymap = { {"a", 100},{"b", 200},{"c", 30000 }};
   mymap["a"] = 110;
   mymap.at("b") += 1;
 
