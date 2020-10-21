@@ -34,6 +34,20 @@ GNU General Public License （GPL）的可能是开源项目最常用的许可�
 
 
 
+## Add License at GitHub
+
+
+
+1. Open your GitHub repository in a browser.
+2. In the root directory, click on **Create new file**.
+3. Name the file “LICENSE”.
+4. Click on **Choose a license template**.
+5. Pick one of the licenses (all the ones mentioned in this article are there).
+6. Once chosen, click on **Review and submit**.
+7. **Commit** the file.
+
+
+
 # Git
 
 - Git跟踪的是修改，而非文件。(修改：增/删/改行，创建/删文件)

@@ -7,7 +7,6 @@
 n.b.  : a Latin phrase meaning "**note well**". 
 
 
-
 #### Pearson correlation coefficient
 
 > 皮尔森相关系数, Pearson correlation coefficient, 皮尔森积矩相关系数, Pearson product-moment correlation coefficient 
@@ -15,25 +14,10 @@ n.b.  : a Latin phrase meaning "**note well**".
 - 一种线性相关系数，反映两个变量线性相关程度的统计量
 - **总体**相关系数 ：
 
-$$
-{\displaystyle \rho _{X,Y}={\mathrm {cov} (X,Y) \over \sigma _{X}\sigma _{Y}}={E[(X-\mu _{X})(Y-\mu _{Y})] \over \sigma _{X}\sigma _{Y}}}
-$$
-
-
 
 **样本相关系数**(样本皮尔逊系数)
-$$
-{\displaystyle r={\frac {\sum \limits {i=1}^{n}(X{i}-{\overline {X}})(Y{i}-{\overline {Y}})}{{\sqrt {\sum \limits _{i=1}^{n}(X{i}-{\overline {X}})^{2}}}{\sqrt {\sum \limits {i=1}^{n}(Y{i}-{\overline {Y}})^{2}}}}}}\\
-{\displaystyle r={\frac {1}{n-1}}\sum \limits _{i=1}^{n}\left({\frac {X_{i}-{\overline {X}}}{\sigma _{X}}}\right)\left({\frac {Y_{i}-{\overline {Y}}}{\sigma _{Y}}}\right)}
-$$
 
-$$
-{\frac {X{i}-{\overline {X}}}{\sigma _{X}}}\\
-{\frac {X{i}-{\overline {X}}}{\sigma _{X}}}\\
-\overline {X}  \\
-\sigma _{X}
-$$
-分别是对$X_{i}$样本的标准分数、样本平均值和样本标准差 
+**分别是对 **$ X_{i} $ 样本的标准分数、样本平均值和样本标准差 
 
 总体和样本皮尔逊系数的绝对值小于或等于1 
 
@@ -42,11 +26,8 @@ $$
 对称性：corr(X,Y) = corr(Y,X) 
 
 
-
 **皮尔逊距离**: 度量的是两个变量X和Y，它可以根据皮尔逊系数定义成
-$$
-d_{X,Y}=1-\rho _{X,Y}
-$$
+
 皮尔逊系数落在[-1,1]，而皮尔逊距离落在[0,2]
 
 
@@ -63,8 +44,6 @@ edge degree:  suppose k~ij~ is the edge degree of link e~ij~ , then
 $$
 k_{ij} = \sqrt {k_i\times k_j}
 $$
-
-
 
 
 
@@ -117,7 +96,7 @@ $$
 $$
 C_i=\frac{|\{ e_{jk} : v_j, v_k \in N_i, e_{jk}\in E \}|}{k_i(k_i-1)}
 $$
-$$C(i)\in [0,1]$$, C(i)越接近1，这个点附近的点越有抱团的趋势 
+$ C(i)\in [0,1] $, C(i)越接近1，这个点附近的点越有抱团的趋势 
 
 
 
@@ -163,7 +142,7 @@ k: the  node degree, $$\lambda$$: the scaling exponent
 $$
 P(k) \backsim k^{-\lambda}
 $$
-![](http://op4fcrj8y.bkt.clouddn.com/18-7-25/51029543.jpg)
+
 
 
 
