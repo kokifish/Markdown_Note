@@ -19,6 +19,7 @@
 - Applied to Internet routers, a flow may be a host-to-host communication path, or a socket-to-socket communication identified by a unique combination of source and destination addresses and port numbers, together with transport protocol (for example, UDP or TCP). In the TCP case, a flow may be a virtual circuit, also known as a virtual connection or a byte stream.
 - 应用于Internet路由器，流可以是host-to-host的通信路径，也可以是socket-to-socket的通信，它是由**源地址**、**目标地址**、**端口号**以及**传输协议**（e.g. UDP, TCP）。 在TCP情况下，流可以是虚拟电路，也称为虚拟连接或字节流。
 - In packet switches, the flow may be identified by IEEE 802.1Q **Virtual LAN tagging** in Ethernet networks, or by a **Label Switched Path** in MPLS tag switching
+- A session is a traffic unit divided based on 5-tuple, i.e. source IP, source port, destination IP, destination port and transport-level protocol. A flow is very similar to a session, and the difference is that it **contains traffic of only one direction**, i.e. the source and destination IP / port are not interchangeable. flow是单向的五元组决定的traffic     //《End-To-end encrypted traffic classification with one-dimensional convolution neural networks》中的解释
 
 
 
