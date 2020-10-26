@@ -505,10 +505,6 @@ git push -u origin main
 
 
 
-
-
-
-
 # OneDrive
 
 1. Use the **Windows key + X** keyboard shortcut to open the Power User menu, and select **Command Prompt (Admin)**.
