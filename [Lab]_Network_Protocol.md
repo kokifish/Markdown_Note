@@ -140,9 +140,90 @@ DPI检测应用层协议的协议数据，即有效载荷(payload)部分。
 
 # bt
 
+- bt是BitTorrent协议的简称，bt协议是最流行的p2p下载协议
+- BT协议是一个协议簇：有点像tcp/ip协议一样，bt协议不是一个简单的协议，而是一系列相关的协议组成的，而且这个协议簇一直在进化。
 
 
 
+
+
+## Entities Consisted and Steps
+
+1. An ordinary web server. 传统的文件服务器
+2. A static 'metainfo' file. 种子文件(.torrent文件)
+3. A BitTorrent tracker. bt tracker服务器
+4. An 'original' downloader. 原始下载者，文件分享者
+5. The end user web browsers. web浏览器
+6. The end user downloaders. 下载者(多个)
+
+
+
+一个服务器按照下面的步骤开始文件分享过程
+
+1. 启动一个bt tracker服务器
+2. 启动一个普通的web服务器，如apache
+3. 在web服务器上配置多媒体类型‘application/x-bittorrent’关联到.torrent文件
+4. 生成一个.torrent文件，在文件中添加bt tracker服务器的地址
+5. 上传torrent文件到web服务器
+6. 发布torrent文件下载页面
+7. 等待用户下载
+
+一个用户按照下面的步骤开始文件下载
+
+1. 安装bt客户端
+2. 浏览web页面
+3. 下载torrent文件
+4. 保存torrent文件到本地
+5. 使用bt客户端打开torrent文件，开始下载
+6. 等待文件下载完成
+
+
+
+## bencoding 编码
+
+> Bencode (pronounced like B-encode) is the encoding used by the peer-to-peer file sharing system BitTorrent for storing and transmitting loosely structured data.
+
+
+
+## metainfo files(.torrent)
+
+metainfo files(俗称torrent文件)使用bencoding进行编码的一个dictionaries数据类型，有两个key
+
+1. announce ： bt tracker服务器地址
+2. info ： info又是一个dictionaries（bencoding支持数据类型的嵌套），info里面的字符串都是使用utf-8编码
+   1. name: 文件名，通常用作torrent文件的文件名
+   2. piece length: 每一个文件块的byte长度。bt协议将文件分成等大的piece，除最后一块，通常是2的指数。最常见为2^18^ = 262144 bytes = 256KB. ver3.2前默认为 2^20^=1MB. 
+   3. pieces: 是一个字符串，长度为20的倍数，每一段20个字符对应文件块的SHA1的hash值
+   4. files: 一个dictionaries数据类型，有两个key
+      1. length: 文件长度，总字节数. The length of the file, in bytes.
+      2. path: 一个utf-8编码的字符串list，最后一个字符串保存真实的文件名，前面的字符串保存文件路径。长度为0表示path字段不合法。 A list of UTF-8 encoded strings corresponding to subdirectory names, the last of which is the actual file name (a zero length list is an error case).
+
+length和files 两个中有且只有一个会出现。当存在length key时，表示torrent种子文件只包含一个单一的文件，length表示这个文件的字节数，俗称文件长度
+
+## trackers
+
+tracker服务器接收get请求，一个get请求由下列字段组成
+
+| key        | description                                                  |
+| ---------- | ------------------------------------------------------------ |
+| info_hash  | The 20 byte sha1 hash of the bencoded form of the info value from the metainfo file. This value will almost certainly have to be escaped. |
+| peer_id    | 下载者的id，20bytes的字符串。每个下载者再开始下载前会随机生成自己的id |
+| ip         | [optional]                                                   |
+| port       | 文件下载者监听的端口，默认从6881开始，最大的6889             |
+| uploaded   | The total amount uploaded so far, encoded in base ten ascii. |
+| downloaded | The total amount downloaded so far, encoded in base ten ascii. |
+| left       | The number of bytes this peer still has to download, encoded in base ten ascii. 十进制表示的剩余字节总数 Note that this can't be computed from downloaded and the file length since it might be a resume, and there's a chance that some of the downloaded data failed an integrity check and had to be re-downloaded. 重传，或文件块数据完整性校验失败导致需重新下载。 |
+| event      | [optional] 有4种可能值：started, completed, stopped, empty(same as not being present). If not present, this is one of the announcements done at regular intervals. An announcement using started is sent when a download first begins, and one using completed is sent when the download is complete. No completed is sent if the file was complete when started. Downloaders send an announcement using stopped when they cease downloading. |
+
+
+
+
+
+
+
+
+
+---
 
 # Papers
 
