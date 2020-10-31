@@ -10,13 +10,29 @@
 
 
 
-### C/C++
+
+
+## Use in Linux
+
+```cmd
+code # 启动visual studio code
+code . # 打开当前文件夹
+code . --user-data-dir # 打开当前文件夹(root)
+code /path/to/ # 打开指定文件夹
+ctrl + d # 选中当前单词
+```
+
+
+
+
+
+## C/C++
 
 - C/C++ support for Visual Studio Code is provided by a Microsoft C/C++ extension to enable cross-platform C and C++ development using VS Code on Windows, Linux, and macOS.
 
 Extension name: C/C++
 
-##### `task.json`
+#### `task.json`
 
 - `Terminal` -> `Configure Default Build Task`
 
@@ -52,7 +68,7 @@ Extension name: C/C++
 
 
 
-##### `launch.json`
+#### `launch.json`
 
 - `Run`-> `Open Configurations` -> `launch.json`
 
@@ -89,7 +105,35 @@ Extension name: C/C++
 
 
 
-#### Getting Started
+#### `c_cpp_properties.json`
+
+```json
+// how to resolve "include file not found" error: // demo
+// C/C++ Edit Configurations(JSON) // c_cpp_properties.json
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${PWD}/**", // added
+                "/opt/Qt5.14.1/5.14.1/gcc_64/include/**" // added // find / -name QProcess
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc"
+        }
+    ],
+    "version": 4
+}
+```
+
+
+
+
+
+
+
+### Getting Started
 
 1. Open VS Code
 2. ctrl+shift+P: open command palette; input: Extensions: Install Extensions;(or install)
@@ -108,7 +152,23 @@ First Use:
 
 
 
-### setting
+### clang-format ERROR
+
+在使用`clang-format`对代码进行格式化时，出现`libtinfo.so.5 not found`问题的解决方法：
+
+```cmd
+# 1. install clang-format
+dnf install git-clang-format # fedora
+apt install clang-format # ubuntu
+# 2. open setting.json, add:
+"C_Cpp.clang_format_path": "/usr/bin/clang-format"
+```
+
+
+
+
+
+## setting
 
 
 
@@ -123,7 +183,7 @@ Auto Closing Brackets: 是否自动加右括号, close brackets.
 
 
 
-##### setting.json
+### setting.json
 
 - 20200920 backup `VScode setting.json`
 

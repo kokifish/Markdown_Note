@@ -62,12 +62,7 @@ https://blog.csdn.net/chengtong222/article/details/51335730
 
 # 代码无关
 
-食.尸.鬼第三季，1—4集
-https://pan.baidu.com/s/1m_q8m_oF_EDzwhX-CpXNBA 密码：ojbk
 
-
-
-www.gddjg.com
 
 
 
