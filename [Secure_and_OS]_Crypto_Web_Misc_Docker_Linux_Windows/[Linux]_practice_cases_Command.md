@@ -675,4 +675,8 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
+Autotools 工作步骤：
 
+1. 首先，在 `./configure` 步骤中，Autotools 扫描宿主机系统（即当前正在运行的计算机）以发现默认设置。默认设置包括支持库所在的位置，以及新软件应放在系统上的位置。
+2. 接下来，在 `make` 步骤中，Autotools 通常通过将人类可读的源代码转换为机器语言来构建应用程序。
+3. 最后，在 `make install` 步骤中，Autotools 将其构建好的文件复制到计算机上（在配置阶段检测到）的相应位置。
