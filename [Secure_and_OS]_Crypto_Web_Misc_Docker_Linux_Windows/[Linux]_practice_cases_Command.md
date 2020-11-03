@@ -680,3 +680,131 @@ Autotools 工作步骤：
 1. 首先，在 `./configure` 步骤中，Autotools 扫描宿主机系统（即当前正在运行的计算机）以发现默认设置。默认设置包括支持库所在的位置，以及新软件应放在系统上的位置。
 2. 接下来，在 `make` 步骤中，Autotools 通常通过将人类可读的源代码转换为机器语言来构建应用程序。
 3. 最后，在 `make install` 步骤中，Autotools 将其构建好的文件复制到计算机上（在配置阶段检测到）的相应位置。
+
+
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/autotools_autotools_work_flow.jpg)
+
+
+
+# CMake
+
+- CMake是个一个开源的跨平台自动化建构系统，用来管理软件建置的程序，并不相依于某特定编译器
+- 支持多层目录、多个应用程序与多个库
+- CMake并不直接建构出最终的软件，而是产生标准的建构档（如Unix的Makefile或Windows Visual C++的projects/workspaces），然后再依一般的建构方式使用
+
+
+
+- CMAKE_BINARY_DIR: 运行`cmake`命令的根目录/顶层目录，所有二进制文件的根文件夹。CMake支持就地/源外 构建和生成二进制文件。The **root or top level folder** that you run the `cmake` command from is known as your CMAKE_BINARY_DIR and is the root folder for all your binary files. CMake supports building and generating your binary files both in-place and also out-of-source.
+  - 1. In-Place Build 就地构建: 指在root目录运行`cmake`指令。生成的所有临时构建文件都与源代码同目录
+    2. Out-of-Source Build 源外构建: (外部构建)可以创建一个单独的用于build的文件夹，该文件夹可以位于系统的任何位置。所有临时文件和目标文件都将位于此目录中。如需重新构建，只需删除构建目录并重新运行cmake
+
+```cmake
+# Out-of-Source Build example
+hello-root-dir$ mkdir build
+hello-root-dir$ cd build
+A-hello-cmake/build$ cmake .. # 此时运行cmake命令的文件夹不在root目录中，而在其子目录build
+```
+
+
+
+
+
+`CMakeLists.txt`大小写不敏感，可以大小写混用
+
+
+
+## Variables
+
+| Variable                 | Info                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| CMAKE_SOURCE_DIR         | 根源目录The root source directory                            |
+| CMAKE_CURRENT_SOURCE_DIR | 当前源目录 The current source directory if using sub-projects and directories. |
+| PROJECT_SOURCE_DIR       | The source directory of the current cmake project.           |
+| CMAKE_BINARY_DIR         | The root binary / build directory. This is the directory where you ran the `cmake`command. |
+| CMAKE_CURRENT_BINARY_DIR | The build directory you are currently in.                    |
+| PROJECT_BINARY_DIR       | The build directory for the current project.                 |
+
+
+
+## Cases
+
+
+
+```python
+# The files in this tutorial are below: 目录树
+A-hello-cmake$ tree
+.
+├── CMakeLists.txt
+├── main.cpp
+```
+
+- CMakeLists.txt - Contains the CMake commands you wish to run
+- main.cpp - A simple "Hello World" cpp file.
+
+
+
+```cmake
+# Content of CMakeLists.txt
+# Set the minimum version of CMake that can be used
+# $ cmake --version # To find the cmake version run
+cmake_minimum_required(VERSION 3.5) # 指定CMkae最低版本
+
+# Set the project name
+project (hello_cmake) # 项目名 # make referencing certain variables easier when using multiple projects. 包含项目名称，以便在使用多个项目时更容易引用某些变量。
+
+# Add an executable # 构建的可执行文件的名字
+add_executable(hello_cmake main.cpp) # 把一系列文件编译成 hello_cmake 这个目标文件
+```
+
+> 简写：将可执行文件的名字与project name保持一致
+>
+> ```cmake
+> cmake_minimum_required(VERSION 2.6) # 指定CMkae最低版本
+> project (hello_cmake) # 项目名
+> add_executable(${PROJECT_NAME} main.cpp) # 可执行文件名 与项目名一致
+> ```
+
+
+
+
+
+
+
+```console
+B-hello-headers$ tree
+.
+├── CMakeLists.txt
+├── include
+│   └── Hello.h
+└── src
+    ├── Hello.cpp
+    └── main.cpp
+```
+
+```cmake
+# Set the minimum version of CMake that can be used
+# To find the cmake version run
+# $ cmake --version
+cmake_minimum_required(VERSION 3.5)
+
+# Set the project name
+project (hello_headers)
+
+# Create a sources variable with a link to all cpp files to compile
+set(SOURCES  # 定义一个宏
+    src/Hello.cpp
+    src/main.cpp
+)
+
+# Add an executable with the above sources
+add_executable(hello_headers ${SOURCES})
+
+# Set the direcoties that should be included in the build command for this target
+# when running g++ these will be included as -I/directory/path/ #在g++命令行的等效
+target_include_directories(hello_headers
+    PRIVATE 
+        ${PROJECT_SOURCE_DIR}/include  # 添加./include 作为需要-I include的文件夹
+)
+```
+
