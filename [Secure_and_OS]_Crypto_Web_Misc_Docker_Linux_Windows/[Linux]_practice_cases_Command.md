@@ -687,6 +687,70 @@ Autotools 工作步骤：
 
 
 
+### configure.ac
+
+```python
+AC_PREREQ(2.61)
+AC_INIT(l7-filter-userspace, [0.11], [http://sourceforge.net/tracker/?group_id=80085])
+AC_CONFIG_SRCDIR([l7-queue.h])
+
+AC_CANONICAL_TARGET
+
+AM_INIT_AUTOMAKE
+AC_CONFIG_HEADERS(config.h)
+
+AC_PROG_CXX
+# give configure command line options to specify which such external software to use
+# software name: pidfile 
+# AS_HELP_STRING: 设置帮助信息 (左侧内容，右侧内容)
+# 这些将在 ./configure --help 中显示
+# AC_ARG_WITH (package, help-string, [action-if-given], [action-if-not-given])
+AC_ARG_WITH([pidfile], 
+  [AS_HELP_STRING([--with-pidfile],
+    [Sets the default pid filename. Set to NULL to disable. @<:@default=/var/run/l7-filter.pid@:>@])],
+    [],
+    [with_pidfile=/var/run/l7-filter.pid])
+# AC_ARG_WITH最后一个参数是默认情况下的操作
+
+# AS_IF (test1, [run-if-true1], ..., [run-if-false])
+# 如果 "x$with_pidfile" != xno exits with a zero status, then run shell code run-if-true1
+# 逻辑：如果$with_pidfile不是no，而是yes，那么定义 PID_FILENAME 为 /var/run/l7-filter.pid
+AS_IF([test "x$with_pidfile" != xno],
+
+  AS_IF([test "x$with_pidfile" = xyes],
+    AC_DEFINE([PID_FILENAME], ["/var/run/l7-filter.pid"]),
+    AC_DEFINE_UNQUOTED([PID_FILENAME], ["$with_pidfile"],
+              [Define when and what filename to use as the PID filename])),
+
+    AC_DEFINE([PID_FILENAME], [NULL], [Do not use a PID filename on this build])  )
+
+PKG_CHECK_MODULES([NFNETLINK], [libnetfilter_conntrack libnetfilter_queue])
+AC_CHECK_LIB(pthread, main)
+
+# Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS([netinet/in.h stdlib.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+
+# Checks for library functions.
+AC_FUNC_CLOSEDIR_VOID
+AC_FUNC_MALLOC
+AC_TYPE_SIGNAL
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([regcomp strerror strtol])
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+```
+
+
+
+
+
 # CMake
 
 - CMake是个一个开源的跨平台自动化建构系统，用来管理软件建置的程序，并不相依于某特定编译器
