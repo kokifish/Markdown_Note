@@ -374,8 +374,7 @@ PPP协议的六阶段
 5.  PPP会话维持阶段：维持PPP会话， 定时发送Echo Request报文，并等待Echo Reply报文 
 6.  网络终止阶段：终止PPP会话，回到链路不可用阶段
 
-
-###### PPP Frame
+### PPP Frame
 
 -   PPP协议采用HDLC的广播地址(0xFF)和无编号帧(0x03)
 -   PPP协议采用字节填充法(Byte-stuffing): 信息字段出现的标志字节(0x7E)用0x7D-5E 替
@@ -411,7 +410,7 @@ PPP协议的六阶段
 
 以太网采用的帧(framing)方法 ：inter-frame space. 每帧发送前要求信道空闲时间至少为96bits，这会造成每帧之间有空隙
 
-###### Ethernet Frame
+### Ethernet Frame
 
 -   Ethernet 采用inter-frame space的成帧(framing)方法//每帧发送前要求信道空闲时间至少为96bits，这会造成每帧之间有空隙
 
@@ -421,19 +420,26 @@ PPP协议的六阶段
 
 -   前导字符 Preamble：同步字符(7B)和起始定界符(Start of Frame Delimiter)(1B)
 
--   源地址和目标地址(6B)MAC地址：源地址一般为发送者的单播地址。目标地址可以是接收者的单播地址，也可以是多播地址和广播地址。
-
 -   类型/长度字段 Type/Length：**指明上层协议(>1500)或有效载荷的长度(≤1500)**。0x0800 IP数据报、0x0806 ARP报文、0x0835 RARP报文
 
     DIXv2帧：类型。≥1536 （0x0600）。802.3帧（原）：长度。(SNAP格式)。802.3帧（1997年修订）：类型/长度
 
--   有效载荷 Payload：数据字段 46\~1500字节 承载IP数据报。以太网的最大传输单元(Maximum transmission unit MTU)是1500 Byte。不足46字节时加入填充字节(任何字节)至46字节
 
--   帧校验序列 Frame Check Sequence：对目的地址、源地址、类型/长度和有效载荷（加填充位）字段进行CRC-32校验
+```python
+# Ethernet_II Frame Format (Type >= 1536)
+|   6 B   |   6 B   | 2B |  46-1500B  |  4B  |
+| dst.MAC | src.MAC |Type|    Data    |  FCS |
+```
 
-    
+1. dst.MAC: 目的MAC地址。目标地址可以是接收者的单播地址，也可以是多播地址和广播地址
+2. src.MAC: 源MAC地址。源地址一般为发送者的单播地址
+3. Type: 数据字段中包含的高层协议。Type>=1536(`0x0600`): Ethernet_II帧。46<= Type <=1500：IEEE 802.3帧。
+4. Data: 网络层(IP层) 数据，有效载荷 Payload。最小长度必须为46字节以保证帧长度至少为64字节。以太网的最大传输单元(Maximum transmission unit MTU)是1500 Byte。不足46字节时加入填充字节(任何字节)至46字节
+5. FCS(Frame Check Sequence): 帧校验序列，循环冗余校验字段。对目的地址、源地址、类型/长度和有效载荷（加填充位）字段进行CRC-32校验
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-4-12/78515386.jpg)
+
+
+
 
 -   单播地址：全球唯一。每个网卡(或接口)一个，最高字节的最低有效位为0。如：06-01-02-01-2C-4B。也称为网卡地址，烧录地址(Burned-In-Address，BIA)，MAC地址，硬件地址，物理地址
 -   多播地址的字节0的第0位为1 ，并且地址非全1。如：01-00-5E-20-01-4B
@@ -454,7 +460,7 @@ PPP协议的六阶段
 
 
 
-###### CSMA/CD protocol
+### CSMA/CD protocol
 
 > Carrier Sense Multiple Access With Collision Detection 带有冲突检测的载波侦听多路存取(访问)协议
 
@@ -492,7 +498,7 @@ address size（地址字段长） 48比特
 
 
 
-###### 二进制指数退避算法
+### 二进制指数退避算法
 
 > 二进制指数退避算法 binary exponential backoff
 
@@ -509,8 +515,7 @@ address size（地址字段长） 48比特
 
 
 
-
-###### 最短帧&冲突域&广播域
+### 最短帧&冲突域&广播域
 
 -   以太网(10M bps 10Base5)相距最远的两个站点（2500m，A和B)之间的信号往返时间为51.2 μs
 -   假如站点A发送的数据在快到达站点B时与其发送的数据冲突，因为发送站点只在发送时才检测冲突，为了检测到返回的冲突信号，则要求站点A此时还在发送，故帧长至少为512b(64B)
@@ -530,7 +535,7 @@ address size（地址字段长） 48比特
 
 
 
-### Switch 交换机
+## Switch 交换机
 
 > 交换机 switch 是一个把多个网段连接起来的设备，也称为多端口网桥
 
@@ -548,8 +553,7 @@ address size（地址字段长） 48比特
 
 ---
 
-
-### bridge 网桥
+## bridge 网桥
 
 -   用网桥(bridge)连接若干局域网(LAN)可以建造一个更大的局域网, 称为桥接的局域网(bridged LAN) 或扩展局域网(extended LAN)
 -   原来的局域网就成为该扩展局域网的一部分，称为该扩展局域网的一个网段Segment(一个网段就是一个冲突域)
@@ -558,7 +562,7 @@ address size（地址字段长） 48比特
 
 
 
-###### 透明网桥算法
+### 透明网桥算法
 
 -   透明网桥(transparent bridge)的标准是802.1D
 -   网桥：即插即用设备，只要把网桥接入LAN，不需要改动硬件和软件，无需设置地址开关，无需装入路由表或参数，网桥就能工作
@@ -584,7 +588,7 @@ address size（地址字段长） 48比特
 
 
 
-###### Spanning Tree Protocol
+### Spanning Tree Protocol
 
 -   **生成树协议** Spanning Tree Protocol, STP 工作在数据链路层 IEEE 802.1d
 -   防止交换机冗余链路产生环路，确保以太网中无环路的逻辑拓扑结构，从而避免了广播风暴,大量占用交换机的资源
