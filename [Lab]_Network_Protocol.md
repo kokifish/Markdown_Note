@@ -20,6 +20,8 @@
 - 应用于Internet路由器，流可以是host-to-host的通信路径，也可以是socket-to-socket的通信，它是由**源地址**、**目标地址**、**端口号**以及**传输协议**（e.g. UDP, TCP）。 在TCP情况下，流可以是虚拟电路，也称为虚拟连接或字节流。
 - In packet switches, the flow may be identified by IEEE 802.1Q **Virtual LAN tagging** in Ethernet networks, or by a **Label Switched Path** in MPLS tag switching
 - A session is a traffic unit divided based on 5-tuple, i.e. source IP, source port, destination IP, destination port and transport-level protocol. A flow is very similar to a session, and the difference is that it **contains traffic of only one direction**, i.e. the source and destination IP / port are not interchangeable. flow是单向的五元组决定的traffic     //《End-To-end encrypted traffic classification with one-dimensional convolution neural networks》中的解释
+- A **flow** is mostly defined as set of packets sharing common characteristics: Source-IP, Destination-IP, Source-Port, Destination-Port and Protocol
+- 激活的流：It is considered as **active-flow** when time-interval between packets belonging to a particular flow is below certain threshold value, which depends upon the purpose of analysis or study. Claffy et al. [28] identified that threshold value of **64 s** is good compromise considering the size of flow and initializing & terminating flows. 64秒比较合适，在流的大小和开始/结束流之间平衡。流也可以定义为单向或双向的
 
 
 
@@ -304,3 +306,6 @@ for all pair in IPPort:
 
 > 2017 专注p2p识别的综述
 
+[62]有数据集 [63]有提取方法
+
+[64]没有用难懂的统计特征或机器学习，就能TP 97%识别p2p应用 e.g.BitComet BitTorrent eMule，可以实时分类加密流量 
