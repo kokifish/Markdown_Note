@@ -1,3 +1,3 @@
 git add .;
-git commit -m ".sh update";
-git push origin master;
+git commit -m 'date "+%Y-%m-%d %H:%M:%S"';
+git push origin master
