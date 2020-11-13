@@ -1,3 +1,4 @@
 git add .;
-git commit -m 'date "+%Y-%m-%d %H:%M:%S"';
+var = `date "+%Y-%m-%d %H:%M:%S"`
+git commit -m var;
 git push origin master
