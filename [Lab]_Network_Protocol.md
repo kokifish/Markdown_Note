@@ -312,10 +312,8 @@ for all pair in IPPort:
 
 
 
-### Verification of ground truth of traffic
+### 4. Verification of ground truth of traffic
 
-> 第4章
->
 > 流量的事实验证 指流量属于哪个app/protocol
 >
 > ground truth可以考虑翻译为参考标准
@@ -336,4 +334,37 @@ for all pair in IPPort:
 [42]提出GT工具集，包含在每个客户端上运行的deamon守护进程，用以返回启动网络连接的进程的信息。[43]也提出了一个类似的，基于客户端的方法
 
 没有一种验证ground truth的方法是完美的。而新的分类技术的性能也取决于参考的分类模型的准确性（验证事实的分类方法）。
+
+### 6. P2P traffic classification techniques
+
+1. 基于端口
+2. 基于payload
+3. Classification of traffic in the dark, 不依赖端口号和payload
+4. Classification of encrypted traffic, 加密流量的识别
+
+
+
+#### 6.3 Classification of traffic in the dark
+
+
+
+##### a) Statistical or behavioural signatures
+
+> 统计或行为特征
+
+依赖于包/流级别的属性，比如 包大小，发送/接受的总字节数，流持续时间，流大小，包抵达的间隔时间，TCP/UDP使用的端口。可以单独使用也可以合起来使用，如均值、方差、概率密度函数。用这一方法分类，需要一个提前学习的步骤，用于建立一个参考模型。
+
+58 59：分析web请求响应的大小、每个页面的请求数量、请求与页面回传的的间隔时间，将隐藏在web流量中的VoIP流量识别出来。
+
+60：分析几种P2P和non-P2P的应用，P2P的包大小更加异质/不均匀(heterogeneity)，异质程度用熵表示，熵的值通过一个包含有一定包数量的滑动窗口来计算。
+
+61：C4.5决策树，用两种特征：ACK-Len ab, ACK-Len ba ..... 可以分类: www, ftp, e-mail, P2P，分析的是通信双方的发送的数据量。用了三个数据集，分别为[62]，工作环境，用[63]从工作环境中提取的。可实时在线分类，只使用一开始几个包的数据长度
+
+64: 在受控的被监视的网络下，基于host，对flow进行聚类，
+
+65 识别P2P直播，基于从行为特性分析得出的联合特征
+
+
+
+
 
