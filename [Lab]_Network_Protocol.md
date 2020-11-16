@@ -318,7 +318,7 @@ for all pair in IPPort:
 >
 > ground truth可以考虑翻译为参考标准
 
-由于隐私问题，流的信息可能只有头部信息可用
+由于隐私问题，流的信8息可能只有头部信息可用
 
 1. 数据集公开前预先打标签
 2. 人工打标签
@@ -362,9 +362,16 @@ for all pair in IPPort:
 
 64: 在受控的被监视的网络下，基于host，对flow进行聚类，
 
-65 识别P2P直播，基于从行为特性分析得出的联合特征
+65: 识别P2P直播，基于从行为特性分析得出的联合特征
 
+66: CUFTI( Core Users Finding and Traffic Identification ) 用于识别和管理核心用户 (long-lived peers长存在的peer) 的P2P流量。研究peer在PPlive系统的存在时间life-time，识别核心用户from the overlay(???)。模型利用不用P2P应用的payload长度，一开始的几个控制用的包的方向，用longest common subsequence(LCS)和流识别。
 
+67: component(连通子图) based, 利用UDP连接识别P2P流量。<IP, Port>作为一个节点，两个节点之间有双向流量，则有连边，在短周期内，基本可以确定相连的点的应用类型相同，因此连通子图有相同的应用类型。
 
+##### b) Heuristic-based methods
 
+68: 6个启发式方法：UDP，TCP的同时使用，知名P2P端口，两个对等点之间存在的连续连接数，具有相同流标识的几个流，流持续时间超10分钟或者流大小大于1MB，在测量周期内使用相同端口号超过5次的IP地址。
 
+69: 重定义了[68] [54] 中用的启发式方法，改成：UDP，TCP的同时使用，知名P2P协议的端口数量，经常使用的端口数量，端口数与IP地址数的关系，流持续时间大于10分钟或流大小大于1MB
+
+70: 
