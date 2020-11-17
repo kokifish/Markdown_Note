@@ -562,6 +562,23 @@ address size（地址字段长） 48比特
 
 
 
+### flood/filter/forward
+
+网桥收到一个单播帧，用该帧的目的地址查询MAC地址表
+
+1.  如果没有查到，则**扩散**(**flood**)该帧
+2.  如果查到，则看查到的端口是否为收到该帧的端口
+    1.  欲发送端口等于接收端口，则**丢弃**(**filter过滤**)//同一网段的帧丢弃
+    2.  否则把该帧从查询到的端口**发送**出去(**forward**)
+
+当网桥收到多播或广播帧，直接扩散(flood)
+
+>   **扩散 flood**: 把网桥收到的帧转发到**除了该帧的接收端口以外的所有端口**
+
+
+
+
+
 ### 透明网桥算法
 
 -   透明网桥(transparent bridge)的标准是802.1D
@@ -574,17 +591,6 @@ address size（地址字段长） 48比特
 3.  网桥会自动删除超时的记录
 
 
-
-网桥收到一个单播帧，用该帧的目的地址查询MAC地址表
-
-1.  如果没有查到，则**扩散**(**flood**)该帧
-2.  如果查到，则看查到的端口是否为收到该帧的端口
-    1.  欲发送端口等于接收端口，则**丢弃**(**filter过滤**)//同一网段的帧丢弃
-    2.  否则把该帧从查询到的端口**发送**出去(**forward**)
-
-当网桥收到多播或广播帧，直接扩散(flood)
-
->   扩散 flood: 把网桥收到的帧转发到除了该帧的接收端口以外的所有端口
 
 
 
@@ -1000,7 +1006,7 @@ network | 000...0
 
 
 
-###### 私有IP地址
+#### 私有IP地址
 
 -   **私有IP地址** : 无需IANA分配、任何人都可以使用的IP地址
 
@@ -1016,7 +1022,7 @@ network | 000...0
 
 
 
-###### 多播IP地址
+#### 多播IP地址
 
 
 
@@ -1173,9 +1179,7 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 
 
 
----
 
--   
 
 ---
 
@@ -1185,7 +1189,6 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 >
 > ping用的就是这个协议
 >
-> 解析ping在不同网段之间的过程，包括MAC解析，ARP请求应答 https://www.geeksforgeeks.org/packet-flow-in-different-network/ 
 
 -   用于Host或Router之间发布传递网络级别的控制消息 //错误侦测与回报机制
 -   The **Internet Control Message Protocol** (**ICMP**) is a **supporting protocol** in the Internet protocol suite. It is used by network devices, including routers, to **send error messages and operational information** indicating, for example, that a requested service is not available or that a host or router could not be reached. ICMP differs from transport protocols such as TCP and UDP in that it is not typically used to exchange data between systems, nor is it regularly employed by end-user network applications (with the exception(例外) of some diagnostic(诊断的) tools like **ping** and **traceroute**) //https://tools.ietf.org/html/rfc792
@@ -1224,7 +1227,7 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 
 
 
-常用Type & Code
+#### Type & Code
 
 | Type                                            | Code | Description                                                  |
 | ----------------------------------------------- | ---- | ------------------------------------------------------------ |
@@ -1355,6 +1358,37 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 ```
 
 
+
+### Case: Packet flow in different Network
+
+> 讲述当ping一个不同网段的主机时的整个过程 解析ping在不同网段之间的过程，包括MAC解析，ARP请求应答
+>
+> https://www.geeksforgeeks.org/packet-flow-in-different-network/
+
+1. 如果目标主机在于同一网段中，则包被直接发送到目标主机
+2. 如果目的主机存在于不同的网络中，则包首先被传送到默认网关，而默认网关又依次将包传送到目的主机
+3. 如果ARP没有被解析，那么ARP将首先被解析
+4. **MAC地址不跨越它的广播域**
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_Packet_flow_in_different_Network_1.jpg)
+
+- A: 10.0.0.10/24
+- B: 20.0.0.10/24 : 与A不同网段，是图上右下角的Host，图中标错了
+
+当A ping B时：
+
+1. 判断A.IP和B.IP是不是在同一个网段，发现不在同一个网段，包将被发往默认路由10.0.0.20/24(图中路由器左边端口的IP)
+2. A发现默认路由的IP的MAC未知，发送MAC广播帧，ARP请求10.0.0.20的MAC
+3. 交换机Switch 0接收到了MAC广播帧，把该帧泛洪flood，从接收端口以外的端口转发出去
+4. C收到后发现问的不是自己的IP，忽略掉。Router发现问的是Router上的端口的IP 10.0.0.20，做出响应(ARP reply)
+5. Router发送单播MAC帧到A，告诉A: 10.0.0.20对应的MAC
+6. A发送ICMP包，封装成单播MAC帧，dst.MAC填的就是刚刚问到的10.0.0.20对应的MAC
+7. Router收到ICMP包后，取出IP包
+8. Router不知道B的IP的MAC，从Router右边端口发出ARP request
+9. D收到后忽略，B收到后返回ARP reply，发送单播MAC帧到Router右边端口
+10. Router接收到ARP reply后，把IP包封装成单播MAC帧，dst.MAC就是刚刚问到的B对应的MAC
+11. B收到src.MAC为Router右边端口，dst.MAC为B.IP.MAC的帧，取出IP包，发现是ICMP协议
+12. B对ICMP协议的Ping请求做出应答，发送IP为A.IP: 10.0.0.10 的ICMP Ping应答
 
 
 
@@ -2363,7 +2397,7 @@ quit
 
 
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-3-15/64192539.jpg)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_OSI_7_layers.gif)
 
 
 
