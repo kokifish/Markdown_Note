@@ -19,13 +19,13 @@
 
 # CMD Quick Find
 
-```cmd
-netstat -anput | grep nginx // 检测Nginx是否在运行
-nginx -c /path/to/nginx.conf // 利用配置文件启动nginx
-service nginx restart // 重启服务
-nginx -s stop // 快速停止或关闭
-nginx -s quit // 正常停止或关闭
-nginx -s reload // 配置文件修改重装载命令
-nginx -t // 配置文件测试
+```python
+netstat -anput | grep nginx # 检测Nginx是否在运行
+nginx -c /path/to/nginx.conf # 利用配置文件启动nginx
+service nginx restart # 重启服务
+nginx -s stop # 快速停止或关闭
+nginx -s quit # 正常停止或关闭
+nginx -s reload # 配置文件修改重装载命令
+nginx -t # 配置文件测试
 ```
 
