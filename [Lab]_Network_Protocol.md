@@ -78,6 +78,20 @@ DPI检测应用层协议的协议数据，即有效载荷(payload)部分。
 
 
 
+## Topology
+
+- 拓扑结构是P2P设计过程的核心问题，直接决定了整个网络的基本形态，并且影响着系统中大量对等节点的命名、组织管理、节点加入/退出方式、容错机制和资源定位机制的设计。
+- 由于P2P网络的拓扑维护和路由是叠加于IP层之上的应用层进行的，因此也被称为覆盖网络(Overlay Network)
+
+1. 中心式P2P网络：服务器对用户共享的资源建立索引并提供查询服务。e.g. Napser, BitTorrent, eDonkey2000, FS2You
+2. 无结构P2P网络：去掉了中心索引服务器，将资源文件的索引信息分散到所有网络节点上，网络中所有节点在功能和访问权限上是完全对等的，当一个节点需要查询所需要的资源时，会向所有邻居节点发送查询请求，收到的请求会以泛洪、BFS或随机漫步的方式将消息向下转发。e.g. Gnutella, Freenet
+3. 结构化P2P网络：分布式散列表（DHT, Distributed Hash Table）应用到了P2P网络拓扑设计中。e.g. CAN(Content-Addressable Network), Chord, Pastry, Tapestry, P-Grid, Kademlia
+4. 混合式P2P网络：结合中心式与分布式拓扑特点的折中选择，通过在完全分布式P2P网络中引入超级节点(super node)来实现。e.g. KaZaA, Skype, eMule
+
+
+
+
+
 ## List of P2P protocols
 
 
