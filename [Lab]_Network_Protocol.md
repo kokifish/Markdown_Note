@@ -85,10 +85,12 @@ DPI检测应用层协议的协议数据，即有效载荷(payload)部分。
 
 1. 中心式P2P网络：服务器对用户共享的资源建立索引并提供查询服务。e.g. Napser, BitTorrent, eDonkey2000, FS2You
 2. 无结构P2P网络：去掉了中心索引服务器，将资源文件的索引信息分散到所有网络节点上，网络中所有节点在功能和访问权限上是完全对等的，当一个节点需要查询所需要的资源时，会向所有邻居节点发送查询请求，收到的请求会以泛洪、BFS或随机漫步的方式将消息向下转发。e.g. Gnutella, Freenet
-3. 结构化P2P网络：分布式散列表（DHT, Distributed Hash Table）应用到了P2P网络拓扑设计中。e.g. CAN(Content-Addressable Network), Chord, Pastry, Tapestry, P-Grid, Kademlia
+3. 结构化P2P网络：分布式散列表（DHT, Distributed Hash Table）应用到了P2P网络拓扑设计中。e.g. CAN(Content-Addressable Network), Chord, Pastry, Tapestry, P-Grid, Kademlia(Kad)
 4. 混合式P2P网络：结合中心式与分布式拓扑特点的折中选择，通过在完全分布式P2P网络中引入超级节点(super node)来实现。e.g. KaZaA, Skype, eMule
 
 
+
+- 
 
 
 
@@ -160,6 +162,9 @@ DPI检测应用层协议的协议数据，即有效载荷(payload)部分。
 - BT协议是一个协议簇：有点像tcp/ip协议一样，bt协议不是一个简单的协议，而是一系列相关的协议组成的，而且这个协议簇一直在进化。
 
 
+
+- Mainline DHT协议：基于结构化P2P，为BT共享网络提供了结构化拓扑，减轻Tracker负担的一种扩展协议，大致基于Kademlia协议开发
+- PEX(Peer Exchange)协议：广泛应用于BT系统，减轻Tracker服务器压力的扩展协议。多数BT客户端和95%以上的节点均支持PEX扩展协议。主要有三种典型实现：AZ PEX, UT PEX, BC PEX
 
 
 
@@ -235,9 +240,31 @@ tracker服务器接收get请求，一个get请求由下列字段组成
 
 
 
+# eMule
+
+> 开源免费的P2P文件共享软件，基于eDonkey2000的eDonkey网络
+
+- eMule作为eDonkey的继承者，对eDonkey进行了大量的改进，其中最大的改进是增加了DHT网络的支持，即加入了对Kad网络的支持，是一个基于Kademlia协议全新的DHT网络
+- 由于DHT网络是将所有的节点连接在一起的，所以这使eMule系统能够获取的资源数目大大增加，同时增强了eMule系统的稳定性。技师没有eD2k服务器，eMule系统也能正常运行。通常现在的eMule客户端加入了两个覆盖网络：eD2k覆盖网络和Kad覆盖网络
 
 
----
+
+
+
+# Kademlia
+
+> 简称Kad，结构化P2P网络拓扑，基于DHT技术
+
+实现了4种操作的报文：
+
+1. PING: 主要用于检测一个节点是否在线，当以PONG消息回复PING消息时，证明在线
+2. STORE: 通知节点需要存储的资料信息，一般为<key, value>对
+3. FIND\_NODE: 
+4. FIND\_VALUE: 
+
+
+
+
 
 # Gnutella
 
