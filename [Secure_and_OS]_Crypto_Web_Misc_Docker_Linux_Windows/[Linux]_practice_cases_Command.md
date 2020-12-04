@@ -670,8 +670,7 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
-
-## Autotools
+# Autotools
 
 
 
@@ -870,5 +869,29 @@ target_include_directories(hello_headers
     PRIVATE 
         ${PROJECT_SOURCE_DIR}/include  # 添加./include 作为需要-I include的文件夹
 )
+```
+
+
+
+# conan
+
+> ref: http://chu-studio.com/posts/2019/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84C++%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8CONAN%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97
+
+- 开源的、跨平台的、去中心化的 C++ 包管理器
+
+conan的软件包描述：`名称/版本@用户/渠道`, 渠道 Channel 用来描述是稳定版 Stable 还是测试版 Testing 等信息
+
+Conan 基于 Python 编写，故需要在开始前安装好 Python3。然后使用标准的 *pip* 安装即可
+
+```python
+pip install conan # install conan
+# 使用 GCC 作编译器时需要手动开启对 C++11 的 ABI 的支持，否则默认位于兼容模式下，将使用老的 ABI
+conan profile new default --detect  # Generates default profile detecting GCC and sets old ABI
+conan profile update settings.compiler.libcxx=libstdc++11 default  # Sets libcxx to C++11 ABI
+conan search boost* -r=conan-center # 搜索软件包
+conan remote add my-repo http://my-repo.com/xxx # 添加源
+conan remote update my-repo http://my-repo.com/xxx --insert=0 # 或者使用insert来将其作为首个源
+conan remote list # 展示所有源
+conan remote remove my-repo # 删除一个源
 ```
 
