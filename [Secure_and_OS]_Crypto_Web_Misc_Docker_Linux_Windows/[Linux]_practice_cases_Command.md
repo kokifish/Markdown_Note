@@ -327,7 +327,7 @@ ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该�
 ```cmd
 grep -r "test"  /path # 在路径 /path 下查找文件内容包含 test 的文件
 grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' / # 在根目录/下查找所有“abcdefg”的字符串，但不在以build_开头的目录、kernel和dirvers中查找，同时忽略所有以out为后缀的文件 
-grep -r --exclude-dir=sys --exclude-dir=proc "nf_conntrack" / # 根目录下除sys proc目录外查找含nf_conntrack的文件
+grep -r --exclude-dir=sys --exclude-dir=proc --exclude-dir=dev "nf_conntrack" / # 根目录下除sys proc目录外查找含nf_conntrack的文件
 ```
 
 
