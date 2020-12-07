@@ -814,7 +814,7 @@ A-hello-cmake$ tree
 cmake_minimum_required(VERSION 3.5) # 指定CMkae最低版本
 
 # Set the project name
-project (hello_cmake) # 项目名 # make referencing certain variables easier when using multiple projects. 包含项目名称，以便在使用多个项目时更容易引用某些变量。
+project(hello_cmake) # 项目名 # make referencing certain variables easier when using multiple projects. 包含项目名称，以便在使用多个项目时更容易引用某些变量。
 
 # Add an executable # 构建的可执行文件的名字
 add_executable(hello_cmake main.cpp) # 把一系列文件编译成 hello_cmake 这个目标文件
@@ -824,13 +824,9 @@ add_executable(hello_cmake main.cpp) # 把一系列文件编译成 hello_cmake �
 >
 > ```cmake
 > cmake_minimum_required(VERSION 2.6) # 指定CMkae最低版本
-> project (hello_cmake) # 项目名
+> project(hello_cmake) # 项目名
 > add_executable(${PROJECT_NAME} main.cpp) # 可执行文件名 与项目名一致
 > ```
-
-
-
-
 
 
 
@@ -846,13 +842,9 @@ B-hello-headers$ tree
 ```
 
 ```cmake
-# Set the minimum version of CMake that can be used
-# To find the cmake version run
-# $ cmake --version
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.5) # 支持的最低CMake版本 # Set the minimum version of CMake that can be used
 
-# Set the project name
-project (hello_headers)
+project (hello_headers)# Set the project name
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES  # 定义一个宏
@@ -860,14 +852,117 @@ set(SOURCES  # 定义一个宏
     src/main.cpp
 )
 
-# Add an executable with the above sources
-add_executable(hello_headers ${SOURCES})
+add_executable(hello_headers ${SOURCES}) # Add an executable with the above sources
 
 # Set the direcoties that should be included in the build command for this target
 # when running g++ these will be included as -I/directory/path/ #在g++命令行的等效
 target_include_directories(hello_headers
     PRIVATE 
         ${PROJECT_SOURCE_DIR}/include  # 添加./include 作为需要-I include的文件夹
+)
+```
+
+
+
+### include dir
+
+> https://github.com/ttroy50/cmake-examples/tree/master/01-basic/C-static-library
+
+- include一个由这个cmake编译的库
+
+```cmake
+$ tree
+.
+├── CMakeLists.txt
+├── include
+│   └── static
+│       └── Hello.h
+└── src
+    ├── Hello.cpp  # 这个文件 #include "static/Hello.h" 是static/Hello.h的实现
+    └── main.cpp # 这个文件 #include "static/Hello.h" 调用了Hello.cpp的函数
+```
+
+```cpp
+// src/main.cpp
+#include "static/Hello.h"
+int main(int argc, char *argv[]){
+    Hello hi;
+    hi.print();
+}
+```
+
+```cpp
+// src/Hello.cpp
+#include <iostream>
+#include "static/Hello.h"
+void Hello::print(){
+    std::cout << "Hello Static Library!" << std::endl;
+}
+```
+
+```cpp
+// include/static/Hello.h
+#ifndef __HELLO_H__
+#define __HELLO_H__
+
+class Hello{
+public:
+    void print();
+};
+
+#endif
+```
+
+
+
+```cmake
+cmake_minimum_required(VERSION 3.5)
+project(hello_library) # 注意这里是 library
+
+# Create a library
+#Generate the static library from the library sources
+add_library(hello_library STATIC # 从 .cpp 源文件创建库library
+    src/Hello.cpp
+)
+
+target_include_directories(hello_library # include一个文件夹 只能include这个cmake编译的
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+# Create an executable
+add_executable(hello_binary  # Add an executable with the above sources
+    src/main.cpp
+)
+
+# link the new hello_library target with the hello_binary target
+target_link_libraries(hello_binary 
+    PRIVATE 
+        hello_library
+)
+```
+
+
+
+
+
+### compile flags
+
+- `CACHE STRING "Set C++ Compiler Flags" FORCE`用于强制在该CMakeCache.txt文件中设置该变量
+
+```cmake
+cmake_minimum_required(VERSION 3.5)
+# Set a default C++ compile flag
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEX2" CACHE STRING "Set C++ Compiler Flags" FORCE)
+
+# Set the project name
+project (compile_flags)
+
+# Add an executable
+add_executable(cmake_examples_compile_flags main.cpp)
+
+target_compile_definitions(cmake_examples_compile_flags 
+    PRIVATE EX3
 )
 ```
 

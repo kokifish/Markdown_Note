@@ -15,7 +15,7 @@
 
 
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/choose-a-free-software-license.png)
+![license](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/choose-a-free-software-license.png)
 
 
 
@@ -134,7 +134,7 @@ Initialized empty Git repository in /Users/test/learngit/.git/
 - commit将暂存区的所有修改提交到当前分支
 - 每次修改，如果不用`git add`到stage，那就不会加入到`commit`中
 
-![](https://raw.githubusercontent.com/pureteap/pictures/main/Code_pic/lifecycle.png)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/lifecycle.png)
 
 ```python
 $ git add readme.txt   #add file to repository
@@ -238,7 +238,7 @@ index d39cda9..ca48dab 100644 # 两个版本的git哈希值 # 最后六个数字
 
 
 
-![wiki git](https://raw.githubusercontent.com/pureteap/pictures/main/Code_pic/760px-Git_operations.svg.png)
+![wiki git](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/760px-Git_operations.svg.png)
 
 撤销修改的几种场景：
 
