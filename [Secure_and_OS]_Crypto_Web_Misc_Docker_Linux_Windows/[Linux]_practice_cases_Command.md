@@ -752,6 +752,10 @@ AC_OUTPUT
 
 # CMake
 
+> https://gitlab.kitware.com/cmake/community/-/wikis/Home
+>
+> https://www.hiroom2.com/2016/09/07/convert-makefile-to-cmakelists-txt-manually/
+
 - CMake是个一个开源的跨平台自动化建构系统，用来管理软件建置的程序，并不相依于某特定编译器
 - 支持多层目录、多个应用程序与多个库
 - CMake并不直接建构出最终的软件，而是产生标准的建构档（如Unix的Makefile或Windows Visual C++的projects/workspaces），然后再依一般的建构方式使用
