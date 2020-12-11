@@ -1773,7 +1773,7 @@ TCP协议的运行阶段:
 
 - 序号 Sequence number(以字节流为单位): [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为ISN+1。如果SYN != 1，则此为第一个数据比特的序列码 
 - 确认号 Acknowledgment number: 确认号为期待接收的下一个数据段的开始序号，也即已经收到的数据的字节长度加1 。ACK = 1时，确认号才有效
-- 头部长度 Data offset : 以32bit(4B)为单位，头部长度的实际大小为[20, 60] Bytes,故选项字段最大40B。Data Offset最小值为5
+- 头部长度 **Data offset** : 以32bit(4B)为单位，**头部长度的实际大小为[20, 60] Bytes,故选项字段最大40B**。Data Offset最小值为5
 - 保留 Reserved 0:  For future use and should be set to zero.应置为0
 - 标志 Flags (aka Control bits): 6 bits, wiki写的是9 bit
 - 通知窗口大小 Window size: 接收窗口的大小(Byte)。接收方用通知窗口大小(advertised window)告知发送方接收窗口的大小，发送方会据此修改发送窗口大小。即空闲块的大小，若接收方尚未将数据交付上层，数据还在缓冲区中，窗口大小变小。（包含错序到达的数据段）
