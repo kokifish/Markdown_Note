@@ -9,7 +9,7 @@
 
 
 
-###### 整型
+### 整型
 
 
 - %d  interger    以十进制形式输出带符号整数(正数不输出符号)
@@ -27,7 +27,7 @@
 
 ---
 
-###### 八/十六进制
+### 八/十六进制
 
 
 - %o 以八进制形式输入/出无符号整数(不输出前缀0零) Octal、OCT、O//要输出前缀则用%#o(# 显示前缀)
@@ -35,7 +35,7 @@
 
 ---
 
-###### 实型(和指数型)
+### 实型(和指数型)
 
 - %f float 以小数形式输出单实数(promoted automatically to double for printf())
 - %lf  double 双精度浮点型(实数)[在printf中l、lf、llf等同]
@@ -46,7 +46,7 @@
 
 ---
 
-###### 字符和字符串
+### 字符和字符串
 
 - %c char/signed char/unsigned char 输出单个字符[0,255]%hhi for numerical(数字的) output)
 - %s string 输入/输出字符串
@@ -64,7 +64,7 @@ printf("abc%n", &x);//x==3	//事实上大部分printf中%n不输出但不会给x
 
 
 
-##### 标志
+## 标志
 
 - 左对齐，右边填空格ASCii32// %-7d%d  总共输出7格，左对齐，后面的数字从第八格开始输出
 - 输出符号(正号或负号)// %+d  不论正负都带符号
@@ -82,7 +82,7 @@ printf("abc%n", &x);//x==3	//事实上大部分printf中%n不输出但不会给x
 
 ---
 
-###### 扫描集   scan set    %[]
+### 扫描集   scan set    %[]
 
 
 - 描述 %[aeiou] 扫描集扫描输入流中的字符，寻找与扫描集中的字符相匹配的字符
@@ -107,7 +107,7 @@ scanf("%A-Z", a);		//扫描除了大写字母以外的
 
 ---
 
-###### 赋值抑制字符
+### 赋值抑制字符
 
 >   assignment suppression character
 
@@ -198,7 +198,7 @@ printf("\101");				//输出A，A的ASCii 8进制为101
 
 # 输入输出函数
 
-###### scanf
+### scanf
 
 通用终端格式化输入函数，它从标准输入设备(键盘) 读取输入的信息。可以读入任何固有类型的数据并自动把数值变换成适当的机内格式
 
@@ -264,7 +264,7 @@ scanf("%*[^\n]%*c");//这样写在个别情况下会出小错误，建议分开�
 
 
 
-###### sscanf
+### sscanf
 
 -   <stdio.h>
 -   int sscanf (char *str, char * format [, argument, ...]);//参数str为要读取数据的字符串；format为用户指定的格式；argument为变量，用来保存读取到的数据
@@ -300,7 +300,7 @@ The lowercase is: qwer.
 
 
 
-###### gets
+### gets
 
 -   gets是get string的缩写，获取用户从键盘输入的字符串
 -   gets()不会把空格作为输入结束的标志，能避免空格截断
@@ -330,7 +330,7 @@ gets_s(char *buff,rsize_t size);//n: char数组的最大长度
 
 
 
-###### printf
+### printf
 
 -   int printf (char * format,args, ...); //format可以是一个字符串，或字符数组的起始地址
 -   返回成功输出的字符个数，包含空字符，若出错，则返回负数
