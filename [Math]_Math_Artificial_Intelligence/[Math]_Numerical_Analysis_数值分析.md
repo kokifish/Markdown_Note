@@ -4,11 +4,11 @@
 
 
 
-## 插值法
+# 插值法
 
 -   插值一般是在只知道一些离散的插值节点以及对应函数值的情况下，利用这些插值节点及相应函数值，构造出一个在插值节点满足一定条件(例如函数值相等)的插值函数
 
-###### 龙格现象
+##### 龙格现象
 
 -   在数值分析领域中，**龙格现象**是在一组**等间插值点**上使用具有**高次多项式**的多项式插值时出现的**区间边缘处**的**振荡**问题
 
@@ -18,8 +18,7 @@
 
 -   使用**切比雪夫节点**代替等距点可以减小震荡，在这种情况下，随着多项式阶次的增加最大误差逐渐减小。这个现象表明高阶多项式通常不适合用于插值。使用分段多项式**样条**可以避免这个问题。如果要减小插值误差，那么可以增加构成样条的多项式的数目，而不必是增加多项式的阶次
 
-
-#### 均差(差商)及其性质
+### 均差(差商)及其性质
 
 >   均差字面含义(瞎猜的): 平均的差值，所以要用值的差(y~k+1~ - y~k~)除以导致这个值的差的自变量的变化量(x~k+1~ - x~k~)
 >
@@ -41,7 +40,7 @@ $$
 
 
 
-#### Lagrange polynomials
+## Lagrange polynomials
 
 >   拉格朗日插值多项式
 
@@ -177,22 +176,21 @@ plt.show() #显示图像
 
 
 
-#### Newton Polynomial
+## Newton Polynomial
+
+> 牛顿多项式插值
 
 
 
 
 
-
-
-#### Hermite interpolation
+## Hermite interpolation
 
 >   埃尔米特插值
 
 -   **埃尔米特(Hermite)插值**: 在给定的节点处，不但要求插值多项式的函数值与原函数值相同。同时还要求在插值节点处，插值多项式的**一阶直至指定阶的导数值**，也与被插函数的相应阶导数值相等
 -   Hermite插值在不同的节点，提出的插值条件个数可以不同，若在某节点x\_{i}，要求插值函数多项式的函数值，一阶导数值，直至m~i-1~阶导数值均与被插函数的函数值相同及相应的导数值相等。我们称x~i~为m~i~重插值点节因此，Hermite插值应给出两组数，一组为插值$${\displaystyle \{x_{i}\}_{i=0}^{n}}$$节点，另一组为相应的重数标号$${\displaystyle \{m_{i}\}_{i=0}^{n}}$$
 -   若$${\displaystyle \sum _{i=0}^{n}m_{i}=N+1}$$ ，这就说明了给出的插值条件有$${\displaystyle N+1}$$个，为了保证插值多项式的存在唯一性，这时的Hermite插值多项式应在$${\displaystyle P_{n}}$$上求得
-
 
 ##### 二重Hermite插值
 
@@ -250,8 +248,7 @@ H_3(x) = (1+2\frac{x-x_k}{x_{k+1} -x_k})(\frac{x-x_{k+1}}{x_k-x_{k+1}})^2 y_k
 m_k = f'(x_{k}),m_{k+1} = f'(x_{k+1})
 $$
 
-
-#### Spline interpolation
+## Spline interpolation
 
 >   样条插值。分段线性插值=线性样条插值
 >
@@ -264,8 +261,7 @@ $$
 
 
 
-
-#####  Piecewise Cubic Spline Interpolating
+###  Piecewise Cubic Spline Interpolating三次样条插值
 
 >   分段三次样条插值 每一段的与原函数的值，一阶二阶导的值都相等的样条插值
 
@@ -298,7 +294,145 @@ $$
 4.  计算三次样条插值函数的系数
 5.  在每个子区间中，创建方程
 
-###### 逆推的构造方法
+
+
+
+
+```python
+# 2020.12 黄海宇 20214920 hyhuang1024@outlook.com 数值分析编程题作业 教材p50 第二章计算实习题第2题
+# 在[-1, 1]上分别取n=10,20 用两组等距节点对龙格函数f(x)=1/(1+25x**2)做多项式插值及三次样条插值
+# 对每个n，分别画出插值函数及fx的图形
+# itplt: interpolation 插值, prcs: precise 精确的
+from scipy.interpolate import CubicSpline
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def calRungeFunction(x_arr):
+    # 返回龙格函数的值
+    y_arr = list()
+    for x in x_arr:
+        y_arr.append(1/(1+25 * x**2))
+    return y_arr
+
+
+def calBaseFunc(x_list: list, x_k):
+    # 计算拉格朗日插值函数的基函数，返回np.poly1d
+    base_func = np.poly1d([1])  # 拉格朗日插值多项式的基函数
+    if(x_k not in x_list):
+        return base_func
+
+    for x in x_list:
+        if (x_k != x):
+            cpm_poly = np.poly1d([1, -x]) / float(x_k - x)
+            base_func *= cpm_poly
+    return base_func
+
+
+def polyItpltMain():
+    # 多项式插值主函数 包含作图
+    prcs_ist_x_10 = np.linspace(-1, 1, 11).tolist()
+    prcs_ist_x_20 = np.linspace(-1, 1, 21).tolist()
+    Lagrange_func_10 = np.poly1d([0])  # 最后用于存储拉格朗日插值多项式n=10的版本
+    Lagrange_func_20 = np.poly1d([0])  # 最后用于存储拉格朗日插值多项式n=20的版本
+    prcs_ist_y_10 = calRungeFunction(prcs_ist_x_10)
+    prcs_ist_y_20 = calRungeFunction(prcs_ist_x_20)
+    for index in range(0, len(prcs_ist_y_10)):
+        base_func = calBaseFunc(prcs_ist_x_10, prcs_ist_x_10[index])  # 计算基函数
+        Lagrange_func_10 += prcs_ist_y_10[index] * base_func
+    for index in range(0, len(prcs_ist_y_20)):
+        base_func = calBaseFunc(prcs_ist_x_20, prcs_ist_x_20[index])  # 计算基函数
+        Lagrange_func_20 += prcs_ist_y_20[index] * base_func
+
+    print("Lagrange_func n=10 : \n", Lagrange_func_10)  # 插值函数
+    print("Lagrange_func n=20 : \n", Lagrange_func_20)  # 插值函数
+
+    # matplotlib.pyplot绘图
+    plt.figure(num=1, figsize=(14, 10))
+    plt.grid(False)
+    x_ticks = np.linspace(-1, 1, 21)  # 起始值，终止值，点数
+    plt.xticks(x_ticks)
+    plt.xlim(-1.1, 1.1)
+    plt.ylim(-4, 4)
+    plt.title("Lagrange Polynomials Interpolation")
+    plt.xlabel("x")  # x轴label
+    plt.ylabel("y")  # y轴label
+
+    # 坐标更改
+    ax = plt.gca()  # gca = 'get current axis'
+    ax.spines['right'].set_color('none')  # spines:脊柱,这里指轴,函数图像框的四条边
+    ax.spines['top'].set_color('none')  # 使上边的框颜色透明
+    ax.xaxis.set_ticks_position('bottom')  # 将x坐标轴用bottom的坐标轴代替
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.yaxis.set_ticks_position('left')
+    ax.spines['left'].set_position(('data', 0))
+
+    # matplotlib.pyplot原函数绘图
+    x = np.linspace(-1.1, 1.1, 1000)
+    prcs_y = (1 / (1+25*x**2))
+    plt.plot(x, prcs_y, color="black", linewidth=1, label="precise")
+
+    # matplotlib.pyplot插值函数绘图
+    plt.plot(x, Lagrange_func_10(x), color="red", linewidth=1, label="n=10")
+    plt.plot(x, Lagrange_func_20(x), color="blue", linewidth=1, label="n=20")
+
+    plt.legend(bbox_to_anchor=(0.2, 0.9))
+    plt.show()  # 显示图像
+
+
+def cubicItpltMain():
+    # 三次样条插值main函数 包含画图
+    prcs_ist_x_10 = np.linspace(-1, 1, 11).tolist()
+    prcs_ist_x_20 = np.linspace(-1, 1, 21).tolist()
+    prcs_ist_y_10 = calRungeFunction(prcs_ist_x_10)
+    prcs_ist_y_20 = calRungeFunction(prcs_ist_x_20)
+    cs_10 = CubicSpline(prcs_ist_x_10, prcs_ist_y_10)
+    cs_20 = CubicSpline(prcs_ist_x_20, prcs_ist_y_20)
+    print(cs_10.c)
+    print(cs_20.c)
+    # matplotlib.pyplot绘图
+    plt.figure(num=1, figsize=(14, 6))
+    plt.grid(False)
+    x_ticks = np.linspace(-1, 1, 21)  # 起始值，终止值，点数
+    plt.xticks(x_ticks)
+    plt.xlim(-1.1, 1.1)
+    plt.ylim(-0.2, 1.1)
+    plt.title("Cubic Spline Interpolation")
+    plt.xlabel("x")  # x轴label
+    plt.ylabel("y")  # y轴label
+
+    # 坐标更改
+    ax = plt.gca()  # gca = 'get current axis'
+    ax.spines['right'].set_color('none')  # spines:脊柱,这里指轴,函数图像框的四条边
+    ax.spines['top'].set_color('none')  # 使上边的框颜色透明
+    ax.xaxis.set_ticks_position('bottom')  # 将x坐标轴用bottom的坐标轴代替
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.yaxis.set_ticks_position('left')
+    ax.spines['left'].set_position(('data', 0))
+
+    # matplotlib.pyplot原函数绘图
+    x = np.linspace(-1.1, 1.1, 1000)
+    prcs_y = (1 / (1+25*x**2))
+    plt.plot(x, prcs_y, color="black", linewidth=1, label="precise")
+
+    # matplotlib.pyplot插值函数绘图
+    plt.plot(x, cs_10(x), color="red", linewidth=1, label="n=10")
+    plt.plot(x, cs_20(x), color="blue", linewidth=1, label="n=20")
+
+    plt.legend(bbox_to_anchor=(0.2, 0.9))
+    plt.show()  # 显示图像
+
+
+if __name__ == "__main__":
+    polyItpltMain()
+    cubicItpltMain()
+```
+
+
+
+
+
+#### 逆推的构造方法
 
 三次样条插值的推导方法参考链接: //https://www.bb.ustc.edu.cn/jpkc/xiaoji/szjsff/jsffkj/chapt1_6_1.htm //https://blog.csdn.net/zb1165048017/article/details/48311603
 $$
@@ -366,7 +500,115 @@ $$
 
 ---
 
-## 函数逼近与快速傅里叶变换
+# 函数逼近与快速傅里叶变换
+
+
+
+
+
+```python
+# 2020.12 黄海宇 20214920 hyhuang1024@outlook.com 数值分析编程题作业 教材p95 第三章计算实习题第2题
+# 对于给出的数据表 求3、4次多项式曲线拟合，并根据曲线形状 求一个另外函数的拟合曲线，图示数据曲线及相应三种拟合曲线
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.optimize import curve_fit
+
+ori_x = [0.0, 0.1, 0.2, 0.3, 0.5, 0.8, 1.0]
+ori_y = [1.0, 0.41, 0.50, 0.61, 0.91, 2.02, 2.46]
+
+
+# 3 degree polynomial fit
+poly_coeff_3degree = np.polyfit(ori_x, ori_y, 3)
+poly1d_3degree = np.poly1d(poly_coeff_3degree)
+print(poly1d_3degree)
+# 4 degree polynomial fit
+poly_coeff_4degree = np.polyfit(ori_x, ori_y, 4)
+poly1d_4degree = np.poly1d(poly_coeff_4degree)
+print(poly1d_4degree)
+
+# matplotlib.pyplot绘图
+plt.figure(num=1, figsize=(14, 6))
+plt.grid(False)
+x_ticks = np.linspace(-0.2, 1.2, 15)  # 起始值，终止值，点数
+plt.xticks(x_ticks)
+plt.xlim(-0.3, 1.3)
+plt.ylim(-0.2, 3.5)
+plt.title("Polynomial Curve Fitting")
+plt.xlabel("x")  # x轴label
+plt.ylabel("y")  # y轴label
+
+# 坐标更改
+ax = plt.gca()  # gca = 'get current axis'
+ax.spines['right'].set_color('none')  # spines:脊柱,这里指轴,函数图像框的四条边
+ax.spines['top'].set_color('none')  # 使上边的框颜色透明
+ax.xaxis.set_ticks_position('bottom')  # 将x坐标轴用bottom的坐标轴代替
+ax.spines['bottom'].set_position(('data', 0))
+ax.yaxis.set_ticks_position('left')
+ax.spines['left'].set_position(('data', 0))
+
+# matplotlib.pyplot原函数绘图
+plt.scatter(ori_x, ori_y, color="black", linewidth=1,
+            label="original data points")
+plt.plot(ori_x, ori_y, color="black", linewidth=1, label="original")
+
+# matplotlib.pyplot插值函数绘图
+x = np.linspace(-0.2, 1.2, 1000)
+plt.plot(x, poly1d_3degree(x), color="deepskyblue",
+         linewidth=1, label="3 degree polynomial")
+plt.plot(x, poly1d_4degree(x), color="darkblue",
+         linewidth=1, label="4 degree polynomial")
+
+plt.legend(bbox_to_anchor=(0.6, 0.9))
+plt.show()  # 显示图像
+
+### 画sin拟合 ##########################################################################
+
+
+def sinfunc(t, A, w, p, c):
+    return A * np.sin(w*t + p) + c
+
+
+A, w, p, c = curve_fit(sinfunc, ori_x, ori_y)[0]
+print(A, w, p, c)
+
+# matplotlib.pyplot绘图
+plt.figure(num=1, figsize=(14, 6))
+plt.grid(False)
+x_ticks = np.linspace(-0.2, 1.2, 15)  # 起始值，终止值，点数
+plt.xticks(x_ticks)
+plt.xlim(-0.3, 1.3)
+plt.ylim(-0.2, 3.5)
+plt.title("Polynomial Curve Fitting")
+plt.xlabel("x")  # x轴label
+plt.ylabel("y")  # y轴label
+
+# 坐标更改
+ax = plt.gca()  # gca = 'get current axis'
+ax.spines['right'].set_color('none')  # spines:脊柱,这里指轴,函数图像框的四条边
+ax.spines['top'].set_color('none')  # 使上边的框颜色透明
+ax.xaxis.set_ticks_position('bottom')  # 将x坐标轴用bottom的坐标轴代替
+ax.spines['bottom'].set_position(('data', 0))
+ax.yaxis.set_ticks_position('left')
+ax.spines['left'].set_position(('data', 0))
+
+# matplotlib.pyplot原函数绘图
+plt.scatter(ori_x, ori_y, color="black", linewidth=1,
+            label="original data points")
+plt.plot(ori_x, ori_y, color="black", linewidth=1, label="original")
+
+# matplotlib.pyplot插值函数绘图
+x = np.linspace(-0.2, 1.2, 1000)
+plt.plot(x, poly1d_3degree(x), color="deepskyblue",
+         linewidth=1, label="3 degree polynomial")
+plt.plot(x, poly1d_4degree(x), color="darkblue",
+         linewidth=1, label="4 degree polynomial")
+plt.plot(x, sinfunc(x, A, w, p, c), color="red",
+         linewidth=1, label="A * np.sin(w*x + p) + c")
+
+plt.legend(bbox_to_anchor=(0.6, 0.9))
+plt.show()  # 显示图像
+
+```
 
 
 
@@ -374,15 +616,11 @@ $$
 
 
 
+## 正交多项式
 
 
 
-
-### 正交多项式
-
-
-
-##### Legendre polynomials
+### Legendre polynomials
 
 >   勒让德多项式
 
@@ -392,7 +630,7 @@ $$
 
 
 
-##### Chebyshev polynomials
+### Chebyshev polynomials
 
 >   切比雪夫多项式
 
@@ -475,9 +713,15 @@ $$
 
 
 
+
+
+## 最佳平方逼近
+
+
+
 ---
 
-## 数值积分 数值微分
+# 数值积分 数值微分
 
 >   精确的积分: 
 >
@@ -667,7 +911,7 @@ $$
 
 ---
 
-## 解线性方程组的迭代法
+# 解线性方程组的迭代法
 
 
 
@@ -708,7 +952,7 @@ $$
 
 ---
 
-## 非线性方程与方程组的数值解法
+# 非线性方程与方程组的数值解法
 
 - 讨论非线性方程的求解必须强调$$x$$的定义域，即$$x$$的求解区间$$[a, b]$$，一般非线性问题不存在直接求解公式，故没有直接方法求解，需要使用迭代法求解。
 
