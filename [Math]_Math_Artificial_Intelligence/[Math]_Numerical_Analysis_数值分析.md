@@ -755,14 +755,13 @@ $$
 
 
 
-###### 代数精度
+### 代数精度
 
 -   如果一个求积公式对于次数不超过m的多项式均能准确地成立，但对于m+1次多项式不能准确成立，则称该求积公式具有**m次代数精度**(代数精确度)
 
 
 
-
-##### 牛顿-柯特斯公式
+## 牛顿-柯特斯公式
 
 >   牛頓－寇次公式 Newton–Cotes formulas
 
@@ -826,13 +825,13 @@ $$
 
 
 
-##### 复合求积公式
+## 复合求积公式
 
 -   在每个子区间(通常等分)上使用低阶的求积公式，称为复合求积法
 
 
 
-###### 复合梯形公式
+### 复合梯形公式
 
 -   将区间[a, b]划分为n等分，形成n+1个插值节点，在每个子区间采用梯形公式
 
@@ -842,7 +841,7 @@ I = \int^{b}_{a} f(x) dx = \sum^{n-1}_{k=0} \int^{x_{k+1} }_{x_{k}} f(x) dx = \f
 T_{n} = \frac{h}{2} \sum^{n-1}_{k=0}[f(x_{k}) + f(x_{k+1})] = \frac{h}{2} [f(a)+2\sum^{n-1}_{k=1} f(x_k)+f(b) ]\\
 $$
 
-###### 复合辛普森公式
+### 复合辛普森公式
 
 -   将区间[a, b]划分为n等分，形成n+1个插值节点，步长$$h=\frac{(b-a)}{n}$$ 在每个子区间采用梯形公式，记$$x_{k+1/2} = x_k +\frac{1}{2}h$$
 
@@ -859,13 +858,13 @@ $$
 
 
 
-##### 龙贝格求积公式
+## 龙贝格求积公式
 
 
 
 
 
-##### 高斯求积公式
+## 高斯求积公式
 
 -   高斯求积公式是一种机械求积公式
 -   一般n+1个节点的求积公式的代数精度最高为2n+1次
@@ -884,7 +883,7 @@ $$\int^{b}_{a} \rho (x) · p(x)w_{n+1}(x)dx 0$$
 
 
 
-###### 高斯-勒让德求积公式
+### 高斯-勒让德求积公式
 
 -   积分区间在[-1,1]上的，高斯点为勒让德多项式零点的高斯求积公式
 
@@ -906,6 +905,110 @@ $$
 | 2    | $$\pm \frac{\sqrt{15}}{5},(\pm0.7745967)$$ , 0 | 5/9   8/9                       |
 | 3    | $$\pm0.8611363, \pm0.3399810$$           | 0.3478549, 0.6521452            |
 | 4    | $$\pm 0.9061798, \pm 0.5384693$$ , 0     | 0.2369269, 0.4786287, 0.5688889 |
+
+
+
+
+
+
+
+
+
+
+
+# 解线性方程组的直接方法
+
+
+
+## 高斯消去法
+
+
+
+### 高斯消去法
+
+> 又称逐次消去法
+
+
+
+### 矩阵的三角分解
+
+
+
+
+
+### 列主元消去法
+
+- 由高斯消去法知道，在消元过程中需要用主元素$a_{kk}^{(k)}$作除数，可能出现$a_{kk}^{(k)}=0$的情况，这时消去法无法进行。即使不为0，若其值很小，作为除数也会导致其他元素数量级的严重增长和舍入误差的扩散
+- 当不需要选主元时，高斯消去法实质上产生了一个将A分解为两个三角矩阵相乘的因式分解，即LU分解，且分解是唯一的
+- 当需要进行选主元（列主元）时，高斯消去法相当于先对A进行一系列行交换，然后再进行一般的高斯消去法，即存在排列阵P，使PA=LU
+- 能进行LU分解的条件是A非奇异
+
+```python
+# 2020.12 黄海宇 20214920 hyhuang1024@outlook.com 数值分析编程题作业 教材p178 第五章计算实习题第1题
+# 用LU分解及列主元高斯消去法解线性方程组
+import numpy as np
+import scipy
+import scipy.linalg   # SciPy Linear Algebra Library
+
+
+def sloveLU(A, b):
+    P, L, U = scipy.linalg.lu(A)
+    print("A:", A)
+    print("L:", L)
+    print("U:", U)
+    LU = scipy.linalg.lu_factor(A)
+    x = scipy.linalg.lu_solve(LU, b)
+    print("[LU分解] x:", x, "; det(A):", scipy.linalg.det(A))
+    return x
+
+
+def PivotElimination(A, b):
+    # Gaussian elimination with pivoting 列主元高斯消去法
+    det = 1.0
+    # print(A, A.shape, " <= this is A\n", b, b.shape, " <= this is b")
+    n = len(b)
+    x = np.zeros(n, dtype='f')
+    for i in range(n):
+        A_ii = abs(A[i, i])
+        pivot_row = i
+        for k in range(i+1, n):
+            if(abs(A[k, i]) > A_ii):  # 找到该列最大的元素的那一行，并记录
+                A_ii = abs(A[k, i])
+                pivot_row = k
+        if(pivot_row != i):  # 如果不是同一行 则进行行交换 包括 b
+            A[pivot_row], A[i] = (A[i].copy(), A[pivot_row].copy())
+            b[i], b[pivot_row] = (b[pivot_row], b[i])
+            print("Line Switching: ", i, " <=> ", pivot_row)
+            det = -det
+
+        for k in range(i+1, n):  # 行交换完成 计算i行以下各行的i列元素是A ii 的几倍，然后相减
+            multiple = A[k, i]/A[i, i]  # 计算倍数
+            for j in range(i, n):  # 让主元以下各行的对应列元素为0
+                A[k, j] = A[k, j] - multiple*A[i, j]
+            b[k] = b[k]-multiple*b[i]
+    x[n-1] = b[n-1]/A[n-1, n-1]
+    for i in range(n-1, -1, -1):  # 计算x
+        temp = b[i]
+        for k in range(i+1, n):
+            temp -= A[i, k]*x[k]
+        x[i] = (temp)/A[i, i]
+    for i in range(n):
+        det = A[i, i]*det
+    print("[列主元法] x:", x, "; det(A):", det)
+
+
+if __name__ == "__main__":
+    A = np.array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
+                  [5, -1, 5, -1], [2, 1, 0, 2]])
+    b = np.array([8.0, 5.900001, 5.0, 1.0])
+    # 解约为 [ 0. -1.  1.  1.]
+    sloveLU(A, b)
+
+    PivotElimination(A, b)
+    # 条件数求法： print("(1)中A的条件数", np.linalg.cond(A1))
+```
+
+
 
 
 
