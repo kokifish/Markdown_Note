@@ -953,12 +953,6 @@ RNN梯度爆炸的问题我们可以通过gradient clipping的方法来进行优
 
 
 
-
-
-
-
-
-
 ```python
 import torch
 import numpy as np
@@ -971,6 +965,16 @@ print(
     '\ntorch tensor:', torch_data,#0  1  2 \n 3  4  5[torch.LongTensor of size 2x3]
     '\ntensor to array:', tensor2array,# [[0 1 2], [3 4 5]]
 )
+```
+
+
+
+## Installation
+
+```python
+# 改变链接中的cu101可以改变CUDA版本
+# 相应更改 torch==1.4.0 torchvision==0.5.0 可以实现下载某个版本的CUDA对应的不同版本的 torch torchvision
+pip install torch==1.4.0 torchvision==0.5.0  -f https://download.pytorch.org/whl/cu101/torch_stable.html
 ```
 
 
@@ -1133,7 +1137,9 @@ torch.optim #包含很多optimizer #e.g. SGD, Adom
 
 
 
-## Digest Of Pytorch Package Reference 
+
+
+## Digest Of Pytorch Package Reference
 
 > https://pytorch.org/docs/stable/index.html
 
@@ -1256,7 +1262,6 @@ plt.show()
 
 ```python
 # -*- coding: utf-8 -*-
-# author: 黄海宇 student id: 16337087  email:hyhuang1024@outlook.com
 # 将MNIST数据集读入后，训练自编码机，并且用自编码机编码后的数据训练分类器，对预测集数据做预测
 import os
 import time
@@ -1646,8 +1651,6 @@ $$\mathbf{x}_{n+1}=\mathbf{x}_n-\gamma_n \nabla F(\mathbf{x}_n),\ n \ge 0$$
 
 >   https://blog.csdn.net/mytestmy/article/details/26969149 算法 
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-6-21/38143827.jpg)
-
 
 
 
@@ -1657,11 +1660,6 @@ $$\mathbf{x}_{n+1}=\mathbf{x}_n-\gamma_n \nabla F(\mathbf{x}_n),\ n \ge 0$$
 > IOAS
 
 
-
-
-
-
-[TOC]
 
 
 
