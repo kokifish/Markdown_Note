@@ -108,7 +108,7 @@ Mainly three schools: 主要是三个流派
 
 
 
-## 启发式搜索
+## Heuristic Search 启发式搜索
 
 - Heuristic or informed search exploits additional knowledge about the problem that helps direct search to more promising paths.
 - A heuristic function, h(n), provides an estimate of the cost of the path from a given node to the closest goal state. Must be zero if node represents a goal state
@@ -288,7 +288,7 @@ On a grid, there are well-known heuristic functions to use.
 
 ### KNN
 
-K最近邻
+> K最近邻
 
 
 
@@ -319,7 +319,7 @@ $$
 
 ## Game
 
-
+> 博弈
 
 
 
@@ -685,6 +685,7 @@ PDP Model: Parallel Distributed Processing Model
 
 
 ##### Sigmoid
+
 $$
 \sigma(x) = \frac{1}{1+e^{-x}}
 $$
@@ -1437,6 +1438,671 @@ if __name__ == '__main__':
 > CNN 卷积神经网络
 
 
+
+
+
+
+
+### DQN
+
+- 共三个文件，其中`atari_wrappers.py`来自openai官网，对atari游戏环境进行配置；`DQN_Net_Buffer.py`定义网络模型，经验池；`DQN.py`为训练主过程
+
+```python
+# DQN.py
+# 使用DQN 玩atari的pong游戏
+# 含Agent定义 DQN训练过程
+from atari_wrappers import make_atari, wrap_deepmind
+import torch.nn.functional as F
+import torch
+import gym
+import random
+import os
+import sys
+import math
+import glob
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+from DQN_Net_Buffer import DQN, Memory_Buffer
+
+saveStdOut = None
+file_log = None
+
+class DQNAgent:
+    def __init__(self, in_channels=1, action_space=[], USE_CUDA=False, memory_size=10001,
+                epsilon=1, lr=1e-4):
+        self.epsilon = epsilon  # 选择随机策略的概率
+        self.action_space = action_space  # action的空间
+        self.memory_buffer = Memory_Buffer(memory_size) # 经验池
+        # 初始化Agent的网络结构
+        self.DQN = DQN(in_channels=in_channels, num_actions=action_space.n)
+        self.DQN_target = DQN(in_channels=in_channels, num_actions=action_space.n)
+        self.DQN_target.load_state_dict(self.DQN.state_dict()) # same
+        self.USE_CUDA = USE_CUDA # 是否使用CUDA
+        if self.USE_CUDA:
+            self.DQN = self.DQN.cuda()
+            self.DQN_target = self.DQN_target.cuda()
+        self.optimizer = torch.optim.RMSprop(self.DQN.parameters(),
+                                             lr=lr, eps=0.001, alpha=0.95)
+
+    def observe(self, lazyframe):
+        # 将环境给出的observation(np.array)转换为torch tensor # from Lazy frame to tensor
+        state = torch.from_numpy(lazyframe._force().transpose(2, 0, 1)[None] / 255).float()
+        if self.USE_CUDA:
+            state = state.cuda()
+        return state
+
+    def value(self, state):
+        # 给出state即atari game中的一帧图像 对应的每个action的价值Q value
+        q_values = self.DQN(state)
+        return q_values
+
+    def act(self, state, epsilon=None):
+        # 通过epsilon-greedy policy选出action
+        # epsilon 的概率采用随机action 1-epsilon的概率选择具有最大 Q(s,a) 的 action
+        if epsilon is None:
+            epsilon = self.epsilon
+        # q_values.shape = (1, 6)
+        q_values = self.value(state).cpu().detach().numpy()
+        if random.random() < epsilon:  # 命中epsilon概率 采用随机策略
+            aciton = random.randrange(self.action_space.n)
+        else:  # 命中 1-epsilon 选择最大的q_value所对应的action
+            aciton = q_values.argmax(1)[0]
+        return aciton
+
+    def compute_td_loss(self, states, actions, rewards, next_states, is_done, gamma=0.99):
+        # 计算 temporal difference loss # 时间差分法(无模型的方法)
+        # TDLoss = R_t + \gamma * Q(s_{s+1}, a_{t+1}) - Q(s_s, a_t)
+        actions = torch.tensor(actions).long()  # shape: [batch_size]
+        rewards = torch.tensor(rewards, dtype=torch.float)  # same
+        is_done = torch.tensor(is_done).bool()  # shape: [batch_size]
+        if self.USE_CUDA:
+            actions = actions.cuda()
+            rewards = rewards.cuda()
+            is_done = is_done.cuda()
+        # 计算当前所有状态states的q value预测值
+        predicted_qvalues = self.DQN(states)
+        # 选择actions对应的q values
+        predicted_qvalues_for_actions = predicted_qvalues[range(states.shape[0]), actions]
+
+        # 预测的下一 states 对应的所有actions 的 q values
+        predicted_next_qvalues = self.DQN_target(next_states)
+        # 用预测的下一状态对应的q values最大值作为下一状态的q values
+        next_state_values = predicted_next_qvalues.max(-1)[0]
+        # 计算目标q values
+        target_qvalues_for_actions = rewards + gamma * next_state_values
+        target_qvalues_for_actions = torch.where(is_done, rewards, target_qvalues_for_actions)
+
+        # 计算 均方差误差
+        loss = F.smooth_l1_loss(predicted_qvalues_for_actions, target_qvalues_for_actions.detach())
+        return loss
+
+    def sample_from_buffer(self, batch_size):
+        # 从buffer中采样过往的经验
+        states, actions, rewards, next_states, dones = [], [], [], [], []
+        for _ in range(batch_size):
+            idx = random.randint(0, self.memory_buffer.size() - 1)
+            data = self.memory_buffer.buffer[idx]
+            frame, action, reward, next_frame, done = data
+            states.append(self.observe(frame))
+            actions.append(action)
+            rewards.append(reward)
+            next_states.append(self.observe(next_frame))
+            dones.append(done)
+        return torch.cat(states), actions, rewards, torch.cat(next_states), dones
+
+    def learn_from_experience(self, batch_size):
+        # 根据已有经验学习
+        if self.memory_buffer.size() > batch_size:
+            states, actions, rewards, next_states, dones = self.sample_from_buffer(batch_size)
+            td_loss = self.compute_td_loss(states, actions, rewards, next_states, dones)
+            self.optimizer.zero_grad()
+            td_loss.backward()  # bp backward
+            for param in self.DQN.parameters():
+                param.grad.data.clamp_(-1, 1)
+            self.optimizer.step()
+            return td_loss  # !
+        else:
+            if self.USE_CUDA:
+                torch.FloatTensor([0]).cuda()
+            else:
+                return torch.FloatTensor([0])
+
+
+def epsilon_by_frame(idx, epsilon_max, epsilon_min, eps_decay):
+    # e-greedy decay # epsilon 衰变 返回对应idx下的 epsilon value
+    return epsilon_min + (epsilon_max - epsilon_min) * math.exp(-1.0 * idx / eps_decay)
+
+
+def moving_average(a, n=3):
+    ret = np.cumsum(a, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    return ret[n - 1:] / n
+
+
+def draw_training(frame_idx, rewards, path):
+    # 绘制每个 episode 的 total reward 变化曲线
+    plt.title("total frame %s. mean reward(last 100 games): %s" %
+              (frame_idx + 1, np.mean(rewards[-100:])))
+    plt.plot(moving_average(rewards, 20))
+    plt.savefig("./" + path + "/reward.jpg")
+    # plt.show()
+
+
+def draw_epsilon(frames, epsilon_max, epsilon_min, eps_decay, path):
+    # 绘制 epsilon 的变化曲线
+    plt.title("epsilon curve(max=%s,min=%s,eps_decay=%s,frames=%s)"
+        % (epsilon_max, epsilon_min, eps_decay, frames))
+    plt.plot([epsilon_by_frame(i, epsilon_max, epsilon_min, eps_decay) for i in range(frames)])
+    plt.savefig("./" + path + "/epsilon curve.jpg")
+
+
+def log_to_file(path, time_id):
+    # 将程序输出到log文件中
+    global saveStdOut
+    global file_log
+    saveStdOut = sys.stdout
+
+    path = os.path.join(os.path.abspath("."), path)  # 绝对路径 + 相对路径
+    folder = os.path.exists(path)  # 判断是否存在
+    if not folder:  # 判断是否存在文件夹如果不存在则创建为文件夹
+        os.makedirs(path)  # makedirs 创建文件时如果路径不存在会创建这个路径
+        print("[DEBUG] new folder ", path, " created")
+    else:
+        print("[DEBUG] folder ", path, " exits")
+
+    # 绝对路径 + time id为文件名
+    file_log = open((os.path.join(path, str(time_id) + str(".log"))), "w")
+    sys.stdout = file_log
+
+
+def cancel_log():
+    # 取消输出到文件
+    sys.stdout = saveStdOut
+    file_log.close()
+
+
+if __name__ == "__main__":  # run: python DQN.py
+    USE_CUDA = torch.cuda.is_available()
+    env = make_atari("PongNoFrameskip-v4")
+    env = wrap_deepmind(env, scale=False, frame_stack=True)
+
+    # === 超参数 START ==================================
+    batch_size = 32  # default = 32
+    learning_rate = 0.0002  # 学习率 # default = 0.0005
+    frames = 1000000  # 游戏给出的总帧数 用作停止条件 # default = 1000000 10^6
+    epsilon_max = 1  # 最大epsilon epsilon为采用随机选择action策略的概率 # default = 1
+    epsilon_min = 0.01  # 最小epsilon # default = 0.01
+    eps_decay = 50000  # epsilon衰减系数 # default = 50000
+    gamma = 0.99  # 遗忘系数 # default = 0.99
+    interval_update_DQNtar = 1000  # 更新DQN_target的间隔 # default = 1000
+    interval_print = 1000  # debug输出间隔 frame数 # default = 1000
+    learn_start = 10000  # 到多少frame后开始学习 # default = 10000
+    # === 超参数 END ==================================
+
+    start_time = time.time()
+    print("start:", time.asctime(time.localtime(start_time)), " id=",
+            int(start_time), " CUDA:", USE_CUDA)
+    # 保存 log pictures video 文件的目录
+    path = ("pong_" + str(float(learning_rate)) + "_batchSize_" + str(batch_size) + 
+            "_epsDecay_" + str(eps_decay) + "_frames_" + str(frames))
+    log_to_file(path, int(start_time))  # === 开始写log # 该调用会创建文件夹
+    draw_epsilon(frames, epsilon_max, epsilon_min, eps_decay, '')
+    
+    print("start:", time.asctime(time.localtime(start_time)), " CUDA:", USE_CUDA)
+    print("batch_size= ", batch_size, " learning_rate= ", learning_rate, " frames= ",
+        frames, " epsilon_max=", epsilon_max, " epsilon_min=", epsilon_min, " eps_decay=",
+        eps_decay, " gamma=", gamma)
+
+    action_space = env.action_space  # action 空间 用于记录数量
+    state_channel = env.observation_space.shape[2]  # 状态 state 数量
+    # state_channel=4  action_space=Discrete(6) env.observation_space.shape=(84, 84, 4)
+    # env.action_space.n = 6 action状态数
+    # 创建DQN Agent
+    agent = DQNAgent(in_channels=state_channel, action_space=action_space, USE_CUDA=USE_CUDA, lr=learning_rate)
+    frame = env.reset()
+
+    episode_reward = 0  # 记录当前 episode 的 reward
+    all_rewards = []  # 记录所有 episode 的 reward
+    losses = []
+    episode_count = 0  # 记录当前 episode 数
+
+    for i in range(frames):
+        # 计算当前epsilon的值
+        epsilon = epsilon_by_frame(i, epsilon_max, epsilon_min, eps_decay)
+        cur_state = agent.observe(frame)  # 从atari游戏的帧观测出当前状态
+        action = agent.act(cur_state, epsilon)  # 对当前状态依据e-greedy计算应采取的action
+        next_frame, reward, done, _ = env.step(action)  # 采用了该action后的...
+        # reward: 1表示赢了，-1表示输了 在出现第21次|reward|=1时，done=True表示21局打完
+        episode_reward += reward  # 将该动作产生的reward累加起来
+        # 记录经验至buffer中
+        agent.memory_buffer.push(frame, action, reward, next_frame, done)
+        frame = next_frame  # 更新frame
+        loss = 0
+        if agent.memory_buffer.size() >= learn_start:  # 如果已经开始学习
+            loss = agent.learn_from_experience(batch_size)  # 从经验中学习
+            losses.append(loss)
+
+        if i % interval_print == 0 and i > 0:
+            if len(all_rewards) >= 10:
+                recent_reward_mean = np.mean(all_rewards[-10:])
+            else:
+                recent_reward_mean = -21
+            print("frames: %5d, reward: %5f, loss: %4f, epsilon: %5f, episode: %4d"
+                % (i, recent_reward_mean, loss, epsilon, episode_count))
+
+        if i % interval_update_DQNtar == 0:  # 将 DQN_target 更新为当前 DQN
+            agent.DQN_target.load_state_dict(agent.DQN.state_dict())
+
+        if done:  # 游戏每完成一次(指打完21局) 则episode+1 将episode_reward置0
+            frame = env.reset()  # 重新开始游戏
+            all_rewards.append(episode_reward)  # 该21局的最终reward [-21, 21]
+            episode_reward = 0
+            episode_count += 1
+
+    torch.save(agent.DQN.state_dict(), "./" + path + "/DQN_dict.pth.tar")
+    torch.save(agent.DQN.state_dict(), "DQN_dict.pth.tar")
+    # 绘制reword曲线
+    draw_training(i, all_rewards, path)
+
+    print("[End] Total time: ", (time.time() - start_time) / 3600, "hours")
+    cancel_log()  # === 结束log记录
+    print("[End] Total time: ", (time.time() - start_time) / 3600, "hours")
+
+    # 录制视频 # force=True 表示如果有之前的视频 则覆盖保存
+    env = gym.wrappers.Monitor(env, "./" + path, force=True)
+    frame = env.reset()
+    for i in range(10000):
+        cur_state = agent.observe(frame)
+        action = agent.act(cur_state, epsilon=0)
+        next_frame, reward, done, _ = env.step(action)
+        frame = next_frame
+        if done:
+            break
+```
+
+
+
+```python
+# DQN_Net_Buffer.py
+# 使用DQN 玩atari的pong游戏 # 附属文件 需要被DQN.py (main文件) 调用
+# 定义DQN网络结构 经验缓存 Memory_Buffer
+import torch.autograd as autograd
+import torch.nn.functional as F
+import torch.nn as nn
+import torch.optim as optim
+import numpy as np
+import random
+
+class DQN(nn.Module):
+    # 实现论文中的DQN: Human-level control through deep reinforcement learning
+    def __init__(self, in_channels=4, num_actions=5):
+        # in_channels: 输入通道数 即最近的frame的数量
+        # num_actions: action-value的数量 与游戏里的action一一对应
+        super(DQN, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, 32, kernel_size=8, stride=4)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
+        self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
+        self.fc4 = nn.Linear(7 * 7 * 64, 512)
+        self.fc5 = nn.Linear(512, num_actions)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
+        x = F.relu(self.fc4(x.reshape(x.size(0), -1)))
+        return self.fc5(x)  # <class 'torch.Tensor'>, maybe: torch.Size([1, 6])
+
+class Memory_Buffer(object):
+    # 经验池 # 经验缓存
+    def __init__(self, memory_size=1000):
+        self.buffer = []
+        self.memory_size = memory_size
+        self.next_idx = 0
+
+    def push(self, state, action, reward, next_state, done):
+        # 存储经验样本
+        data = (state, action, reward, next_state, done)
+        if len(self.buffer) <= self.memory_size:  # buffer not full
+            self.buffer.append(data)
+        else:  # buffer is full
+            self.buffer[self.next_idx] = data
+        self.next_idx = (self.next_idx + 1) % self.memory_size
+
+    def sample(self, batch_size): # 获取经验样本
+        states, actions, rewards, next_states, dones = [], [], [], [], []
+        for _ in range(batch_size):
+            idx = random.randint(0, self.size() - 1)
+            data = self.buffer[idx]
+            state, action, reward, next_state, done = data
+            states.append(state)
+            actions.append(action)
+            rewards.append(reward)
+            next_states.append(next_state)
+            dones.append(done)
+        return np.concatenate(states), actions, rewards, np.concatenate(next_states), dones
+
+    def size(self):
+        return len(self.buffer)
+```
+
+```python
+# 附属文件 需要被DQN.py (main文件) 调用
+import numpy as np
+from collections import deque
+import gym
+from gym import spaces
+import cv2
+cv2.ocl.setUseOpenCL(False)
+
+
+class NoopResetEnv(gym.Wrapper):
+    def __init__(self, env, noop_max=30):
+        """Sample initial states by taking random number of no-ops on reset.
+        No-op is assumed to be action 0.
+        """
+        gym.Wrapper.__init__(self, env)
+        self.noop_max = noop_max
+        self.override_num_noops = None
+        self.noop_action = 0
+        assert env.unwrapped.get_action_meanings()[0] == 'NOOP'
+
+    def reset(self, **kwargs):
+        """ Do no-op action for a number of steps in [1, noop_max]."""
+        self.env.reset(**kwargs)
+        if self.override_num_noops is not None:
+            noops = self.override_num_noops
+        else:
+            noops = self.unwrapped.np_random.randint(1, self.noop_max + 1)  # pylint: disable=E1101
+        assert noops > 0
+        obs = None
+        for _ in range(noops):
+            obs, _, done, _ = self.env.step(self.noop_action)
+            if done:
+                obs = self.env.reset(**kwargs)
+        return obs
+
+    def step(self, ac):
+        return self.env.step(ac)
+
+
+class FireResetEnv(gym.Wrapper):
+    def __init__(self, env):
+        """Take action on reset for environments that are fixed until firing."""
+        gym.Wrapper.__init__(self, env)
+        assert env.unwrapped.get_action_meanings()[1] == 'FIRE'
+        assert len(env.unwrapped.get_action_meanings()) >= 3
+
+    def reset(self, **kwargs):
+        self.env.reset(**kwargs)
+        obs, _, done, _ = self.env.step(1)
+        if done:
+            self.env.reset(**kwargs)
+        obs, _, done, _ = self.env.step(2)
+        if done:
+            self.env.reset(**kwargs)
+        return obs
+
+    def step(self, ac):
+        return self.env.step(ac)
+
+
+class EpisodicLifeEnv(gym.Wrapper):
+    def __init__(self, env):
+        """Make end-of-life == end-of-episode, but only reset on true game over.
+        Done by DeepMind for the DQN and co. since it helps value estimation.
+        """
+        gym.Wrapper.__init__(self, env)
+        self.lives = 0
+        self.was_real_done = True
+
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        self.was_real_done = done
+        # check current lives, make loss of life terminal,
+        # then update lives to handle bonus lives
+        lives = self.env.unwrapped.ale.lives()
+        if lives < self.lives and lives > 0:
+            # for Qbert sometimes we stay in lives == 0 condition for a few frames
+            # so it's important to keep lives > 0, so that we only reset once
+            # the environment advertises done.
+            done = True
+        self.lives = lives
+        return obs, reward, done, info
+
+    def reset(self, **kwargs):
+        """Reset only when lives are exhausted.
+        This way all states are still reachable even though lives are episodic,
+        and the learner need not know about any of this behind-the-scenes.
+        """
+        if self.was_real_done:
+            obs = self.env.reset(**kwargs)
+        else:
+            # no-op step to advance from terminal/lost life state
+            obs, _, _, _ = self.env.step(0)
+        self.lives = self.env.unwrapped.ale.lives()
+        return obs
+
+
+class LossLifePunishEnv(gym.Wrapper):
+    def __init__(self, env, train="True", fire_reset=False):
+        """Make end-of-life have a -1 reward when training. 
+        When evaluation, end-of-life have 0 reward, but perform no-op step to advance from terminal/lost life state
+        if fire_reset = True, performs fire action to reset when life is loss
+        """
+        if train:
+            self.loss_life_punishment = -1
+        else:
+            self.loss_life_punishment = 0
+
+        gym.Wrapper.__init__(self, env)
+        self.lives = 0
+        self.fire_reset = fire_reset
+
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        # check current lives, make loss of life terminal,
+        # then update lives to handle bonus lives
+        lives = self.env.unwrapped.ale.lives()
+        if lives < self.lives and lives > 0:
+            # set reward to -1 when life is loss
+            reward += self.loss_life_punishment
+            # no-op step to advance from terminal/lost life state
+            obs, _, _, _ = self.env.step(0)
+            if self.fire_reset:
+                obs, _, done, _ = self.env.step(1)
+        self.lives = lives
+        return obs, reward, done, info
+
+    def reset(self, **kwargs):
+        return self.env.reset(**kwargs)
+
+
+class MaxAndSkipEnv(gym.Wrapper):
+    def __init__(self, env, skip=4):
+        """Return only every `skip`-th frame"""
+        gym.Wrapper.__init__(self, env)
+        # most recent raw observations (for max pooling across time steps)
+        self._obs_buffer = np.zeros((2,)+env.observation_space.shape, dtype=np.uint8)
+        self._skip = skip
+
+    def step(self, action):
+        """Repeat action, sum reward, and max over last observations."""
+        total_reward = 0.0
+        done = None
+        for i in range(self._skip):
+            obs, reward, done, info = self.env.step(action)
+            if i == self._skip - 2:
+                self._obs_buffer[0] = obs
+            if i == self._skip - 1:
+                self._obs_buffer[1] = obs
+            total_reward += reward
+            if done:
+                break
+        # Note that the observation on the done=True frame
+        # doesn't matter
+        max_frame = self._obs_buffer.max(axis=0)
+
+        return max_frame, total_reward, done, info
+
+    def reset(self, **kwargs):
+        return self.env.reset(**kwargs)
+
+
+class ClipRewardEnv(gym.RewardWrapper):
+    def __init__(self, env):
+        gym.RewardWrapper.__init__(self, env)
+
+    def reward(self, reward):
+        """Bin reward to {+1, 0, -1} by its sign."""
+        return np.sign(reward)
+
+
+class WarpFrame(gym.ObservationWrapper):
+    def __init__(self, env, width=84, height=84, grayscale=True, dict_space_key=None):
+        """
+        Warp frames to 84x84 as done in the Nature paper and later work.
+        If the environment uses dictionary observations, `dict_space_key` can be specified which indicates which
+        observation should be warped.
+        """
+        super().__init__(env)
+        self._width = width
+        self._height = height
+        self._grayscale = grayscale
+        self._key = dict_space_key
+        if self._grayscale:
+            num_colors = 1
+        else:
+            num_colors = 3
+
+        new_space = gym.spaces.Box(low=0, high=255,
+            shape=(self._height, self._width, num_colors), dtype=np.uint8)
+        if self._key is None:
+            original_space = self.observation_space
+            self.observation_space = new_space
+        else:
+            original_space = self.observation_space.spaces[self._key]
+            self.observation_space.spaces[self._key] = new_space
+        assert original_space.dtype == np.uint8 and len(original_space.shape) == 3
+
+    def observation(self, obs):
+        if self._key is None:
+            frame = obs
+        else:
+            frame = obs[self._key]
+
+        if self._grayscale:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        frame = cv2.resize(frame, (self._width, self._height), interpolation=cv2.INTER_AREA)
+        if self._grayscale:
+            frame = np.expand_dims(frame, -1)
+
+        if self._key is None:
+            obs = frame
+        else:
+            obs = obs.copy()
+            obs[self._key] = frame
+        return obs
+
+class FrameStack(gym.Wrapper):
+    def __init__(self, env, k):
+        """Stack k last frames.
+        Returns lazy array, which is much more memory efficient.
+        See Also
+        --------
+        baselines.common.atari_wrappers.LazyFrames
+        """
+        gym.Wrapper.__init__(self, env)
+        self.k = k
+        self.frames = deque([], maxlen=k)
+        shp = env.observation_space.shape
+        self.observation_space = spaces.Box(low=0, high=255, shape=(
+            shp[:-1] + (shp[-1] * k,)), dtype=env.observation_space.dtype)
+
+    def reset(self):
+        ob = self.env.reset()
+        for _ in range(self.k):
+            self.frames.append(ob)
+        return self._get_ob()
+
+    def step(self, action):
+        ob, reward, done, info = self.env.step(action)
+        self.frames.append(ob)
+        return self._get_ob(), reward, done, info
+
+    def _get_ob(self):
+        assert len(self.frames) == self.k
+        return LazyFrames(list(self.frames))
+
+class ScaledFloatFrame(gym.ObservationWrapper):
+    def __init__(self, env):
+        gym.ObservationWrapper.__init__(self, env)
+        self.observation_space = gym.spaces.Box(
+            low=0, high=1, shape=env.observation_space.shape, dtype=np.float32)
+
+    def observation(self, observation):
+        # careful! This undoes the memory optimization, use
+        # with smaller replay buffers only.
+        return np.array(observation).astype(np.float32) / 255.0
+
+class LazyFrames(object):
+    def __init__(self, frames):
+        """This object ensures that common frames between the observations are only stored once.
+        It exists purely to optimize memory usage which can be huge for DQN's 1M frames replay
+        buffers.
+        This object should only be converted to numpy array before being passed to the model.
+        You'd not believe how complex the previous solution was."""
+        self._frames = frames
+        self._out = None
+
+    def _force(self):
+        if self._out is None:
+            self._out = np.concatenate(self._frames, axis=-1)
+            self._frames = None
+        return self._out
+
+    def __array__(self, dtype=None):
+        out = self._force()
+        if dtype is not None:
+            out = out.astype(dtype)
+        return out
+
+    def __len__(self):
+        return len(self._force())
+
+    def __getitem__(self, i):
+        return self._force()[i]
+
+    def count(self):
+        frames = self._force()
+        return frames.shape[frames.ndim - 1]
+
+    def frame(self, i):
+        return self._force()[..., i]
+
+def make_atari(env_id, max_episode_steps=None):
+    env = gym.make(env_id)
+    assert 'NoFrameskip' in env.spec.id
+    env = NoopResetEnv(env, noop_max=30)
+    env = MaxAndSkipEnv(env, skip=4)
+    return env
+
+def wrap_deepmind(env, episode_life=False, clip_rewards=False, frame_stack=False, scale=False):
+    """Configure environment for DeepMind-style Atari.
+    """
+    if episode_life:
+        env = EpisodicLifeEnv(env)
+    if 'FIRE' in env.unwrapped.get_action_meanings():
+        env = FireResetEnv(env)
+    env = WarpFrame(env)
+    if scale:
+        env = ScaledFloatFrame(env)
+    if clip_rewards:
+        env = ClipRewardEnv(env)
+    if frame_stack:
+        env = FrameStack(env, 4)
+    return env
+```
 
 
 
