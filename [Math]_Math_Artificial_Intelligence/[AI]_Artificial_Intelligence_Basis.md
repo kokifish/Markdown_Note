@@ -1573,12 +1573,10 @@ def epsilon_by_frame(idx, epsilon_max, epsilon_min, eps_decay):
     # e-greedy decay # epsilon 衰变 返回对应idx下的 epsilon value
     return epsilon_min + (epsilon_max - epsilon_min) * math.exp(-1.0 * idx / eps_decay)
 
-
 def moving_average(a, n=3):
     ret = np.cumsum(a, dtype=float)
     ret[n:] = ret[n:] - ret[:-n]
     return ret[n - 1:] / n
-
 
 def draw_training(frame_idx, rewards, path):
     # 绘制每个 episode 的 total reward 变化曲线
@@ -1588,14 +1586,12 @@ def draw_training(frame_idx, rewards, path):
     plt.savefig("./" + path + "/reward.jpg")
     # plt.show()
 
-
 def draw_epsilon(frames, epsilon_max, epsilon_min, eps_decay, path):
     # 绘制 epsilon 的变化曲线
     plt.title("epsilon curve(max=%s,min=%s,eps_decay=%s,frames=%s)"
         % (epsilon_max, epsilon_min, eps_decay, frames))
     plt.plot([epsilon_by_frame(i, epsilon_max, epsilon_min, eps_decay) for i in range(frames)])
     plt.savefig("./" + path + "/epsilon curve.jpg")
-
 
 def log_to_file(path, time_id):
     # 将程序输出到log文件中
@@ -1615,18 +1611,15 @@ def log_to_file(path, time_id):
     file_log = open((os.path.join(path, str(time_id) + str(".log"))), "w")
     sys.stdout = file_log
 
-
 def cancel_log():
     # 取消输出到文件
     sys.stdout = saveStdOut
     file_log.close()
 
-
 if __name__ == "__main__":  # run: python DQN.py
     USE_CUDA = torch.cuda.is_available()
     env = make_atari("PongNoFrameskip-v4")
     env = wrap_deepmind(env, scale=False, frame_stack=True)
-
     # === 超参数 START ==================================
     batch_size = 32  # default = 32
     learning_rate = 0.0002  # 学习率 # default = 0.0005
@@ -1708,7 +1701,6 @@ if __name__ == "__main__":  # run: python DQN.py
     print("[End] Total time: ", (time.time() - start_time) / 3600, "hours")
     cancel_log()  # === 结束log记录
     print("[End] Total time: ", (time.time() - start_time) / 3600, "hours")
-
     # 录制视频 # force=True 表示如果有之前的视频 则覆盖保存
     env = gym.wrappers.Monitor(env, "./" + path, force=True)
     frame = env.reset()
@@ -1825,7 +1817,6 @@ class NoopResetEnv(gym.Wrapper):
     def step(self, ac):
         return self.env.step(ac)
 
-
 class FireResetEnv(gym.Wrapper):
     def __init__(self, env):
         """Take action on reset for environments that are fixed until firing."""
@@ -1845,7 +1836,6 @@ class FireResetEnv(gym.Wrapper):
 
     def step(self, ac):
         return self.env.step(ac)
-
 
 class EpisodicLifeEnv(gym.Wrapper):
     def __init__(self, env):
@@ -1883,7 +1873,6 @@ class EpisodicLifeEnv(gym.Wrapper):
         self.lives = self.env.unwrapped.ale.lives()
         return obs
 
-
 class LossLifePunishEnv(gym.Wrapper):
     def __init__(self, env, train="True", fire_reset=False):
         """Make end-of-life have a -1 reward when training. 
@@ -1917,7 +1906,6 @@ class LossLifePunishEnv(gym.Wrapper):
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
 
-
 class MaxAndSkipEnv(gym.Wrapper):
     def __init__(self, env, skip=4):
         """Return only every `skip`-th frame"""
@@ -1948,7 +1936,6 @@ class MaxAndSkipEnv(gym.Wrapper):
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
 
-
 class ClipRewardEnv(gym.RewardWrapper):
     def __init__(self, env):
         gym.RewardWrapper.__init__(self, env)
@@ -1956,7 +1943,6 @@ class ClipRewardEnv(gym.RewardWrapper):
     def reward(self, reward):
         """Bin reward to {+1, 0, -1} by its sign."""
         return np.sign(reward)
-
 
 class WarpFrame(gym.ObservationWrapper):
     def __init__(self, env, width=84, height=84, grayscale=True, dict_space_key=None):
@@ -1974,7 +1960,6 @@ class WarpFrame(gym.ObservationWrapper):
             num_colors = 1
         else:
             num_colors = 3
-
         new_space = gym.spaces.Box(low=0, high=255,
             shape=(self._height, self._width, num_colors), dtype=np.uint8)
         if self._key is None:
@@ -1990,13 +1975,11 @@ class WarpFrame(gym.ObservationWrapper):
             frame = obs
         else:
             frame = obs[self._key]
-
         if self._grayscale:
             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
         frame = cv2.resize(frame, (self._width, self._height), interpolation=cv2.INTER_AREA)
         if self._grayscale:
             frame = np.expand_dims(frame, -1)
-
         if self._key is None:
             obs = frame
         else:
@@ -2018,7 +2001,7 @@ class FrameStack(gym.Wrapper):
         shp = env.observation_space.shape
         self.observation_space = spaces.Box(low=0, high=255, shape=(
             shp[:-1] + (shp[-1] * k,)), dtype=env.observation_space.dtype)
-
+        
     def reset(self):
         ob = self.env.reset()
         for _ in range(self.k):
@@ -2088,8 +2071,7 @@ def make_atari(env_id, max_episode_steps=None):
     return env
 
 def wrap_deepmind(env, episode_life=False, clip_rewards=False, frame_stack=False, scale=False):
-    """Configure environment for DeepMind-style Atari.
-    """
+    # Configure environment for DeepMind-style Atari.
     if episode_life:
         env = EpisodicLifeEnv(env)
     if 'FIRE' in env.unwrapped.get_action_meanings():
