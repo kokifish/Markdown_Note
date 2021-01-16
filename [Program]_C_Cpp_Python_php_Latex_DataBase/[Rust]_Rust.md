@@ -1,6 +1,20 @@
 
 
+# Rust
 
+
+
+
+
+# Build
+
+```bash
+cd ./greeting 
+cargo build 
+cargo run 
+```
+
+# Comment 注释
 
 ```rust
 /// Adds one to the number given.
@@ -330,3 +344,20 @@ fn main() {
 # Ownership 所有权
 
 - https://www.runoob.com/rust/rust-ownership.html
+
+
+
+# Slice 切片类型
+
+- 切片（Slice）是对数据值的部分引用
+
+```rust
+fn main() { // 字符串切片（String Slice）
+    let s = String::from("broadcast");
+    let part1 = &s[0..5];
+    let part2 = &s[5..9];
+
+    println!("{}={}+{}", s, part1, part2);
+} // broadcast=broad+cast
+```
+
