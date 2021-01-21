@@ -361,3 +361,141 @@ fn main() { // 字符串切片（String Slice）
 } // broadcast=broad+cast
 ```
 
+
+
+# Struct 结构体
+
+Rust 中的结构体（Struct）与元组（Tuple）都可以将若干个类型不一定相同的数据捆绑在一起形成整体，但结构体的每个成员和其本身都有一个名字，这样访问它成员的时候就不用记住下标了。元组常用于非定义的多值传递，而结构体用于规范常用的数据结构。结构体的每个成员叫做"字段"。
+
+```rust
+struct Site { // 定义结构体 // struct 语句仅用来定义，不能声明实例
+    domain: String, // 每个字段定义之后用 , 分隔
+    name: String, // 字段名字为name，类型为String
+    nation: String,
+    found: u32
+} // 结尾不需要 ; 符号
+```
+
+```rust
+// 结构体实例
+let foo = Site {
+    domain: String::from("www.foo.com"),
+    name: String::from("foo"),
+    nation: String::from("China"),
+    found: 2013
+};
+```
+
+```rust
+// 如果正在实例化的结构体有字段名称和现存变量名称一样的，可以简化书写
+let domain = String::from("www.foo.com");
+let name = String::from("foo");
+let foo = Site {
+    domain,  // 等同于 domain : domain,
+    name,    // 等同于 name : name,
+    nation: String::from("China"),
+    traffic: 2013
+};
+```
+- 有这样一种情况：你想要新建一个结构体的实例，其中大部分属性需要被设置成与现存的一个结构体属性一样，仅需更改其中的一两个字段的值，可以使用结构体更新语法
+
+```rust
+let site = Site {
+    domain: String::from("www.foo1.com"),
+    name: String::from("foo1"),
+    ..foo // ..foo 后面不可以有逗号。这种语法不允许一成不变的复制另一个结构体实例，即至少重新设定一个字段的值才能引用其他实例的值
+};
+```
+
+
+
+## 元组结构体
+
+- 元组结构体是一种形式是元组的结构体
+- 与元组的区别是它有名字和固定的类型格式。它存在的意义是为了处理那些需要定义类型（经常使用）又不想太复杂的简单数据：
+
+```rust
+fn main() {
+    struct Color(u8, u8, u8); // 元组结构体
+    struct Point(f64, f64);
+
+    let black = Color(0, 0, 0);
+    let origin = Point(0.0, 0.0);
+	// 元组结构体对象的使用方式和元组一样，通过 . 和下标来进行访问
+    println!("black = ({}, {}, {})", black.0, black.1, black.2);
+    println!("origin = ({}, {})", origin.0, origin.1);
+}
+
+```
+
+
+
+## 结构体方法 Method
+
+> "结构体方法"不叫"结构体函数"是因为"函数"这个名字留给了在 impl 块中却没有 &self 参数的函数
+
+- 方法（Method）和函数（Function）类似，只不过它是用来操作结构体实例的。
+- 结构体方法的第一个参数必须是 &self，不需声明类型，因为 self 不是一种风格而是关键字
+
+```rust
+struct Rectangle { // 定义结构体 
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle { // 结构体 impl 块可以写几次，效果相当于它们内容的拼接
+    fn area(&self) -> u32 { // 定义结构体 Rectangle 的 method : area
+        self.width * self.height
+    }
+
+    fn wider(&self, rect: &Rectangle) -> bool { // 计算是否比 rect 宽
+        self.width > rect.width
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle { width: 30, height: 50 };
+    let rect2 = Rectangle { width: 40, height: 20 };
+    println!("rect1's area is {}", rect1.area()); // 在调用结构体方法的时候不需要填写 self ，这是出于对使用方便性的考虑
+    println!("{}", rect1.wider(&rect2)); // false
+}
+```
+
+
+
+## 结构体关联函数
+
+- 在 impl 块中却没有 &self 参数
+- 不依赖实例，但是使用它需要声明是在哪个 impl 块中的
+- `String::from` 就是一个"关联函数"
+
+```rust
+#[derive(Debug)]
+struct Rectangle { // 定义结构体 
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    // 结构体关联函数
+    fn create(width: u32, height: u32) -> Rectangle { // 没有 &self 参数
+        Rectangle { width, height }
+    }
+}
+
+fn main() {
+    let rect = Rectangle::create(30, 50);
+    println!("{:?}", rect);
+}
+```
+
+
+
+## Unit Struct 单元结构体
+
+结构体可以只作为一种象征而无需任何成员，称这种没有身体的结构体为单元结构体（Unit Struct）
+
+```rust
+struct UnitStruct;
+```
+
