@@ -92,7 +92,7 @@ sudo apt-get install git-core #老一点的Debian, Ubuntu # 以前有个软件�
 1. Git官网下载源码，解压
 2. 依次输入：`./config`，`make`，`sudo make install`
 
-
+### config
 
 ```python
 $ git config --global user.name "Your Name"
@@ -100,7 +100,8 @@ $ git config --global user.email "email@example.com"
 ```
 
 - 设置自己的名字与Email地址
-- --global参数：表示该机器上所有的Git仓库都使用这个配置，也可以对某个仓库指定不同的用户名和Email地址
+- `--global`参数：表示该机器上所有的Git仓库都使用这个配置
+- 不使用global参数可以仅对该仓库设置名字与邮箱。也可以对某个仓库指定不同的用户名和Email地址
 
 
 
