@@ -430,6 +430,23 @@ eject -rf -v /dev/cdrom
 
 
 
+### Error: Unable to open kernel device '\\.\VMCIDev\VMX'
+
+```console
+Unable to open kernel device '\\.\VMCIDev\VMX': The operation completed successfully. Did you reboot after installing VMware Workstation?
+Module 'DevicePowerOn' power on failed.
+Failed to start the virtual machine.
+```
+
+- 解决方法：
+
+```python
+set 'vmci0.present' to "FALSE"
+vmci0.present = "FALSE"
+```
+
+
+
 
 
 
