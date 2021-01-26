@@ -430,24 +430,9 @@ eject -rf -v /dev/cdrom
 
 
 
-### Error: Unable to open kernel device '\\.\VMCIDev\VMX'
+### ping不通虚拟机 ping得通主机
 
-```console
-Unable to open kernel device '\\.\VMCIDev\VMX': The operation completed successfully. Did you reboot after installing VMware Workstation?
-Module 'DevicePowerOn' power on failed.
-Failed to start the virtual machine.
-```
-
-- 解决方法：
-
-```python
-set 'vmci0.present' to "FALSE"
-vmci0.present = "FALSE"
-```
-
-
-
-
+- 禁用VMware的两个虚拟网卡，再启用。欸，好了？？？？？
 
 
 
