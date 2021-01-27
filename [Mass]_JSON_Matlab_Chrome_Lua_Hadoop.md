@@ -1,8 +1,15 @@
-[TOC]
 
 
 
 
+# MASS
+
+
+
+## 删除文件夹或者文件报错，说要来自自己账户的权限
+
+- Open `command prompt` as administrator
+- Execute `rd /S /Q "P:\Ath\To\Directory"`
 
 ---
 
@@ -657,4 +664,6 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin:${JAVA_HOME}/bin:$PATH
 将hadoop添加进sudoers中
 usermod -aG wheel hadoop 
 ```
+
+
 

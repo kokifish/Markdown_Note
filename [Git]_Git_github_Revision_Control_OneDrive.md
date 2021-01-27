@@ -366,6 +366,10 @@ HEAD is now at 02ae281 readme refresh #已回到原本的最新版 readme refres
 
 总之，就是让这个文件回到最近一次`git commit`或`git add`时的状态。`git checkout -- file`命令中的`--`很重要，没有`--`，就变成了“切换到另一个分支”的命令
 
+```python
+git checkout main; # 切换到 branch main
+```
+
 
 
 - `git rm`删除版本库中的一个文件，并且`git commit`后，文件就从版本库中删除
