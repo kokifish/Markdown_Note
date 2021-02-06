@@ -1,4 +1,4 @@
-echo "[Step-2] git pull origin main:"
+echo "[Step-1] git pull origin main:"
 git pull origin master;
 echo 
 echo "=== [WARNING] If conflict occured, related files will show below: ========="
