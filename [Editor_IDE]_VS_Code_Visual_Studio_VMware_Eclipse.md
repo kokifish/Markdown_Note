@@ -436,7 +436,16 @@ eject -rf -v /dev/cdrom
 
 
 
+### 'DevicePowerOn' power on failed
 
+```
+Unable to open kernel device '\\.\VMCIDev\VMX': The operation completed successfully. Did you reboot after installing VMware Workstation?
 
+Module 'DevicePowerOn' power on failed.
 
+Failed to start the virtual machine.
+```
+
+- 用打开虚拟机所在目录下的.vmx文件
+-  vmci0.present = "TRUE"将 TRUE 改为 FALSE
 
