@@ -355,7 +355,7 @@ sherry 96054656
 
 
 
-#### list 列表
+### list 列表
 
 -   list是一种有序的集合，可以随时添加和删除其中的元素
 
@@ -435,7 +435,7 @@ list(set(seq))# Not order preserving #不保持顺序 #list去重
 
 
 
-#### tuple 元组
+### tuple 元组
 
 -   tuple元组，有序列表，tuple一旦初始化就**不能修改**
 
@@ -454,7 +454,7 @@ t = (1,) # t为tuple #t: (1,)
 
 
 
-#### dict (map)字典
+### dict (map)字典
 
 -   dict for dictionary
 -   使用 **key-value** 存储(键值对)，内部实现使用hash，所以查找时间不随key的增加而增加，具有极快的查找速度，复杂度O(1)
@@ -503,8 +503,7 @@ print([da for k, da in d.items()]) #Output: list: value in dict
 
 
 
-
-#### set & frozenset
+### set & frozenset
 
 >   可变集合与不可变集合
 >
@@ -534,11 +533,11 @@ s1 | s2 # 集合运算: 并集
 
 
 
-##### frozenset 
+#### frozenset
 
 -   不可变集合 frozenset 冻结的集合
 -   不可变，存在哈希值，可以作为字典的key，可以作为其它集合的元素
--   缺点: 一旦创建便不能更改，没有add()，remove()
+-   缺点: 一旦创建便不能更改，没有`add(), remove()`
 
 
 
@@ -1486,13 +1485,13 @@ import numpy as np
 
 ---
 
-## Built-in Module
+# Built-in Module
 
 
 
 ---
 
-### random
+## random
 
 ```python
 import random
@@ -1527,7 +1526,7 @@ random.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)
 
 ---
 
-### datetime
+## datetime
 
 > https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431937554888869fb52b812243dda6103214cd61d0c2000/ 廖雪峰datetime专题
 
@@ -1551,17 +1550,17 @@ datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S') #字符串todatetime
 
 
 
-### timeit
+## timeit
 
 - 可用于计算一段代码的使用时间
 
 
 
-### re 正则表达式
+## re 正则表达式
 
 
 
-##### match & search
+### match & search
 
 re.match只匹配字符串的开始，如果字符串开始不符合正则表达式，则匹配失败，函数返回None；而re.search匹配整个字符串，直到找到一个匹配 
 
@@ -1599,7 +1598,9 @@ print(re.search('www', 'awwwwwwwwwww')) #
 
 
 
-### sys
+## sys
+
+
 
 
 
@@ -1631,7 +1632,55 @@ raise Exception, 'this error will be logged'
 >
 > 当程序由于异常而崩溃时，Python程序也结束了，Python会替我们清理和关闭文件
 
-## Module Interaction
+## logging
+
+> Python 标准库，用于事件日志系统
+>
+> refer: https://www.cnblogs.com/yyds/p/6901864.html
+
+
+- 日志级别：
+| log level | 描述                                                         |
+| --------- | ------------------------------------------------------------ |
+| DEBUG     | 最详细的日志信息，典型应用场景是 问题诊断                    |
+| INFO      | 信息详细程度仅次于DEBUG，通常只记录关键节点信息，用于确认一切都是按照我们预期的那样进行工作 |
+| WARNING   | 当某些不期望的事情发生时记录的信息（如，磁盘可用空间较低），但是此时应用程序还是正常运行的 |
+| ERROR     | 由于一个更严重的问题导致某些功能不能正常运行时记录的信息     |
+| CRITICAL  | 当发生严重错误，导致应用程序不能继续运行时记录的信息         |
+
+
+- 常用函数：
+| Function                               | 说明                                 |
+| -------------------------------------- | ------------------------------------ |
+| logging.debug(msg, *args, **kwargs)    | 创建一条严重级别为DEBUG的日志记录    |
+| logging.info(msg, *args, **kwargs)     | 创建一条严重级别为INFO的日志记录     |
+| logging.warning(msg, *args, **kwargs)  | 创建一条严重级别为WARNING的日志记录  |
+| logging.error(msg, *args, **kwargs)    | 创建一条严重级别为ERROR的日志记录    |
+| logging.critical(msg, *args, **kwargs) | 创建一条严重级别为CRITICAL的日志记录 |
+| logging.log(level, *args, **kwargs)    | 创建一条严重级别为level的日志记录    |
+| logging.basicConfig(**kwargs)          | 对root logger进行一次性配置          |
+
+- logging 模块四大组件
+| 组件       | 说明                                                         |
+| ---------- | ------------------------------------------------------------ |
+| loggers    | 提供应用程序代码直接使用的接口                               |
+| handlers   | 用于将日志记录发送到指定的目的位置                           |
+| filters    | 提供更细粒度的日志过滤功能，用于决定哪些日志记录将会被输出（其它的日志记录将会被忽略） |
+| formatters | 用于控制日志信息的最终输出格式                               |
+
+
+
+
+
+### cases
+
+
+
+
+
+---
+
+# Module Interaction
 
 > 模块之间的相互作用
 
