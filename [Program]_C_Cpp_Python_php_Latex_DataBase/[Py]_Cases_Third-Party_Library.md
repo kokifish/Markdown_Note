@@ -8,7 +8,7 @@
 
 
 
-##### pearson相关系数
+### pearson相关系数
 
 >  皮尔逊相关系数 皮尔森
 
@@ -21,7 +21,7 @@ r_val, p_val = pearsonr(x1, x2)
 
 
 
-##### Kendall rank correlation coefficient
+### Kendall rank correlation coefficient
 
 > Kendall's τ coefficient (after the Greek letter τ, tau);  Kendall秩相关系数; 肯德尔系数
 
@@ -42,7 +42,7 @@ tau, p_value = stats.kendalltau(x1, x2)
 
 
 
-#####  Spearman's rank correlation coefficient
+###  Spearman's rank correlation coefficient
 
 > 斯皮尔曼等级相关系数; Spearman's ρ; Spearman秩相关系数
 
@@ -87,7 +87,7 @@ import numpy as np # 一般将numpy简写为np
 
 
 
-#### ndarray
+### ndarray
 
 > **ndarray** stand for ***n*-dimensional array** 多维数组 
 
@@ -276,7 +276,7 @@ array([3, 5])
 
 
 
-### random
+## random
 
 
 
@@ -334,7 +334,7 @@ array([[1, 2, 5],
 
 
 
-### common function
+## common function
 
 
 
@@ -824,7 +824,7 @@ print(model.score(data_X, data_y)) #对model进行打分，获取精确度，方
 
 
 
-#### SVC SVR
+## SVC SVR
 
 > SVC: Support Vectors Classification; SVR: Support Vectors Regression
 
@@ -867,7 +867,7 @@ CSV (Comma Separated Values)，即逗号分隔值（也称字符分隔值，因�
 
 
 
-##### reader
+#### reader
 
 ```python
 reader(csvfile, dialect='excel', **fmtparams)
@@ -1008,7 +1008,7 @@ plt.show()
 
 ------
 
-## Apply in math
+## Cases
 
 
 

@@ -82,7 +82,7 @@ Client:
 #### UDP Socket
 
 -   无需建立连接
--   ​
+-   
 
 ![](http://op4fcrj8y.bkt.clouddn.com/18-3-16/65605021.jpg)
 
@@ -242,8 +242,6 @@ typedef struct addrinfo {
 ---
 
 #### TCP基本流程
-
-![](http://op4fcrj8y.bkt.clouddn.com/18-3-16/64842194.jpg)
 
 ```c++
 //TCP Socket Server 
@@ -468,7 +466,7 @@ int sendto(
 
 ###### recvfrom()
 
--   ​
+-   
 
 ```cpp
 int recvfrom(

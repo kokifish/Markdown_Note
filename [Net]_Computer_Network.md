@@ -764,6 +764,19 @@ address size（地址字段长） 48比特
 
 ### IP datagram
 
+```python
+# IPv4 header format
+  |0         |4         |8         |12        |16       19|20        |24        |28     31 Bit|
+ 0| Version  |    IHL   |         TOS         |               Total Length                    |
+ 4|    Identification                         | Flags  |          Fragment Offset             |
+ 8|    Time To Live     |       Protocol      |                   Header Checksum             |
+12|                                 Source IP Address                                         |
+16|                               Destination IP Address                                      |
+20|                      Options and Padding (optional) (if IHL > 5)                          |
+```
+
+
+
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_ipv4_datagram.png)
 
 
@@ -777,17 +790,21 @@ address size（地址字段长） 48比特
 | Flags(DF,MF)   | 3    | Reserved. DF: Don’t Fragment(1:不分片). MF: More Fragment(1:还有分片). |
 | 片偏移量offset | 13   | **片偏移量以8B(64bit)为单位**                                |
 | 生存期TTL      | 8    | 记载经过的router数(跳数)hop count //TTL限制了因特网的直径    |
-| 协议           | 8    | 定义数据部分的协议//**TCP为6**, **UDP为17**, ICMP为1, IGMP为2 |
+| 协议           | 8    | 定义数据部分的协议//**TCP:6**, **UDP:17**, ICMP:1, IGMP:2, ENCAP(IPv6 encapsulation): 41 |
 | 头部校验       | 16   | 头部校验和checksum。路由器会丢弃出错的数据报                 |
 | 源IP地址       | 32   | 发出本数据报的地址                                           |
 | 目的IP地址     | 32   | 接收本数据报的地址                                           |
 | 选项和填充位   | 可变 | 最多40B，填充位用于32bit(4B)对齐                             |
 
 >   生存期 TTL(Time To live): 当收到IP数据报时，路由器或主机会把它的TTL减1。TTL限制了因特网的直径。防止数据报长时间滞留在因特网上
->
 >   需设置为网络直径的两倍，router丢弃TTL为0的datagram(并发送一个ICMP packet告知source host)，host则接收(如果是发给自己的)
->
 >   Win8 Linux默认64 Win10默认128 Unix默认255
+
+
+
+
+
+
 
 
 
@@ -813,18 +830,26 @@ address size（地址字段长） 48比特
 -   当目的主机收到该数据报的所有片段时，它会重组(reassemble)为原来的数据报
 -   第一个片段到达目的主机时目的主机会启动一个重组定时器(默认超时值为15秒)。如果该定时器到期时没有收集到所有片段，目的主机会放弃本次重组并丢弃该数据报的所有片
 
-#### IP datagram 选项
+#### IP Datagram Options
 
 -   一般格式: 代码(1B)、总长度(1B)、数据(nB)
 
-
-
-![](http://op4fcrj8y.bkt.clouddn.com/18-4-25/80438716.jpg)
+|     Field     | Size (bits) |                         Description                          |
+| :-----------: | :---------: | :----------------------------------------------------------: |
+|    Copied     |      1      | Set to **1** if the options need to be copied into all fragments of a fragmented packet. |
+| Option Class  |      2      | A general options category. 0 is for "control" options, and 2 is for "debugging and measurement". 1 and 3 are reserved. |
+| Option Number |      5      |                     Specifies an option.                     |
+| Option Length |      8      | Indicates the size of the entire option (including this field). This field may not exist for simple options. |
+|  Option Data  |  Variable   | Option-specific data. This field may not exist for simple options. |
 
 -   选项码：
-    1.  复制(1bit): 1: 将选项复制到所有分片中 0: 将选项仅复制到第一个分片中
+    1.  复制(1bit): **1: 将选项复制到所有分片中** 0: 将选项仅复制到第一个分片中
     2.  选项类(2bit): 指明选项的类别//00:数据报或网络控制 01:保留 10: 调试和度量 11: 保留
     3.  选项号(5bit): 表示选项类中的具体选项
+
+> Note: Copied, Option Class, and Option Number are sometimes referred to as a single eight-bit field, the *Option Type*.
+>
+> 以上三个选项码有时会被视为一个8bit的**Option Type**域
 
 ![](http://op4fcrj8y.bkt.clouddn.com/18-4-25/60003712.jpg)
 
@@ -1047,7 +1072,8 @@ network | 000...0
 
 ## IPv6
 
--   RFC 2373和RFC 2374定义的IPv6地址 有128位长
+> RFC 2373和RFC 2374定义的IPv6地址 有128位长
+
 -   IPv6地址的表达形式，一般采用32个十六进制数
 -   2^128^≈3.4×10^38^个，具体数量为340,282,366,920,938,463,463,374,607,431,768,211,456个。也可以想象为1632个，因为32位地址每位可以取16个不同的值
 -   很多场合，IPv6地址由两个逻辑部分组成：一个64位的网络前缀和一个64位的主机地址，主机地址通常根据物理地址自动生成，叫做EUI-64（或者64-位扩展唯一标识）
@@ -1059,6 +1085,35 @@ network | 000...0
 -   ffff:192.168.89.9等价于::ffff:c0a8:5909，但不等价于::192.168.89.9和::c0a8:5909
 -   ffff:1.2.3.4格式叫做**IPv4映射地址**，是不建议使用的。而::1.2.3.4格式叫做**IPv4一致地址**
 -   IPv4地址可以很容易的转化为IPv6格式。举例来说，如果IPv4的一个地址为135.75.43.52（十六进制为0x874B2B34），它可以被转化为0000:0000:0000:0000:0000:0000:874B:2B34或者::874B:2B34。同时，还可以使用混合符号（IPv4-compatible address），则地址可以为::135.75.43.523
+
+### IPv6 Datagram
+
+```python
+  |0        3|4        7|8       11|12      15|16      19|20      23|24      27|28      31|Bit
+ 0| Version  |Traffic Class(6+2bit)|                   Flow Label(20bit)                  |
+ 4|     Payload Length(16bit, in bytes)       |   Next Header(8bit) |   Hop Limit(8bit)   |
+  |---------------------------------------------------------------------------------------|
+ 8|                                                                                       |
+12|                                   Source Address(128bit)                              |
+16|                                                                                       |
+20|                                                                                       |
+  |---------------------------------------------------------------------------------------|
+24|                                                                                       |
+28|                               Destination Address(128bit)                             |
+32|                                                                                       |
+36|                                                                                       |
+```
+
+- Version(4bit): 常数6(`0110`)
+- Traffic Class(6+2 bits): 通信类，
+- Flow Label(20bit): 流标签。
+- Payload Length(16bit): 有效载荷长度，
+
+
+
+
+
+
 
 ## DMZ
 
@@ -1760,15 +1815,15 @@ TCP协议的运行阶段:
 
 > 伪IP头用于计算Check Sum
 
-```cpp
-|0           6   7|8    10        15|16            23|24            31|
-|       源端口号 Source Port          |    目的端口号 Destination Port   |
-|              序号 Sequence number (若SYN=1, 此为最初的序列号)           |
-|           确认号 Acknowledgment number (if ACK set)                  |
-|头部长度(4b)|Reserved 0 | 标志(6b)   |    通知窗口大小 Window size        |
-|       校验和 Check Sum             |紧急指针 Urgent Pointer(if URG set)|
-|                      选项 Options (MAX:40 Bytes)                     | 
-|                              数据 Data                               |
+```python
+# TCP segment header
+ B|0  1  2  3  4  5  6  7 |8  9  10 11 12 13 14 15|16 17 18 19 20 21 22 23|24 25 26 27 28 29 30 31|
+ 0|                     Source Port               |                Destination Port               |
+ 4|                                Sequence number (if SYN=1, its initial number)                 |
+ 8|                      确认号 Acknowledgment number (if ACK set)                                 |
+12|Data offset|Reserved|  Flags    (6b)           |                   Window size                 |
+16|                    Check Sum                  |            Urgent Pointer(if URG set)         |
+20|       Options(if data offset > 5. Padded at the end with "0" bytes if necessary)MAX:40 B      | 
 ```
 
 - 序号 Sequence number(以字节流为单位): [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为ISN+1。如果SYN != 1，则此为第一个数据比特的序列码 
