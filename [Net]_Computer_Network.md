@@ -1859,7 +1859,7 @@ TCP协议的运行阶段:
 
 字节流中的每个字节均被编号。初始序号采用基于时间的方案，一般采用随机数。数据部分的第一个字节的编号为初始序号加1
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_TCP_header_format.png)
+![https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_TCP_header_format.png)
 
 > 伪IP头用于计算Check Sum
 
