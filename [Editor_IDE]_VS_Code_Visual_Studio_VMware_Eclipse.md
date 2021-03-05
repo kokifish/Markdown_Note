@@ -388,6 +388,33 @@ Default
 
 
 
+
+
+
+
+
+
+## 连接局域网主机的VMware虚拟机
+
+> VMware Workstation 16 Pro Version 16.1
+>
+> VM: kali 2020.4-vm-amd64
+
+1. VMware => Edit => Virtual Network Editor... : lower right: Change Settings (to get administrator privileges)
+2. Select VMnet8 NAT => NAT Settings... => Port Forwarding => Add...
+3. Fill: Host port(宿主机的端口), TCP or UDP(TCP if set for `ssh`), Virtual machine IP address(VM虚拟机的IP), Virtual machine port(VM虚拟机的port, 22 if set for `ssh`)
+4. OK, then can connect `virtual machine IP:virtual machine port` through `host machine IP:host machine port` on host machine subnet
+
+> 案例：VM虚拟机kali: IP: 192.168.149.129 ssh配置在22端口(默认)
+>
+> VM宿主机IP: 172.18.33.87, 经过上述配置，Host Port设置为40123后(数字随机，不被占用即可，猜的)
+>
+> 可以在172.18.216.103通过ssh连接172.18.33.87:40123来连接到VM虚拟机kali的22端口
+
+
+
+
+
 Kali 创建共享文件夹:
 
 Kali Client Process:
@@ -427,6 +454,10 @@ https://blog.csdn.net/pan869823184/article/details/7237248?utm_source=blogxgwz0
 eject -rf -v /dev/cdrom
 
 
+
+
+
+## Q&A
 
 
 
