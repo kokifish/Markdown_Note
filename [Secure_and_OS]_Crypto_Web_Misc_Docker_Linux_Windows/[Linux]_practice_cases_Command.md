@@ -14,6 +14,18 @@
 
 
 
+### Big Endian / Little Endian
+
+```bash
+$ lscpu | grep -i byte
+Byte Order:                      Little Endian    # 这个输出说明是小端序
+$ echo -n I | od -o | head -n1 | cut -f2 -d" " | cut -c6 # 1为小端模式，0为大端模式
+```
+
+
+
+
+
 ### 配置快捷键
 
 - 终端快捷键设置：命令如下，名称随意
@@ -147,8 +159,7 @@ ls #列出文件 -a 包括隐藏文件 -l 详情
 LANG=en_US.utf8 #修改语系为英文语系(当次登录有效)
 ca[tab][tab] #命令补全(指令串的第一个字后):连按两次tab后，ca开头的命令被列出
 
-# 网络相关
-ip addr # 查看网路ip
+
 ```
 
 ### cat
@@ -477,6 +488,7 @@ ifconfig -a #查看系统的所有网络接口
 ip link show
 ethtool eth0 #查看某个网络接口的详细信息，例如eth0的详细参数和指标
 ip r # routing info
+ip addr # 查看网路ip
 ```
 
 
@@ -670,7 +682,7 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
-# Autotools
+## Autotools
 
 
 
@@ -750,7 +762,7 @@ AC_OUTPUT
 
 
 
-# CMake
+## CMake
 
 > https://gitlab.kitware.com/cmake/community/-/wikis/Home
 >
@@ -781,7 +793,7 @@ A-hello-cmake/build$ cmake .. # 此时运行cmake命令的文件夹不在root目
 
 
 
-## Variables
+### Variables
 
 | Variable                 | Info                                                         |
 | ------------------------ | ------------------------------------------------------------ |
@@ -794,7 +806,7 @@ A-hello-cmake/build$ cmake .. # 此时运行cmake命令的文件夹不在root目
 
 
 
-## Cases
+### Cases
 
 
 
@@ -868,7 +880,7 @@ target_include_directories(hello_headers
 
 
 
-### include dir
+#### include dir
 
 > https://github.com/ttroy50/cmake-examples/tree/master/01-basic/C-static-library
 
@@ -950,7 +962,7 @@ target_link_libraries(hello_binary
 
 
 
-### compile flags
+#### compile flags
 
 - `CACHE STRING "Set C++ Compiler Flags" FORCE`用于强制在该CMakeCache.txt文件中设置该变量
 
@@ -972,7 +984,7 @@ target_compile_definitions(cmake_examples_compile_flags
 
 
 
-# conan
+## conan
 
 > ref: http://chu-studio.com/posts/2019/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84C++%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8CONAN%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97
 

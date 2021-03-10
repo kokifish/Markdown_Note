@@ -87,7 +87,7 @@ printf("abc%n", &x);//x==3	//事实上大部分printf中%n不输出但不会给x
 
 - 描述 %[aeiou] 扫描集扫描输入流中的字符，寻找与扫描集中的字符相匹配的字符
 - 停止 一旦扫描到扫描集中没有包含的字符，扫描集停止输入字符。如果第一个就不符合
-- 逆向扫描集 %[ ^字符]在扫描字符前加"脱字符号(^)"，没有出现在扫描集中的字符反而被保存
+- 逆向扫描集 %[ \^字符] 在扫描字符前加"脱字符号(\^)"，没有出现在扫描集中的字符反而被保存
 
 ```c++
 //扫描集 demo ---		//char a[100];
@@ -97,8 +97,10 @@ scanf("%[abcd]", a);	//仅扫描abcd
 scanf("%'\n'", a);		//扫描除回车符外的字符	
 输入 z u_l，a[]== z u_l	//除了回车符以外的字符包括空格，tab都被存储
 
+    // 20210309 此处记录的内容有误，经过尝试，输出与预期不符，可能由于扫描集使用方法有误  ！！！！！！！！！！！！！！！！！
+    
 scanf("%A-Z", a);		//扫描除了大写字母以外的
-输入abcdTkk，a[]==abcd
+输入abcdTkk，a[]==abcd    
 ```
 
 
@@ -181,11 +183,11 @@ printf( "%-10.3s", "four");fou       	左对齐，域宽为10， 只输出3个ch
 - \?   | Question mark 输出问号?
 
 
-ASCii表示需输出的%c(字符)
+ASCII表示需输出的%c(字符)
 
--   \0 Null character (all zero bits) 空字符Ctrl + @  ASCII:00    0x00
--   \ddd  | Octal equivalent 八进制 (3 octal digits)//ddd代表数字// \65输出5，八进制65对应十进制53，5的ASCii为53
--   \xddd | Hexadecimal equivalent 十六进制(1 or more hex digits for integer value of character)
+-   `\0` Null character (all zero bits) 空字符Ctrl + @  ASCII:00    0x00
+-   `\ddd`  | Octal equivalent 八进制 (3 octal digits)//ddd代表数字// `\65`输出5，八进制65对应十进制53，5的ASCII为53
+-   `\xddd` | Hexadecimal equivalent 十六进制(1 or more hex digits for integer value of character)
 
 ```c++
 printf("abc\b%c",'v');  	//此处的输出结果是abv，后面的'v'就是用来替换'c'的字符
@@ -273,10 +275,11 @@ scanf("%*[^\n]%*c");//这样写在个别情况下会出小错误，建议分开�
 
 
 
-format参数
-%[a-z] 表示匹配a到z中任意字符，贪婪性(尽可能多的匹配)
-%[aB'] 匹配a、B、'中一员，贪婪性
-%\[\^a\] 匹配非a的任意字符，贪婪性
+#### format参数
+
+`%[a-z]` 表示匹配a到z中任意字符，贪婪性(尽可能多的匹配)
+`%[aB']` 匹配a、B、'中一员，贪婪性
+`%\[\^a\]` 匹配非a的任意字符，贪婪性
 
 ```c
 //format不仅可以用空格界定字符串，还可以用其他字符界定，可以实现简单的字符串分割
@@ -332,7 +335,7 @@ gets_s(char *buff,rsize_t size);//n: char数组的最大长度
 
 ### printf
 
--   int printf (char * format,args, ...); //format可以是一个字符串，或字符数组的起始地址
+-   `int printf (char * format,args, ...);` //format可以是一个字符串，或字符数组的起始地址
 -   返回成功输出的字符个数，包含空字符，若出错，则返回负数
 
 ```c
@@ -847,10 +850,6 @@ extern "C" void fun(int a, int b);//这个函数是一个C环境下声明的函�
 (2) 负数的补码为相应正数按位取反再加1;   或正数-1再按位取反
 (+0)补码 = (-0)补码 = 0 0000000
 -1补码:  1111 1111 1111 1111 
-
-
-
-
 
 
 
