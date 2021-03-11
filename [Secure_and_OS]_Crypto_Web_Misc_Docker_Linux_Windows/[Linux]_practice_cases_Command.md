@@ -181,7 +181,7 @@ cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个�
 
 
 
-#### apt/dpkg
+### apt/dpkg
 
 ```shell
 # apt-get等安装更新卸载相关
@@ -196,7 +196,7 @@ sudo alien package # convert .rpm to .deb files
 
 
 
-#### yum/rpm
+### yum/rpm
 
 ```shell
 # yum rpm (CentOS)
@@ -219,7 +219,7 @@ rpm -ql PKG_NAME # find the installation path for a software
 
 
 
-#### snap
+### snap
 
 - Snap是一个全新的软件包架构,它与其它包管理器的区别在于snap安装的app互相之间是高度隔离的,减少了互相引用. 避免了很多冲突问题. 不过这也导致了其占用的磁盘比较多.
 
@@ -229,7 +229,7 @@ sudo ln -s /var/lib/snapd/snap /snap # to enable classic snap support #  create 
 sudo snap install hello-world # test # after install, ex cmd: hello-world
 ```
 
-```sh
+```bash
 snap search abc
 snap install abc
 snap list
@@ -309,9 +309,7 @@ cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注
 
 ### find / grep / ls 
 
-
-
-lsof(list open files)是一个列出当前系统打开文件的工具
+- `lsof`(list open files)是一个列出当前系统打开文件的工具
 
 
 
@@ -328,10 +326,8 @@ find / -user fred #查找在系统中属于FRED这个用户的文件
 
 find / -name docker #全盘按照文件名搜索docker
 
-ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该目录下以.bash开头的文件名
+
 ```
-
-
 
 > https://blog.csdn.net/ydfok/article/details/1486451
 
@@ -339,6 +335,14 @@ ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该�
 grep -r "test"  /path # 在路径 /path 下查找文件内容包含 test 的文件
 grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' / # 在根目录/下查找所有“abcdefg”的字符串，但不在以build_开头的目录、kernel和dirvers中查找，同时忽略所有以out为后缀的文件 
 grep -r --exclude-dir=sys --exclude-dir=proc --exclude-dir=dev "nf_conntrack" / # 根目录下除sys proc目录外查找含nf_conntrack的文件
+```
+
+```bash
+ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该目录下以.bash开头的文件名
+```
+
+```bash
+ll # ls -l # On many systems, ll is an alias of ls -l # type ll 输出：ll is an alias for ls -l
 ```
 
 
@@ -382,6 +386,33 @@ stat FILENAME # file: size, Device, Access, Modify, Change
 
 
 ## Process and Service
+
+
+
+### ln
+
+- ln: link files. 为某一个文件在另外一个位置建立一个同步的链接
+- 当需要在不同目录用到相同文件
+
+1. 软链接：symbolic link 符号链接
+   1. 以路径的形式存在。类似Win的快捷方式
+   2. 可跨文件系统 ，硬链接不可以
+   3. 可对一个不存在的文件名进行链接
+   4. 可对目录进行链接
+2. 硬链接：hard link
+   1. 以文件副本的形式存在。但不占用实际空间
+   2. 不允许给目录创建硬链接
+   3. 只有在同一个文件系统中才能创建
+
+```bash
+ln [参数][源文件或目录][目标文件或目录] # 语法结构
+[-bdfinsvF] [-S backup-suffix] [-V {numbered,existing,simple}][--help] [--version] [--]  # 参数格式
+ln -s a.log a_ln # 为 a.log 创建软链接 a_ln # 若 a.log 丢失，a_ln 失效 # ll 输出：lrwxrwxrwx 1 root root   ... a_ln -> a.log
+rm -rf ./a_ln # 删除软链接a_ln # 不可使用 rm -rf ./a_ln/ 如果后面加了/ 就会删除a_ln链接到的文件夹下的所有文件
+unlink a_ln # 删除软链接a_ln
+```
+
+
 
 ### Process Info: ps
 
