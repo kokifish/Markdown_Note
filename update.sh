@@ -1,9 +1,9 @@
 echo "[Step-1] git pull origin main:"
 git pull origin master;
 echo 
-echo "=== [WARNING] If conflict occured, related files will show below: ========="
+echo "==== [WARNING] If conflict occured, related files will show below: ========="
 git status
-echo "=== [WARNING] Fix by hands if conflict exits. Then [RE-RUN] this script ==="
+echo "==== [WARNING] Fix by hands if conflict exits. Then [RE-RUN] this script ===="
 echo 
 
 echo "[Step-2] Local changes add and commit:"
