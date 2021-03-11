@@ -10,11 +10,11 @@ If you have any questions or anything related to my research areas, feel free to
 
 - C++
 - Python
-- Computer Network
+- Computer Network: P2P protocol, P2P classification
 - Linux
 - Reverse
 - Pwn(CTF)
-- P2P traffic
+- AI: EA, MOEA, Pytorch
 
 > For more notes related to CTF, visit https://github.com/hex-16/CTF-detailed-writeups
 
