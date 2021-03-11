@@ -8,23 +8,97 @@
 
 # Introduction
 
+> http://liuchengxu.org/blog-cn/posts/quick-latex/ 从零开始 LaTeX 快速入门
+
 LaTeX， 是一种基于TEX的排版系统，由美国电脑学家莱斯利·兰伯特在20世纪80年代初期开发，利用这种格式，即使用户没有排版和程序设计的知识也可以充分发挥由TEX所提供的强大功能，能在几天，甚至几小时内生成很多具有书籍质量的印刷品。对于生成复杂表格和数学公式，这一点表现得尤为突出。因此它非常适用于生成高印刷质量的科技和数学类文档。这个系统同样适用于生成从简单的信件到完整书籍的所有其他种类的文档。
 
 LaTeX 基于 TeX，主要目的是为了方便排版。在学术界的论文，尤其是数学、计算机等学科论文都是由 LaTeX 编写, 因为用它写数学公式非常漂亮。
 
 文学编程是 TeX 的作者高德纳提出的编程方式，主张程序员在编写代码的过程中详细地记录自己的思维方式和内在逻辑
 
-### Installation
+## Installation (VS code + textlive)
 
 > VS code + LaTex Workshop 配置方法 https://zhuanlan.zhihu.com/p/38178015
 
 
 
+- textlive 2020 + VS code 环境配置 简易记录(Win10，默认VS code已经安装)
+
+1. 下载texlive2020，`https://tug.org/texlive/` on DVD,  downloading the TeX Live ISO image and burning your own DVD, download from a nearby CTAN mirror. 下载texlive2020-20200406.iso, 3.7GiB
+2. Mount `iso`. 运行`install-tl-windows.bat`，弹出TeX Live Installer 对话框，可以更改安装目录等，点击Install，等待。
+3. VS code安装Latex Workshop，配置`setting.json`
+
+```json
+        "latex-workshop.latex.recipes": [ // latex-workshop //
+        {
+            "name": "xelatex",
+            "tools": [
+                "xelatex"
+            ],
+        },
+        {
+            "name": "pdflatex",
+            "tools": [
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "xe->bib->xe->xe",
+            "tools": [
+                "xelatex",
+                "bibtex",
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            "name": "pdf->bib->pdf->pdf",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-pdf",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.autoBuild.run": "onFileChange",
+    "latex-workshop.view.pdf.viewer": "tab",
+```
 
 
-### Ref
 
-http://liuchengxu.org/blog-cn/posts/quick-latex/ 从零开始 LaTeX 快速入门
+
+
+
 
 # File Systemation
 
@@ -70,7 +144,7 @@ http://liuchengxu.org/blog-cn/posts/quick-latex/ 从零开始 LaTeX 快速入门
 
 # Mathematical Formula
 
-
+> 数学表达式已经在很多.md笔记中记录了。由于经常是返回去搜索写过的内嵌latex的.md，所以这里应该不会再详细记录了
 
 
 
@@ -81,6 +155,10 @@ http://liuchengxu.org/blog-cn/posts/quick-latex/ 从零开始 LaTeX 快速入门
 
 
 ## tikz
+
+> 用于绘图的一个包 在写教材的时候用到过
+
+- 画出来的图非常原生，图里的字可以复制，但是绘图指令比较复杂，需要不断修改，调试，同时网上很多博客的指令无法在较新版本中使用了
 
 ```latex
 \begin{figure}[htbp]

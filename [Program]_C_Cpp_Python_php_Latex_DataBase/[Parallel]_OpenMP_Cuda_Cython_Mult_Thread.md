@@ -59,7 +59,7 @@ Windows VS Studio
 
 macOS/Linux:
 
-对于支持OpenMP的编译器: gcc: 在编译时增加-fopenmp 标记
+对于支持OpenMP的编译器: gcc: 在编译时增加`-fopenmp` 标记
 
 ```cpp
 #include <omp.h> //使用库函数
@@ -158,7 +158,7 @@ for (n = 0; n < 4; n++) {
 
 OpenMP中的每个线程同样可以被并行化为一组线程
 
-OpenMP默认关闭嵌套，需要使用omp_set_nested(1) 打开
+OpenMP默认关闭嵌套，需要使用`omp_set_nested(1) `打开
 
 ```cpp
 omp_set_nested(1);
@@ -400,7 +400,7 @@ printf("i = %d\n", i);
 - 线程可能执行不同任务
 - ```#pragma omp sections```
 - 每个section由一个线程完成
-- 同样有隐式栅障，可使用nowait去除
+- 同样有隐式栅障，可使用`nowait`去除
 
 
 
@@ -1383,7 +1383,7 @@ Cython解释器可以识别`.py`,`.cpp`,`.c`,`.h`,`.pyx`,`.pxd`,`.pxi`,其中
 
 -   C run-time libraries
 
-###### \_beginthread &\_beginthreadex
+##### \_beginthread &\_beginthreadex
 
 
 
@@ -1588,7 +1588,7 @@ error_return:
 
 
 
-###### \_endthread & \_endthreadex
+##### \_endthread & \_endthreadex
 
 -   `_endthread` 终止由 `_beginthread` 创建的线程， `_endthreadex` 终止由 `_beginthreadex`创建的线程
 
@@ -1628,7 +1628,7 @@ int main(){
 
 
 
-###### WaitForSingleObject
+##### WaitForSingleObject
 
 -   等待hHandle事件发生，如果hHandle是某个线程的句柄，则其功能是等待该线程结束
 
@@ -1647,7 +1647,7 @@ DWORD WINAPI WaitForSingleObject(//等待对象发生事件
 
 
 
-##### Critical Section
+#### Critical Section
 
 -   在同步的程序设计中，**临界区块**Critical section指的是一个访问共用资源(e.g. 共用设备或是共用内存)的程序片段，而这些共用资源有无法同时被多个线程访问的特性
 -   当有线程进入临界区块时，其他线程或是进程必须等待（e.g. bounded waiting 等待法），有一些同步的机制必须在临界区块的进入点与离开点实现，以确保这些共用资源是被互斥或的使用，e.g. semaphore
@@ -1658,8 +1658,7 @@ DWORD WINAPI WaitForSingleObject(//等待对象发生事件
 
 
 
-
-###### [Win] Critical Section 
+##### [Win] Critical Section
 
 
 -   在Windows中，CRITICAL_SECTION是一种同步对象类型，用于同一个进程内的多线程同步访问资源。如果是跨进程同步，需要使用互斥锁(mutex)

@@ -6,17 +6,11 @@
 
 
 
-
-
-
-
-
-
 ---
 
 # Intelligent Optimization Algorithms
 
-> 智能优化算法   
+> 智能优化算法
 >
 > IOAS
 
@@ -83,7 +77,7 @@ Pareto ranking scheme:
 
 > 模拟退火算法; Annealing [n.] 热处理;低温退火;磨炼; v.退火;磨炼(anneal的ing)
 
-![](<https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_SA_animation.gif>)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_SA_animation.gif)
 
 模拟退火算法所得解依概率收敛到全局最优解
 
@@ -333,8 +327,10 @@ A: Approaches for improvement
 ## Multi-Objective Optimization Problem 
 
 > multi-objective optimization problem MOP 多目标优化问题
-
+>
 > Multiobjective Evolutionary Algorithm, 多目标进化算法
+>
+> https://github.com/hex-16/MOEA-Net-HL   多目标进化算法在复杂网络上的应用案例
 
 
 
@@ -499,7 +495,7 @@ Algorithm 1: $$R^D_n$$-Sampling Phase 取样
 -   "the production of an analysis that corresponds too closely or exactly to a particular set of data, and may therefore fail to fit additional data or predict future observations reliably"
 -   过拟合有关因素: 参数个数，训练数据集，模型结构
 
-![](<https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_overfitting.png>)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_overfitting.png)
 
 >   绿色线曲线(curve): overfitted model; black line: regularized model; 虽然绿色曲线更加适合当前数据集，但是对于未知的数据，绿色线可能有更高的误差。
 

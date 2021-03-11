@@ -1,21 +1,26 @@
 # Markdown_Note
 
-My markdown notes. Just for backup and self-learning. You can view as you like, but please don't diffuse these notes. Actually I don’t think you will spread these notes due to my limited knowledge.
+My markdown notes. Just for backup and self-learning. You can view as you like, but please don't diffuse these notes. Actually I don’t think you will spread these notes due to my limited knowledge. 笔记以中英双语为主，部分纯英文，部分纯中文。
 
 If you have any questions or anything related to my research areas, feel free to contact me.
 
 
 
-# Major programming Languages
+# Major Skills
 
 - C++
 - Python
+- Computer Network
+- Linux
+- Reverse
+- Pwn(CTF)
+- P2P traffic
 
-
+> For more notes related to CTF, visit https://github.com/hex-16/CTF-detailed-writeups
 
 # Contacts
 
-email: hexhex16@outlook.com, pureteap@gmail.com
+new an issue or email: hexhex16@outlook.com
 
 
 

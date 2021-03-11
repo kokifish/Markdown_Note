@@ -10,6 +10,7 @@
 - TensorFlow 1.0.0: released on February 11, 2017. 想要成为一门新的语言，而不仅是python package
 - TensorFlow 2.0: officially available in Sep 2019. 简化使用，移除`tf.app`,`tf.flags`, `tf.logging`, `tf.session`, `tf.graph`等，本分地当个python package?
 - 提供稳定的Python, C API, 对很多其他语言(c++, Go, Java, JavaScript, Swift)提供不具向后兼容保证的API，以及第三方包(Haskell, Julia, Matlab, Scale, Rust...)
+- WARNING! 需要注意版本问题，貌似tf 1.x之间都很可能互不兼容，2.x和1.x之间的更无法兼容
 
 
 
@@ -36,11 +37,13 @@
    SET PATH=C:\tools\cuda\bin;%PATH%
    ```
 
-4. Download `cudnn-11.2-windows-x64-v8.1.1.33.zip` from Nvidia official website. Then unzip.
+4. `cudnn`: Download `cudnn-11.2-windows-x64-v8.1.1.33.zip` from Nvidia official website. Then unzip.
 
-5. Copy folders `bin, include, lib` to `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0`
+5. Copy `cudnn` folders `bin, include, lib` to `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0`
 
 
+
+## Linux
 
 
 
