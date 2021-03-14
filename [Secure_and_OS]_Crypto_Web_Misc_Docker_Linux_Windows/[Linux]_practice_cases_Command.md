@@ -83,7 +83,7 @@ conda --version 检查是否安装成功，如果command not found: export PATH=
 
 若一个 inode 号对应多个文件名，则称这些文件为硬链接。换言之，硬链接就是同一个文件使用了多个别名。硬链接可由命令 link 或 ln 创建
 
-```cmd
+```bash
 link oldfile newfile 
 ln oldfile newfile
 ```
@@ -183,7 +183,7 @@ cat -n a.log b.log #把 a.log 的文件内容加上行号后输入 b.log 这个�
 
 ### apt/dpkg
 
-```shell
+```bash
 # apt-get等安装更新卸载相关
 apt-get update # 列举本地更新
 apt-get upgrade # 安装可用更新
@@ -198,7 +198,7 @@ sudo alien package # convert .rpm to .deb files
 
 ### yum/rpm
 
-```shell
+```bash
 # yum rpm (CentOS)
 yum check-update #检查可更新的rpm包
 yum update #更新所有的rpm包
@@ -660,7 +660,7 @@ brctl delbr br0 # 删除网桥
 
 
 
-## Account
+## Privilege and Account
 
 ### su / passwd
 
@@ -680,6 +680,12 @@ su #Once the root password is set, you can login as root by using the su command
 ```
 
 
+
+### chmod
+
+```bash
+chmod +x a # 赋予可执行权限
+```
 
 
 
