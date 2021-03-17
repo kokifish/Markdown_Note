@@ -24,7 +24,7 @@ print(
 
 
 
-# Installation
+## Installation
 
 ```python
 # 改变链接中的cu101可以改变CUDA版本
@@ -32,7 +32,7 @@ print(
 pip install torch==1.4.0 torchvision==0.5.0  -f https://download.pytorch.org/whl/cu101/torch_stable.html
 ```
 
-
+> 2021.03.17 使用官方推荐的安装指令：`pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio===0.8.0 -f https://download.pytorch.org/whl/torch_stable.html`  会报错，说pytorch某网站连接超时，这种情况就可以用上面的方法安装了。
 
 ## Tensor
 
@@ -196,6 +196,8 @@ torch.optim #包含很多optimizer #e.g. SGD, Adom
 
 # Digest Of Pytorch Package Reference
 
+> 摘要
+>
 > https://pytorch.org/docs/stable/index.html
 
 

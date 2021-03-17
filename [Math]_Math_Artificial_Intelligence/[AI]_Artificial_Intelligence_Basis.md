@@ -917,6 +917,10 @@ Contributions:
 
 
 
+经过展开的RNN单元，unfolded(unrolled) basic recurrent neural network
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Unfolded_basic_recurrent_neural_network.png)
+
 ## LSTM
 
 > Long Short-Term Memory LSTM 长短期记忆网络
@@ -930,3 +934,6 @@ RNN梯度爆炸的问题我们可以通过gradient clipping的方法来进行优
 - 门（gates）是动态变化的，计算出来的
 - 遗忘门 输出门 输入门 都有各自的(U, W, b)
 
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_LSTM_cell_color.png)
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_LSTM_cell_black_white.png)
