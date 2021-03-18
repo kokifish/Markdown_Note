@@ -910,8 +910,9 @@ Contributions:
 
 ## RNN
 
+> recurrent neural network, 循环神经网络, 递归神经网络
 
-
+- 网络输入：RNN 网络的输入数据的维度通常是`[batch_size x seq_len x input_size]`，比CNN多序列长度`seq_len`
 - RNN结构共享一组(U, W, b)
 - 在(U, W, b)不变的情况下，梯度在bp过程中不断连乘，数值不是越来越大就是越来越小，会出现梯度爆炸或梯度消失问题
 

@@ -34,6 +34,22 @@ pip install torch==1.4.0 torchvision==0.5.0  -f https://download.pytorch.org/whl
 
 > 2021.03.17 使用官方推荐的安装指令：`pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio===0.8.0 -f https://download.pytorch.org/whl/torch_stable.html`  会报错，说pytorch某网站连接超时，这种情况就可以用上面的方法安装了。
 
+### Test
+
+- 测试pytorch，CUDA是否安装成功
+
+```python
+import torch    # 如正常则静默
+a = torch.Tensor([1.])    # 如正常则静默
+a.cuda()    # 如正常则返回"tensor([ 1.], device='cuda:0')"
+from torch.backends import cudnn # 如正常则静默
+cudnn.is_acceptable(a.cuda())    # 如正常则返回 "True"
+```
+
+
+
+
+
 ## Tensor
 
 > Pytorch 0.4后，Variable和Tensor基本没有差别了

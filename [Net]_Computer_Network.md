@@ -766,7 +766,7 @@ address size（地址字段长） 48比特
 
 ```python
 # IPv4 header format
-  |0         |4         |8         |12        |16       19|20        |24        |28     31 Bit|
+  |0         |4         |8         |12        |16       19|20        |24        |28         31|Bit
  0| Version  |    IHL   |         TOS         |               Total Length                    |
  4|           Identification                  | Flags  |          Fragment Offset             |
  8|    Time To Live     |       Protocol      |                   Header Checksum             |
@@ -775,7 +775,7 @@ address size（地址字段长） 48比特
 20|                      Options and Padding (optional) (if IHL > 5)                          |
 ```
 
-- IPv4报头长度: [20, 60] Bytes
+- IPv4报头长度: **[20, 60]** Bytes
 
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_ipv4_datagram.png)
 
@@ -783,9 +783,9 @@ address size（地址字段长） 48比特
 | 字段           | bit  | 说明                                                         |
 | -------------- | :--- | ------------------------------------------------------------ |
 | 版本           | 4    | 共两个版本：4 for IPv4, 6 for IPv6                           |
-| 头部长度       | 4    | 头部的长度，以字(4B、32-bit)为单位 **20B \~ 60B**            |
+| 头部长度       | 4    | 头部的长度，以字(**4B**、32-bit)为单位 **20B \~ 60B**        |
 | 服务类型       | 8    | (Type of Service,TOS)本IP数据报希望得到的服务。该字段被重新定义为**区分服务** |
-| 总长度         | 16   | 整个数据报的长度，以字节为单位(含头部长度)                   |
+| 总长度         | 16   | 整个数据报的长度，以**字节**为单位(含头部长度)               |
 | 标识           | 16   | 每产生一个IP数据报，加一(被分段的IP数据报标识一样)           |
 | Flags(DF,MF)   | 3    | Reserved. DF: Don’t Fragment(1:不分片). MF: More Fragment(1:还有分片). |
 | 片偏移量offset | 13   | **片偏移量以8B(64bit)为单位**                                |
@@ -804,30 +804,27 @@ address size（地址字段长） 48比特
 
 
 
-
-
-
-
 #### IP Datagram Fragment
 
--   一个物理网络的最大传输单元( maximum transmission unit, MTU)是该网络可以运载的最大有效载荷，即数据帧的数据部分的最大长度。例如：以太网(DIXv2)的MTU为1500, FDDI和令牌环的MTU分别为4353和4482
+-   一个物理网络的最大传输单元( maximum transmission unit, **MTU**)是该网络可以运载的最大有效载荷，即数据帧的数据部分的最大长度。例如：以太网(DIXv2)的MTU为1500, FDDI和令牌环的MTU分别为4353和4482
 -   如果一个datagram的大小大于要承载它的网络的MTU，路由器需要先对该数据报进行**分段(fragment)**
--   源主机每次发送IP数据报时都会把标识(Identification)字段加1。**分段时标识的值保持不变**，并且用**偏移量字段(offset)**指出该片段的数据部分相对(最)原来数据报的偏移量(以8B为单位)
+-   源主机每次发送IP数据报时都会把标识(Identification)字段加1。**分段时标识的值保持不变**，并且用**偏移量字段(offset)**指出该片段的数据部分相对(最)原来数据报的偏移量(以**8B**为单位)
 -   分段后会改变：头部校验，总长度，偏移量，MF
 
-```c
-一个没有选项的IP数据报的总长度为3000字节，标识(iden)是10034，DF=0，OFFSET=0，要转发到MTU=800的物理网络上。如果前面的片段尽量大，划分片段后的 iden offset MF
-10034 0 1
-10034 97 1//在后面会再被分片
-10034 194 1
-10034 291 0//注意为0
-如果第二个片段在后面的一个router要转发到MTU=300的物理网络上，分片后的iden offset MF
-10034 97 1
-10034 132 1
-10034 167 1//注意仍为1
+```python
+# 一个没有选项的IP数据报的总长度为3000字节，标识(iden)是10034，DF=0，OFFSET=0，要转发到MTU=800的物理网络上。如果前面的片段尽量大，划分片段后的 
+iden offset MF
+10034 0     1
+10034 97    1 # 在后面会再被分片
+10034 194   1
+10034 291   0 # 注意为0
+# 如果第二个片段在后面的一个router要转发到MTU=300的物理网络上，分片后的iden offset MF
+10034 97    1
+10034 132   1
+10034 167   1 # 注意仍为1
 ```
 
--   当目的主机收到该数据报的所有片段时，它会重组(reassemble)为原来的数据报
+-   当目的主机收到该数据报的所有片段时，它会重组(**reassemble**)为原来的数据报
 -   第一个片段到达目的主机时目的主机会启动一个重组定时器(默认超时值为15秒)。如果该定时器到期时没有收集到所有片段，目的主机会放弃本次重组并丢弃该数据报的所有片
 
 #### IP Datagram Options
@@ -1862,6 +1859,8 @@ TCP协议的运行阶段:
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_TCP_header_format.png)
 
 > 伪IP头用于计算Check Sum
+>
+> TCP校验和也包括了96bit的伪头部，其中有源地址、目的地址、协议以及TCP的长度。这可以避免报文被错误地路由
 
 ```python
 # TCP segment header
@@ -1878,16 +1877,16 @@ TCP协议的运行阶段:
 - 确认号 Acknowledgment number: 确认号为期待接收的下一个数据段的开始序号，也即已经收到的数据的字节长度加1 。ACK = 1时，确认号才有效
 - 头部长度 **Data offset** : 以32bit(**4B**)为单位，**头部长度的实际大小为[20, 60] Bytes,故选项字段最大40B**。Data Offset最小值为5
 - 保留 Reserved 0:  For future use and should be set to zero.应置为0
-- 标志 Flags (aka Control bits): 6 bits, wiki写的是9 bit
+- 标志 Flags (aka Control bits): 6 bits, wiki写的是9 bit(即)
 - 通知窗口大小 Window size: 接收窗口的大小(Byte)。接收方用通知窗口大小(advertised window)告知发送方接收窗口的大小，发送方会据此修改发送窗口大小。即空闲块的大小，若接收方尚未将数据交付上层，数据还在缓冲区中，窗口大小变小。（包含错序到达的数据段）
 - 校验和 Check Sum: 伪IP头、TCP头和TCP数据部分形成。
-- 紧急指针 Urgent Pointer: 指出**带外数据** out-of-band data(OOB)的边界。标志URG为1时有效
+- 紧急指针 Urgent Pointer: 指出**带外数据** out-of-band data(OOB)的边界。标志**URG**为1时有效
 - 选项: MSS(Maximum Segment Size)、窗口比例(Scale) ；是否使用选择性确认(SACK-Permitted)。数据传送时的选项：选择性确认的序号范围(Selective ACK,SACK)，时间戳等。// Unix 默认值: MSS=536，SACK-Permitted=False。Windows 默认值: MSS=1460，SACK-Permitted=True
 
 | 标识符 | 为1表示的内容 |
 | --- | --- |
 |URG | 高优先级数据包，紧急指针字段有效。表示本数据段**包含紧急数据**(带外数据，不属字节流) |
-| ACK | 确认号字段有效 |
+| ACK | 确认号字段(Acknowledgment number)有效 |
 | PSH | 是带有PUSH标志的数据，指示接收方应该**尽快**将这个报文段**交给应用层**而不用等待缓冲区装满 |
 | RST| 重置连接。出现严重差错。通知对方立即中止连接并释放相关资源。还可以用于拒绝非法的报文段和拒绝连接请求 |
 | SYN| 同步(Synchronize)序号标志，用来发起一个TCP连接。这是**连接请求**或是**连接接受请求**，用于创建连接和使顺序号同步 |
@@ -1897,7 +1896,7 @@ TCP协议的运行阶段:
 
 
 
-#### TCP Timer 定时器
+### TCP Timer 定时器
 
 - **超时定时器 重传定时器 retransmission timer retransmit timer**：每个连接只针对第一个未确认数据段启动重传定时器。每收到一个确认帧都重置。所有数据段都已确认则关闭。超时重传或发送窗口移动时要重启该定时器。(This means that the retransmit timer fires only when the sender has received *no* acknowledgement for a long time.)
 - **持续定时器 坚持定时器 persist timer**: 用于保持窗口大小信息流动即使连接的另一端关闭了接收窗口。
@@ -2098,11 +2097,11 @@ ACK报文用来应答的，SYN报文用来同步的
 
 三次握手过程：
 
-1. SYN: Client 根据已知的IP和端口号向 Server 发送连接请求，SYN = **X** (一般为随机数), 称为Client initial sequence number (ISN)
-2. SYN-ACK: Server 为合法 SYN 回送 SYN-ACK。ACK的确认码: **X+1**，SYN = **Y** (一般为随机数) 称为Server ISN
-3. ACK: Client 再发送一个ACK = **Y+1** . 完成三次握手 
+1. SYN: Client 根据已知的IP和端口号向 Server 发送连接请求，seq = **a** (一般为随机数), 称为Client initial sequence number (ISN), **SYN=1, ACK=0**
+2. SYN-ACK: Server 为合法 SYN 回送 SYN-ACK。ack值: **a+1**，seq = **b** (一般为随机数) 称为Server ISN, **SYN=1, ACK=1**
+3. ACK: Client 再发送一个ack = **b+1**, seq = **a+1**, **ACK=1** . 完成三次握手
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-7-9/3806316.jpg)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_TCP_Establishment_3times.png)
 
 每一步均采用超时重传，多次重发后将放弃。重发次数与间隔时间依系统不同而不同。头两个数据段确定的选项：Scale，MSS ，SACK-Permited
 
@@ -2160,7 +2159,7 @@ FIN报文采用超时自动重发方式。在若干次重发后依然没有收�
  B|0  1  2  3  4  5  6  7 |8  9  10 11 12 13 14 15|16 17 18 19 20 21 22 23|24 25 26 27 28 29 30 31|
  0|                                       Source IPv4 Address                                     |
  4|                                     Destination IPv4 Address                                  |
- 8|         Zeroes        |       Protocol        |                  UDP Length                   | # 这里及以上为伪UDP头
+ 8|         Zeroes        |       Protocol        |                  UDP Length                   | #以上为伪UDP头
 12|                   Source Port                 |               Destination Port                |
 16|                     Length                    |                   Checksum                    |
 20|                                             Data                                              | 

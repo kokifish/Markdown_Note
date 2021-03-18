@@ -1858,9 +1858,9 @@ def run_thread(n):
 
 
 
+---
 
-
-# pip 
+# pip
 
 -   a package management system used to install and manage software packageswritten in Python
 
@@ -1885,7 +1885,7 @@ pip install --upgrade numpy #更新numpy
 pip uninstall numpy #卸载
 
 pip install matplotlib==2.0.0 #安装指定版本的包
-#↓使用whl文件安装第三方模块
+# 使用whl文件安装第三方模块
 pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
 ```
 
@@ -1898,10 +1898,10 @@ pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
 
 安装pip:
 
-1.  download get-pip.py  //https://pip.pypa.io/en/stable/installing/
+1.  download get-pip.py     /https://pip.pypa.io/en/stable/installing/
 2.  python get-pip.py
 
-#### pip批处理相关
+#### pip批处理 / requirements
 
 ```python
 pip freeze >requirements.txt #在当前目录下，将当前环境下pip list能列出的几乎所有包列出，除去pip, setuptools等 
