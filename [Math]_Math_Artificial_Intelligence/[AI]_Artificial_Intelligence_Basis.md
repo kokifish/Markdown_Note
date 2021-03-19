@@ -911,16 +911,47 @@ Contributions:
 ## RNN
 
 > recurrent neural network, 循环神经网络, 递归神经网络
+>
+> https://en.wikipedia.org/wiki/Recurrent_neural_network
+>
+> https://zhuanlan.zhihu.com/p/71732459
 
 - 网络输入：RNN 网络的输入数据的维度通常是`[batch_size x seq_len x input_size]`，比CNN多序列长度`seq_len`
-- RNN结构共享一组(U, W, b)
-- 在(U, W, b)不变的情况下，梯度在bp过程中不断连乘，数值不是越来越大就是越来越小，会出现梯度爆炸或梯度消失问题
+- 最原始的 RNN 公式：
 
+$h_t=\tanh(w_{ih}x_t+b_{ih}+w_{hh}h_{(t−1)}+b_{hh})$
 
+- 其中w: weigh; b: bias; $x_t$: input; $h_t$: hidden state
+- 普通的神经网络只有$w_{ih}x_t+b_{ih}$, 而RNN多加了隐藏状态信息$w_{hh}h_{(t−1)}+b_{hh}$
+- 普通网络是一次前向传播就得到结果，而RNN多了sequence维度，需要跑n次前向传播
 
 经过展开的RNN单元，unfolded(unrolled) basic recurrent neural network
 
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Unfolded_basic_recurrent_neural_network.png)
+
+```python
+# 使用numpy对RNN工作流程做总结
+class RNN: # 省略很多其他操作
+  def step(self, x, hidden): # update the hidden state
+    hidden = np.tanh(np.dot(self.W_hh, hidden) + np.dot(self.W_xh, x)) # 输出只有一个hidden_state
+    return hidden
+
+rnn = RNN()
+x = get_data() # x: [batch_size * seq_len * input_size]
+seq_len = x.shape[1] # 序列长度
+hidden_state = np.zeros() 初始化一个hidden_state，RNN中的参数没有包括hidden_state
+for i in range(seq_len): # RNN工作流程，每次输入 x[:, i, :] 都是一个时间步长的数据
+    hidden_state = rnn(x[:, i, :], hidden_state) # 同一个hidden_state会在循环中反复输入到网络中
+```
+
+
+
+
+
+- RNN结构共享一组(U, W, b)
+- 在(U, W, b)不变的情况下，梯度在bp过程中不断连乘，数值不是越来越大就是越来越小，会出现梯度爆炸或梯度消失问题
+
+
 
 ## LSTM
 
