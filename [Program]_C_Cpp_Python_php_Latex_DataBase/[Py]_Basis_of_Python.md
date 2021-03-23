@@ -140,7 +140,7 @@ mutable: 容器类对象通常是可变对象
 
 
 
-##### float
+### float
 
 
 
@@ -631,7 +631,7 @@ print(*range(5),)
 
 
 
-##### list Comprehension 
+### list Comprehension
 
 ```python
 multiples = [i for i in range(30) if i % 3 is 0]
@@ -646,7 +646,7 @@ squared = [x**2 for x in range(10)]
 
 
 
-##### dict & set Comprehension 
+### dict & set Comprehension
 
 dict推导式：
 
@@ -850,6 +850,16 @@ True
 
 
 
+### 三目运算符
+
+```python
+exp1 if contion else exp2
+max_num = a if a>b else b
+
+a if a>b else c if c>d else d # 与下面一句等效
+a if a>b else ( c if c>d else d )
+```
+
 
 
 ---
@@ -860,7 +870,7 @@ True
 
 
 
-##### if elif else
+### if elif else
 
 -   `elif`是`else if`的缩写
 -   python不支持switch
@@ -887,7 +897,7 @@ else:
 
 
 
-##### for
+### for
 
 
 
@@ -948,12 +958,11 @@ for num in range(10,20):  # 迭代 10 到 20 之间的数字 [10, 20)
 
 -   循环语句可以有 else 子句，它在穷尽列表(以for循环)或条件变为 false (以while循环)导致循环终止时被执行,但循环被break终止时不执行
 
-##### while
+### while
 
 ```python
 #!/usr/bin/python #Python 3.6.5 (v3.6.5:f59c0932b4, Mar 28 2018, 16:07:46) [MSC v.1900 32 bit (Intel)] on win32
 # -*- coding: UTF-8 -*-
- 
 i = 2
 while(i < 100):
    j = 2
@@ -968,27 +977,7 @@ print("Good bye!")
 # output:
 2 是素数
 3 是素数
-5 是素数
-7 是素数
-11 是素数
-13 是素数
-17 是素数
-19 是素数
-23 是素数
-29 是素数
-31 是素数
-37 是素数
-41 是素数
-43 是素数
-47 是素数
-53 是素数
-59 是素数
-61 是素数
-67 是素数
-71 是素数
-73 是素数
-79 是素数
-83 是素数
+...
 89 是素数
 97 是素数
 Good bye!
@@ -998,13 +987,11 @@ Good bye!
 
 
 
-##### break continue pass
+### break continue pass
 
 -   **break** : break 语句可以跳出 for 和 while 的循环体。如果你从 for 或 while 循环中终止，任何对应的循环 else 块将不执行
 -   **continue** : 告诉Python跳过当前循环块中的剩余语句，然后继续进行下一轮循环
 -   **pass** : 空语句，是为了保持程序结构的完整性，不做任何事情，一般用做占位语句
-
-
 
 ```python
 for letter in 'Runoob':
@@ -1461,6 +1448,34 @@ with open("work/test.txt",'a') as  f:
 
 
 
+# 异常处理 try, except, else, finally
+
+
+
+```python
+try:
+<语句>        #运行别的代码
+except <名字>：
+<语句>        #如果在try部份引发了'name'异常
+except <名字>，<数据>:
+<语句>        #如果引发了'name'异常，获得附加的数据
+else:
+<语句>        #如果没有异常发生
+```
+
+```python
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+try:
+    fh = open("testfile", "w")
+    fh.write("这是一个测试文件，用于测试异常!!")
+except IOError:
+    print "Error: 没有找到文件或读取文件失败"
+else:
+    print "内容写入文件成功"
+    fh.close()
+```
+
 
 
 ---
@@ -1485,13 +1500,13 @@ import numpy as np
 
 ---
 
-# Built-in Module
+## Built-in Module
 
 
 
 ---
 
-## random
+### random
 
 ```python
 import random
@@ -1526,7 +1541,7 @@ random.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)
 
 ---
 
-## datetime
+### datetime
 
 > https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431937554888869fb52b812243dda6103214cd61d0c2000/ 廖雪峰datetime专题
 
@@ -1550,17 +1565,17 @@ datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S') #字符串todatetime
 
 
 
-## timeit
+### timeit
 
 - 可用于计算一段代码的使用时间
 
 
 
-## re 正则表达式
+### re 正则表达式
 
 
 
-### match & search
+#### match & search
 
 re.match只匹配字符串的开始，如果字符串开始不符合正则表达式，则匹配失败，函数返回None；而re.search匹配整个字符串，直到找到一个匹配 
 
@@ -1598,13 +1613,13 @@ print(re.search('www', 'awwwwwwwwwww')) #
 
 
 
-## sys
+### sys
 
 
 
 
 
-### IO重定向
+#### IO重定向
 
 ```python
 #stdout redirect
@@ -1632,7 +1647,7 @@ raise Exception, 'this error will be logged'
 >
 > 当程序由于异常而崩溃时，Python程序也结束了，Python会替我们清理和关闭文件
 
-## logging
+### logging
 
 > Python 标准库，用于事件日志系统
 >
@@ -1672,7 +1687,13 @@ raise Exception, 'this error will be logged'
 
 
 
-### cases
+#### cases
+
+```python
+LOG_FORMAT = "%(asctime)s-[%(levelname)s]- %(message)s"
+logging.basicConfig(filename='mawi_pcap2df.log', level=logging.DEBUG, format=LOG_FORMAT)
+logging.info("[START] mawi_pcap2df.py START {}".format(time.asctime(time.localtime())))
+```
 
 
 
@@ -1680,7 +1701,7 @@ raise Exception, 'this error will be logged'
 
 ---
 
-# Module Interaction
+## Module Interaction
 
 > 模块之间的相互作用
 
@@ -1728,7 +1749,7 @@ print(__name__)
 
 
 
-#### 格式化IO
+### 格式化IO
 
 ```python
 a=1

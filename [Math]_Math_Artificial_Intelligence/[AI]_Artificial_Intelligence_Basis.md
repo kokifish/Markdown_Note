@@ -924,6 +924,7 @@ $h_t=\tanh(w_{ih}x_t+b_{ih}+w_{hh}h_{(t−1)}+b_{hh})$
 - 其中w: weigh; b: bias; $x_t$: input; $h_t$: hidden state
 - 普通的神经网络只有$w_{ih}x_t+b_{ih}$, 而RNN多加了隐藏状态信息$w_{hh}h_{(t−1)}+b_{hh}$
 - 普通网络是一次前向传播就得到结果，而RNN多了sequence维度，需要跑n次前向传播
+- 反向传播，BP：与其他神经网络不通的是，RNN的误差需要在时间轴上进行
 
 经过展开的RNN单元，unfolded(unrolled) basic recurrent neural network
 
@@ -946,10 +947,97 @@ for i in range(seq_len): # RNN工作流程，每次输入 x[:, i, :] 都是一�
 
 
 
-
-
 - RNN结构共享一组(U, W, b)
 - 在(U, W, b)不变的情况下，梯度在bp过程中不断连乘，数值不是越来越大就是越来越小，会出现梯度爆炸或梯度消失问题
+
+```python
+# Created on 2019年6月2日 # 疑似使用tf1.x
+# 用tensorflow实现一个直白的RNN，用这个RNN实现对正弦曲线的刻画：y_t = f(y_t-T-1, ..., y_t-1)
+# 网络结构是RNN层+多元线性回归。
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+# 超参数设置
+batch_size = 11  # 训练的时候，一般使用批量梯度下降来加快收敛；有时候也会使用这个策略来避免内存或者现存不足导致的内存溢出
+rnn_node_num = 50  # RNN神经元个数
+input_dim = 1  # 输入数据的维度
+T = 20  # 序列的长度，这里每次会向网络输入一个长20的序列
+output_dim = 1  # 输出的维度
+lr = 0.0001  # 学习率
+step_num = 1  # 训练时,遍历数据集的次数
+
+def gernerate_data(): # 生成训练数据，取值范围是[-1,1]。
+    data = [np.sin(i / 20) for i in range(0, 1000)] # plt.plot(data)    plt.show()
+    X = []
+    Y = []
+    for i in range(len(data) - T - 1):
+        X.append(data[i: i + T])  # 输入的序列
+        Y.append(data[i + T])  # 输出的取值
+    return np.array(X), np.array(Y)
+
+class TFRNN():
+    def __init__(self, rnn_node_num, input_dim, output_dim, T=10, learning_rate=0.001):
+        self.T = T  # 循环的次数，即时间步数 # 序列长度 seq_len
+        self.lr = learning_rate  # 学习率
+        self.input_dim = input_dim  # 输入序列的元素的维度
+        # 假如输入是气温序列，那么元素就是一个个气温取值，维度是1；假如是字向量，元素就是一个个向量，维度是字向量的长度
+        self.rnn_node_num = rnn_node_num  # RNN的神经元的个数。这里只有一层
+        self.output_dim = output_dim
+        self.init_dynamic_graph() # 创建网络
+
+    def init_dynamic_graph(self):# 初始化一个计算图
+        self.X = tf.placeholder(dtype=tf.float32, shape=[None, self.T, self.input_dim]) # 设置计算图的输入
+        self.Y = tf.placeholder(dtype=tf.float32, shape=[None, self.output_dim])
+        self.batch_size = tf.placeholder(dtype=tf.float32, shape=[1])
+
+        self.rnn_cell = tf.nn.rnn_cell.BasicRNNCell(self.rnn_node_num) # 设置RNN层的结构
+        init_state = tf.zeros(shape=[self.batch_size[0], self.rnn_cell.state_size])
+        output, states = tf.nn.dynamic_rnn(self.rnn_cell, self.X, initial_state=init_state)
+
+        # 多元线性回归，把RNN层的self.rnn_node_num个输出综合起来
+        self.W = tf.Variable(tf.random_normal([self.rnn_node_num, self.output_dim]))
+        self.b = tf.Variable(tf.zeros([self.output_dim]))
+        self.final_output = tf.matmul(output[:, -1, :], self.W) + self.b  # 多元线性回归
+
+        # 把正确答案和模型的计算值都拉直，然后计算最小二乘损失值
+        Y_ = tf.reshape(self.Y, [-1])
+        output_ = tf.reshape(self.final_output, [-1])
+#         self.loss = -tf.reduce_mean(tf.multiply(output_, tf.log(Y_)))#分类时使用的损失函数
+        self.loss = tf.reduce_mean(tf.square(output_ - Y_))  # 回归任务常用的损失函数
+        self.train = tf.train.GradientDescentOptimizer(self.lr).minimize(self.loss) # 设置优化函数
+        self.sess = tf.Session() # 启动上面定义的计算图
+        self.sess.run(tf.initialize_all_variables())
+
+    def fit(self, X, Y): # 把训练数据喂给计算图，驱动计算图的优化动作
+        loss, _, final_output = self.sess.run([self.loss, self.train, self.final_output], feed_dict={
+                                              self.X: X, self.Y: Y, self.batch_size: [X.shape[0]]})
+        return loss, final_output
+
+    def predict(self, X): # 把数据喂给计算图，把输出值获取出来
+        final_output = self.sess.run([self.final_output], feed_dict={
+                                     self.X: X, self.batch_size: [X.shape[0]]}) 
+        return final_output
+
+if __name__ == '__main__':
+    X, Y = gernerate_data() # 生成训练数据
+    model = TFRNN(rnn_node_num, input_dim, output_dim, T=T, learning_rate=lr) # 初始化模型
+    loss_list = []
+    for step in range(step_num): # 开始训练
+        for i in range(0, X.shape[0] - batch_size, batch_size):
+            X_batch = X[i: i + batch_size]
+            Y_batch = Y[i: i + batch_size]
+            X_batch = np.array(X_batch).reshape([-1, T, input_dim])
+            Y_batch = np.array(Y_batch).reshape([-1, 1])
+            loss_v, final_output = model.fit(X_batch, Y_batch) #  # 把训练数据喂给计算图，驱动计算图的优化动作
+            loss_list.append(loss_v)
+    plt.plot(loss_list)
+    plt.show()  # 展示损失值的变化趋势
+```
+
+
+
+
 
 
 
@@ -969,3 +1057,125 @@ RNN梯度爆炸的问题我们可以通过gradient clipping的方法来进行优
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_LSTM_cell_color.png)
 
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_LSTM_cell_black_white.png)
+
+
+
+
+
+
+
+
+
+## GNN
+
+> 图神经网络（Graph Neural Networks，GNN）
+>
+> https://zhuanlan.zhihu.com/p/75307407  图神经网络（Graph Neural Networks，GNN）综述
+
+- 在本文中，我们将图神经网络划分为五大类别
+1. 图卷积网络, Graph Convolution Networks, GCN
+2. 图注意力网络, Graph Attention Networks, **GAT**
+3. 图自编码器,  Graph Autoencoders:
+4. 图生成网络, Graph Generative Networks:
+5. 图时空网络, Graph Spatial-temporal Networks:
+
+
+
+### GCM
+
+> 图卷积网络（Graph Convolution Networks，GCN）
+
+GCN方法又可以分为两大类，
+
+1. 基于谱 spectral-based:
+2. 基于空间 spatial-based: 
+
+
+
+#### Spatial-based Graph Convolutional Networks
+
+> 基于空间的图卷积网络
+
+- 基于空间的图卷积神经网络的思想主要源自于传统卷积神经网络对图像的卷积运算，不同的是基于空间的图卷积神经网络是基于节点的空间关系来定义图卷积的。
+
+
+
+- 一种共同的实践是将多个图卷积层叠加在一起。根据卷积层叠的不同方法，基于空间的GCN可以进一步分为两类：recurrent-based和composition-based的空间GCN。recurrent-based的方法使用相同的图卷积层来更新隐藏表示，composition-based的方法使用不同的图卷积层来更新隐藏表示
+
+
+
+
+
+### Graph Attention Networks
+
+> 图注意力网络（Graph Attention Networks）
+
+注意力机制如今已经被广泛地应用到了基于序列的任务中，它的优点是能够放大数据中最重要的部分的影响。这个特性已经被证明对许多任务有用，例如机器翻译和自然语言理解。如今融入注意力机制的模型数量正在持续增加，图神经网络也受益于此，它在聚合过程中使用注意力，整合多个模型的输出，并生成面向重要目标的随机行走
+
+#### Graph Attention Network (GAT)
+
+- 图注意力网络（GAT）是一种基于空间的图卷积网络，它的注意机制是在聚合特征信息时，将注意机制用于确定节点邻域的权重
+
+
+
+
+
+
+
+
+
+#### Gated Attention Network (GAAN)
+
+- 门控注意力网络（GAAN）还采用了多头注意力机制来更新节点的隐藏状态。然而，GAAN并没有给每个head部分配相等的权重，而是引入了一种自注意机制，该机制为每个head计算不同的权重
+
+
+
+
+
+#### Graph Attention Model (GAM)
+
+- 图形注意力模型（GAM）提供了一个循环神经网络模型，以解决图形分类问题，通过自适应地访问一个重要节点的序列来处理图的信息
+
+
+
+
+
+### Graph Autoencoders
+
+- 图自动编码器是一类图嵌入方法，其目的是利用神经网络结构**将图的顶点表示为低维向量**
+
+
+
+目前基于GCN的自编码器的方法主要有：
+
+- Graph Autoencoder (GAE)
+- Adversarially Regularized Graph Autoencoder (ARGA)
+
+图自编码器的其它变体有：
+
+- Network Representations with Adversarially Regularized Autoencoders (NetRA)
+- Deep Neural Networks for Graph Representations (DNGR)
+- Structural Deep Network Embedding (SDNE)
+- Deep Recursive Network Embedding (DRNE)
+
+
+
+
+
+
+
+### Graph Spatial-Temporal Networks
+
+> 图时空网络
+
+图时空网络同时捕捉时空图的时空相关性。时空图具有全局图结构，每个节点的输入随时间变化。例如，在交通网络中，每个传感器作为一个节点连续记录某条道路的交通速度，其中交通网络的边由传感器对之间的距离决定。图形时空网络的目标可以是预测未来的节点值或标签，或者预测时空图标签。最近的研究仅仅探讨了GCNs的使用，GCNs与RNN或CNN的结合，以及根据图结构定制的循环体系结构。
+
+目前图时空网络的模型主要有
+
+Diffusion Convolutional Recurrent Neural Network (DCRNN)
+
+CNN-GCN
+
+Spatial Temporal GCN (ST-GCN)
+
+Structural-RNN

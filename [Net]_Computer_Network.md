@@ -783,8 +783,8 @@ address size（地址字段长） 48比特
 | 字段           | bit  | 说明                                                         |
 | -------------- | :--- | ------------------------------------------------------------ |
 | 版本           | 4    | 共两个版本：4 for IPv4, 6 for IPv6                           |
-| 头部长度       | 4    | 头部的长度，以字(**4B**、32-bit)为单位 **20B \~ 60B**        |
-| 服务类型       | 8    | (Type of Service,TOS)本IP数据报希望得到的服务。该字段被重新定义为**区分服务** |
+| 头部长度(IHL)  | 4    | 头部的长度，以字(**4B**、32-bit)为单位 **20B \~ 60B**        |
+| 服务类型(TOS)  | 8    | (Type of Service)本IP数据报希望得到的服务。该字段被重新定义为**区分服务** |
 | 总长度         | 16   | 整个数据报的长度，以**字节**为单位(含头部长度)               |
 | 标识           | 16   | 每产生一个IP数据报，加一(被分段的IP数据报标识一样)           |
 | Flags(DF,MF)   | 3    | Reserved. DF: Don’t Fragment(1:不分片). MF: More Fragment(1:还有分片). |
@@ -800,7 +800,9 @@ address size（地址字段长） 48比特
 >   需设置为网络直径的两倍，router丢弃TTL为0的datagram(并发送一个ICMP packet告知source host)，host则接收(如果是发给自己的)
 >   Win8 Linux默认64 Win10默认128 Unix默认255
 
-
+- 服务类型(TOS) 8bit: 现在替换为两个字段:
+  - Differentiated Services Code Point (DSCP) 6bit: 
+  - Explicit Congestion Notification (ECN) 2bit: 
 
 
 
@@ -1104,8 +1106,8 @@ network | 000...0
 - Version(4bit): 常数6(`0110`)
 - Traffic Class(6+2 bits): 通信类，
 - Flow Label(20bit): 流标签。
-- Payload Length(16bit): 有效载荷长度，
-- Next Header(8bit): 下一个头，8 位选定器。标识紧跟在 IPv6 header后面的头的类型。使用与 IPv4 协议字段相同的值
+- Payload Length(16bit): 有效载荷长度，负载长度包括扩展头和上层PDU
+- Next Header(8bit): 下一个头，8 位选定器。标识紧跟在 IPv6 header后面的头的类型（含扩展头，传输层协议头）。使用与 IPv4 协议字段相同的值
 - Hop Limit(8bit): 跃点限制，8bit无符号整数。按转发包的每个节点逐一递减。如果跃点限制递减到零，包就会被丢弃
 - Source Address(128bit): 源地址。包初始发送者的地址
 - Destination Address(128bit): 目标地址。包预定接收者的地址。如果存在可选的路由头，则预定接收者不一定就是接收者
@@ -1935,9 +1937,7 @@ TCP超时重传机制:
 
 
 
-
-
-- **重传超时时间 Retransmission TimeOut (RTO)**:  超市定时器启动时的时间。(过大: 使发送端经过较长时间的等待才能发现报文段丢失，降低了连接数据传输的吞吐量; 过小: 发送端尽管可以很快地检测出报文段的丢失，可能将延迟大的报文段误认为是丢失，造成不必要的重传，浪费网络资源 )
+- **重传超时时间 Retransmission TimeOut (RTO)**:  超时定时器启动时的时间。(过大: 使发送端经过较长时间的等待才能发现报文段丢失，降低了连接数据传输的吞吐量; 过小: 发送端尽管可以很快地检测出报文段的丢失，可能将延迟大的报文段误认为是丢失，造成不必要的重传，浪费网络资源 )
 
 > Estimated: 估计的
 
