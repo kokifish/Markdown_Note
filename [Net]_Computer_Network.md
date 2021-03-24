@@ -1844,9 +1844,9 @@ TCP在网络中的大致过程:
 
 TCP协议的运行阶段:
 
-1. 连接创建 connection establishment
+1. 连接创建 connection establishment: 三次握手
 2. 数据传送 data transfer
-3. 连接终止 connection termination
+3. 连接终止 connection termination: 四次挥手
 
 > 习题助解：https://blog.csdn.net/Zyj061/article/details/50513198
 
@@ -1863,6 +1863,8 @@ TCP协议的运行阶段:
 > 伪IP头用于计算Check Sum
 >
 > TCP校验和也包括了96bit的伪头部，其中有源地址、目的地址、协议以及TCP的长度。这可以避免报文被错误地路由
+>
+> 初始序列号：ISN，Initial Sequence Number
 
 ```python
 # TCP segment header
@@ -1875,7 +1877,7 @@ TCP协议的运行阶段:
 20|       Options(if data offset > 5. Padded at the end with "0" bytes if necessary)MAX:40 B      | 
 ```
 
-- 序号 Sequence number(以字节流为单位): [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为ISN+1。如果SYN != 1，则此为第一个数据比特的序列码 
+- 序号 Sequence number(以字节流为单位): [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为**ISN+1**。如果SYN != 1，则此为第一个数据比特的序列码 
 - 确认号 Acknowledgment number: 确认号为期待接收的下一个数据段的开始序号，也即已经收到的数据的字节长度加1 。ACK = 1时，确认号才有效
 - 头部长度 **Data offset** : 以32bit(**4B**)为单位，**头部长度的实际大小为[20, 60] Bytes,故选项字段最大40B**。Data Offset最小值为5
 - 保留 Reserved 0:  For future use and should be set to zero.应置为0
@@ -2089,11 +2091,9 @@ Reno：如果收到三次重复确认，Reno算法则进入快速重传，只将
 
 > three-way handshake, 非对称 初始序号(initial sequence number,ISN) 
 
-每个TCP连接可以由四元组唯一标识：源IP地址, 源端口号,目的IP地址,目的端口号
-
-TCP uses a three-way handshake(三次握手). Before a client attempts to connect with a server, the server must first bind to and listen at a port to open it up for connections: this is called a passive open. Once the passive open is established, a client may initiate an active open. 
-
-ACK报文用来应答的，SYN报文用来同步的
+- 每个TCP连接可以由四元组唯一标识：源IP地址, 源端口号,目的IP地址,目的端口号
+- TCP uses a three-way handshake(三次握手). Before a client attempts to connect with a server, the server must first bind to and listen at a port to open it up for connections: this is called a **passive open**. Once the passive open is established, a client may initiate an active open. 
+- ACK报文用来应答的，SYN报文用来同步的
 
 三次握手过程：
 
@@ -2104,6 +2104,14 @@ ACK报文用来应答的，SYN报文用来同步的
 ![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_TCP_Establishment_3times.png)
 
 每一步均采用超时重传，多次重发后将放弃。重发次数与间隔时间依系统不同而不同。头两个数据段确定的选项：Scale，MSS ，SACK-Permited
+
+> 在Google Groups的TopLanguage中看到一帖讨论TCP“三次握手”觉得很有意思。贴主提出“TCP建立连接为什么是三次握手？”的问题，在众多回复中，有一条回复写道：“这个问题的本质是, 信道不可靠, 但是通信双发需要就某个问题达成一致. 而要解决这个问题, 无论你在消息中包含什么信息, 三次通信是理论上的最小值. 所以三次握手不是TCP本身的要求, 而是为了满足"在不可靠信道上可靠地传输信息"这一需求所导致的. 请注意这里的本质需求,信道不可靠, 数据传输要可靠. 三次达到了, 那后面你想接着握手也好, 发数据也好, 跟进行可靠信息传输的需求就没关系了. 因此,如果信道是可靠的, 即无论什么时候发出消息, 对方一定能收到, 或者你不关心是否要保证对方收到你的消息, 那就能像UDP那样直接发送消息就可以了.”。这可视为对“三次握手”目的的另一种解答思路。
+>
+> 三次通信是理论上在不可靠信道上进行可靠通信的最小值
+>
+> 三次握手解释（没有第三次握手时的情况）：已经失效的连接请求（A到B的连接请求）报文由于在链路中长时间滞留后，突然又传送到了B，B误以为是A新发送的连接请求，而返回第二次握手给A，并误以为连接已经建立，给A发送数据并等待A发送的数据。B的资源会因此被浪费。
+>
+> 三次握手解释（协商ISN版）：A通知B：A的ISN（第一次握手）；B确认(ack)收到A的ISN，顺便发送B的ISN（第二次握手）；A确认收到了B的ISN
 
 
 
@@ -2117,13 +2125,32 @@ ACK报文用来应答的，SYN报文用来同步的
 
 连接的每一侧都独立地被终止。当一个端点要停止它这一侧的连接，就向对侧发送FIN，对侧回复ACK表示确认。连接双方都可以首先发送FIN，主动发起关闭TCP连接的一方在关闭连接之前等待2MSL。
 
-![](http://op4fcrj8y.bkt.clouddn.com/18-7-10/30298971.jpg)
+四次挥手具体过程以及双方动作：
 
-连接可以工作在**TCP半开**状态。即一侧关闭了连接，**不再发送数据**；但另一侧没有关闭连接，仍可以发送数据。已关闭的一侧仍然应**接收数据**，直至对侧也关闭了连接 
+1. A 发送连接释放报文，`FIN=1, seq=u`.  (`FIN`报文采用超时自动重发。若干次重发后仍未确认，则发送RST报文后强行关闭连接。重发方法与系统有关)
+2. B 收到后发出确认, `ACK=1, ack=u+1, seq=v`. 此时 TCP 属于**半关闭**状态，B 能向 A 发数据但是 A 不能向 B 发数据(TCP半开状态)
+3. B 发送连接释放报文，`FIN=1, ACK=1, ack=u+1, seq=w`. 注意`ack`与前相同，因为不再有A向B的报文了
+4. A 收到后发出确认,`ACK=1, ack=w+1, seq=u+1`(注意这里`seq`比之前+1). 进入 TIME-WAIT 状态，等待 2 MSL（最大报文存活时间）后释放连接。B 收到 A 的确认后释放连接。
 
-FIN报文采用超时自动重发方式。在若干次重发后依然没有收到确认，则发送RST报文给对方后强行关闭连接。不同的系统重发方法不同。u和v都是上一个收到的数据段的确认号
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_Termination_4_wave_handshake.jpg)
 
-先发送FIN报文的一方在ACK发送完毕后需要等待2MSL(Maximum Segment Lifetime)的时间才完全关闭连接。TCP标准中MSL采用60秒，Unix采用30秒。原因: 
+- 连接可以工作在**TCP半开**状态。即一侧关闭了连接，**不再发送数据**；但另一侧没有关闭连接，仍可以发送数据。已关闭的一侧仍然应**接收数据**，直至对侧也关闭了连接
+- 先发送FIN报文的一方在ACK发送完毕后需要等待 2MSL(**Maximum Segment Lifetime**, 最大报文存活时间) 才完全关闭连接。TCP标准中MSL采用60秒，Unix采用30秒
+
+> 其实挥手也可以是三次，只是大部分时候是四次。三次挥手的情况(相当于第2、3次挥手合并)：A发送FIN给B，B在ACK报文中同时也发送FIN，亦即B在A表示A没有更多数据要发送时，B收到后在确认收到的同时也表示B没有更多数据要发送了。
+
+**CLOSE-WAIT**
+
+- A发送 FIN 连接释放报文后，B收到后进入 **CLOSE-WAIT** 状态。这个状态是为了让B继续发送还未传送完毕的数据。传送完毕之后，B发送 FIN 连接释放报文给A，表明B给A的数据已经发送完了
+
+**TIME-WAIT**
+
+- A收到B的 FIN 报文后进入**TIME-WAIT**状态，并不是直接进入 CLOSED 状态，还需要等待一个时间计时器设置的时间 **2MSL**。
+
+A在TIME-WAIT状态等待2MSL的理由：
+
+1. 为了保证A发送的最后一个ACK报文段能够到达B。A发送的这个ACK报文段有可能丢失，如果 B 没收到 A 发送来的确认报文，那么A就会重新发送连接释放请求报文，A 等待一段时间就是为了处理这种情况的发生
+2. 防止“已经失效的连接请求报文段”出现在本链接中。A在发送完最后一个ACK报文段后，再经过时间2MSL，就可以使本连接的时间内所产生的所有报文段都从网络中消失。这样下一个新的连接中就不会出现这种旧的连接请求报文段
 
 
 
