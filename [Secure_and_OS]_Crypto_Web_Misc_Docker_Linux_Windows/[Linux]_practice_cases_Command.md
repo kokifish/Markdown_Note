@@ -368,13 +368,10 @@ grep -r --exclude-dir=sys --exclude-dir=proc --exclude-dir=dev "nf_conntrack" / 
 
 ```bash
 ls -al ~/.bash[tab][tab] #//文件补全(指令串第二个字以后):列出该目录下以.bash开头的文件名
-```
+ls -l --time=ctime fname
 
-```bash
 ll # ls -l # On many systems, ll is an alias of ls -l # type ll 输出：ll is an alias for ls -l
 ```
-
-
 
 
 
@@ -406,13 +403,30 @@ unzip file.zip # 解压zip
 
 
 
-### File Info: stat
+### File Info: stat, touch
 
 ```cmd
-stat FILENAME # file: size, Device, Access, Modify, Change 
+stat FILENAME # file: size, Device, Access, Modify, Change
+ls -l --time=ctime fname
+```
+- touch 可以创建文件，也可以修改文件时间
+
+```bash
+# 如果touch后面接一个已经存在的文件，则该文件的3个时间（atime/ctime/mtime）都会更新为当前时间
+-a # 仅修改access time
+-c # 仅修改时间，而不建立文件
+-d # 后面可以接日期，也可以使用 --date="日期或时间"　
+-m # 仅修改mtime
+-t # 后面可以接时间，格式为 [YYMMDDhhmm]
+touch -d "2018-04-18 08:00:00" fname # 同时变更文件的修改时间和访问时间 Access, Modify; 不含 Change
+touch -m -d "2018-05-20 08:00:00" fname # 只变更文件的修改时间 Modify
+touch -a -d "2017-05-10 09:00:00" fname # 只变更文件的访问时间 Access
+touch -acmr f2  fname # 将 fname 的时间修改成和 f2 一样
 ```
 
-
+- 访问时间：读一次文件内容就会更新。比如对这个文件使用more命令。ls、stat 不会修改文件的访问时间
+- 修改时间：对文件内容修改一次就会更新。比如：vim后保存文件。ls -l 列出的时间就是这个时间
+- 状态改变时间。通过chmod命令更改一次文件属性，这个时间就会更新
 
 ## Process and Service
 
