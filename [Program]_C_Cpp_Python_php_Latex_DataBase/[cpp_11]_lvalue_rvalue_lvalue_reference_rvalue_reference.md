@@ -126,3 +126,54 @@ int main() {
 
 https://zhuanlan.zhihu.com/p/54050093
 
+
+
+
+
+---
+
+# 基于范围的for循环(c++11)
+
+
+
+```c++
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+	A() : a(1) {}
+private:
+	int a;
+};
+
+int main() {
+	double p[5] = { 1.0, 5.2, 9.9, 12.3, 55.5 };
+	for (double x : p) {
+		cout << x << ' ' ;
+	}
+	for (double& x : p) {
+		x = x*0.5;
+	}
+	for (double x : p) {
+		cout << x << ' ' ;
+	}
+	for (int x : {1, 2, 3}) {
+		cout << x;
+	}
+}//Output:
+1 5.2 9.9 12.3 55.5 0.5 2.6 4.95 6.15 27.75 123
+```
+
+
+
+
+
+---
+
+# 逻辑运算符的表示方式
+
+|      |      |      |      |
+| ---- | ---- | ---- | ---- |
+| &&   | and  | \|\| | or   |
+| !    | not  |      |      |

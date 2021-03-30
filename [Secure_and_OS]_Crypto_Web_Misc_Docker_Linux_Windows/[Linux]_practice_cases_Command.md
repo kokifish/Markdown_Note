@@ -14,6 +14,33 @@
 
 
 
+### Environment, zsh, bash (`$PATH`, etc
+
+- 环境配置，zsh，bash，
+- zsh uses env profile `~/.zshrc`, not `~/.bashrc`. Kali默认使用的zsh，而不是常见的bash
+
+```bash
+exec bash # Switch to bash  # 传统Linux常用的
+source ~/.bashrc
+
+exec zsh # Switch to zsh  # Kali 20.04 等使用的
+source ~/.zshrc
+```
+
+
+
+```bash
+export PATH=$PATH:/dir # 临时设置, 测试: echo $PATH
+```
+
+
+
+
+
+
+
+
+
 ### Big Endian / Little Endian
 
 ```bash
@@ -246,23 +273,31 @@ top -u usr #查看usr用户的进程CPU内存等使用信息
 
 
 
-### Device Info: lscpu lsblk lspci
+### Device Info: top lscpu lsblk lspci
 
 - dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
 
+```bash
+sudo apt-get install htop # 样式更易读的top
+htop
+VIRT：virtual memory usage 虚拟内存
+RES：resident memory usage 常驻内存
+SHR：shared memory 共享内存
+```
+
 ```cmd
-lscpu #cpu的统计信息
-cat /proc/cpuinfo #每个cpu信息，如每个CPU的型号，主频等
-free -m #概要查看内存情况
-cat /proc/meminfo #查看内存详细使用
-dmidecode -t memory #查看内存硬件信息
-lsblk #查看硬盘和分区分布
-fdisk -l #硬盘和分区的详细信息
-lspci #查看pci信息
-lspci -v / lspci -vv #更详细的PCI信息
-lscpi -t #设备树
-dmidecode -t bios #查看bios信息
-dmidecode -q #查看所有有用信息
+lscpu # cpu的统计信息
+cat /proc/cpuinfo # 每个cpu信息，如每个CPU的型号，主频等
+free -m # 概要查看内存情况
+cat /proc/meminfo # 查看内存详细使用
+dmidecode -t memory # 查看内存硬件信息
+
+fdisk -l # 硬盘和分区的详细信息
+lspci # 查看pci信息
+lspci -v / lspci -vv # 更详细的PCI信息
+lscpi -t # 设备树
+dmidecode -t bios # 查看bios信息
+dmidecode -q # 查看所有有用信息
 ```
 
 
@@ -271,6 +306,7 @@ dmidecode -q #查看所有有用信息
 
 ```python
 df -h #df命令是linux系统以磁盘分区为单位查看文件系统，可以加上参数查看磁盘剩余空间信息
+lsblk # 查看硬盘和分区分布
 fdisk -l # 查看硬盘的分区
 hdparm -i /dev/hda #查看IDE硬盘(hda)信息
 pidstat -d 1 #展示I/O统计，每秒更新一次
@@ -543,6 +579,41 @@ systemctl restart nginx # 重启nginx
 systemctl stop firewalld.service # fedora 关闭防火墙
 systemctl start firewalld.service
 systemctl restart  firewalld.service
+```
+
+
+
+### timed task: crontab
+
+> cron table
+>
+> https://blog.csdn.net/u010976445/article/details/50819287
+
+- `/var/spool/cron/` 目录下存放的是每个用户包括root的crontab任务，每个任务以创建者的名字命名
+- `/etc/crontab` 这个文件负责调度各种管理和维护任务
+- `/etc/cron.d/` 这个目录用来存放任何要执行的crontab文件或脚本
+- 把脚本放在/etc/cron.hourly、/etc/cron.daily、/etc/cron.weekly、/etc/cron.monthly目录中，让它每小时/天/星期、月执行一次
+
+```bash
+crontab [-u username]　　　　# 省略用户表表示操作当前用户的crontab
+    -e      # 编辑工作表 
+    -l      # 列出工作表里的命令 
+    -r      # 删除工作作 
+```
+
+```bash
+* * * * * myCommand # 每1分钟执行一次myCommand
+3,15 * * * * myCommand # 每小时的第3和第15分钟执行
+3,15 8-11 * * * myCommand # 在上午8点到11点的第3和第15分钟执行
+3,15 8-11 */2  *  * myCommand # 每隔两天的上午8点到11点的第3和第15分钟执行
+3,15 8-11 * * 1 myCommand # 每周一上午8点到11点的第3和第15分钟执行
+30 21 * * * /etc/init.d/smb restart # 每晚的21:30重启smb
+45 4 1,10,22 * * /etc/init.d/smb restart # 每月1、10、22日的4 : 45重启smb
+10 1 * * 6,0 /etc/init.d/smb restart # 每周六、周日的1 : 10重启smb
+0,30 18-23 * * * /etc/init.d/smb restart # 每天18 : 00至23 : 00之间每隔30分钟重启smb
+0 23 * * 6 /etc/init.d/smb restart # 每星期六的晚上11 : 00 pm重启smb
+0 */1 * * * /etc/init.d/smb restart # 每一小时重启smb
+0 23-7/1 * * * /etc/init.d/smb restart # 晚上11点到早上7点之间，每隔一小时重启smb
 ```
 
 
