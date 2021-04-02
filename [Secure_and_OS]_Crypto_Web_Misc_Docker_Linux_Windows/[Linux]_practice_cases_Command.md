@@ -35,13 +35,41 @@ export PATH=$PATH:/dir # 临时设置, 测试: echo $PATH
 
 
 
+### IFS
 
+- 在linux中IFS是分隔符的意思，linux中变量分两种，全局变量env和局部变量set，set中包含了env的全部变量，我们查看IFS的值发现env | grep IFS为空，而set | grep IFS有值，说明IFS是局部变量
 
+```bash
+$ set | grep ^IFS
+IFS=$' \t\n\C-@' #  当前系统所使用的分隔符
+```
 
+```bash
+#!/bin/bash
+IFS=","
+str="a,b,c,d,e,f,g"
+echo $str
+for i in $str
+do
+ echo $i
+done
+# 以上脚本的输出：
+a b c d e f g
+a
+b
+c
+d
+e
+f
+g
+```
 
 
 
 ### Big Endian / Little Endian
+
+1. 大端模式：高字节保存在内存的低地址.
+2. 小端模式：高字节保存在内存的高地址. e.g. `\bin\sh`:`0x6e69622f 0x0068732f`(`2f=/, 62=b, 69=i, 6e=n`).
 
 ```bash
 $ lscpu | grep -i byte
