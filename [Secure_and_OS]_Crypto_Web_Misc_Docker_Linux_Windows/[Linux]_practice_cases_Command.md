@@ -496,7 +496,7 @@ touch -acmr f2  fname # 将 fname 的时间修改成和 f2 一样
 
 
 
-### ln
+### ln / alternatives
 
 - ln: link files. 为某一个文件在另外一个位置建立一个同步的链接
 - 当需要在不同目录用到相同文件
@@ -517,6 +517,11 @@ ln [参数][源文件或目录][目标文件或目录] # 语法结构
 ln -s a.log a_ln # 为 a.log 创建软链接 a_ln # 若 a.log 丢失，a_ln 失效 # ll 输出：lrwxrwxrwx 1 root root   ... a_ln -> a.log
 rm -rf ./a_ln # 删除软链接a_ln # 不可使用 rm -rf ./a_ln/ 如果后面加了/ 就会删除a_ln链接到的文件夹下的所有文件
 unlink a_ln # 删除软链接a_ln
+```
+
+```bash
+sudo alternatives --set python /usr/bin/python3.9 # test on centos8 # 此后 python -v 为3.9
+sudo alternatives --set python3 /usr/bin/python3.9 # test on centos8 # 此后 python3 -v 为3.9
 ```
 
 

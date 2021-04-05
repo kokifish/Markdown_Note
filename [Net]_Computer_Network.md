@@ -1,8 +1,20 @@
-[TOC]
-
-
-
 ---
+
+# 计算机网络基础
+
+-   network core  主干网
+-   access network  接入网: e.g. WiFi
+-   network edge  网络边界:e.g. 主机、网络程序
+
+
+
+**网络序是大端的**
+
+
+
+因特网的三个组成部分为: end system, communication links, routers
+
+
 
 学会 协会 工作组 部门 缩写
 
@@ -18,8 +30,6 @@
 -   ICP 互联网内容提供商 Internet Content Provider
 
 
-
-
 方法 协议 标准相关
 
 -   10BASE-F 10代表数据率为10Mb/s BASE 连接线上的信号是基带信号 F 光纤
@@ -31,8 +41,6 @@
 
 
 
-
-
 设备 网络
 
 -   ARPANET Advanced Research Projects Agency Network (美国国防)高等研究计划署网络
@@ -40,26 +48,9 @@
 -   NIC 网络接口卡 Network Interface Card
 
 
-
-
 -   QoS Quality of Service
 -   PDU 协议数据单元 Protocol Data Unit
 -   peer entity 对等实体。实现相同协议的两个实体
-
-
-# 计算机网络基础
-
--   network core  主干网
--   access network  接入网: e.g. WiFi
--   network edge  网络边界:e.g. 主机、网络程序
-
-
-
-**网络序是大端的**
-
-
-
-因特网的三个组成部分为: end system, communication links, routers
 
 ---
 
@@ -133,6 +124,17 @@
 -   物理层：Ethernet，电力线通信(PLC)
 
 
+
+# ISO/OSI 七层体系结构
+
+
+
+-   表示层 **Presentation Layer** : 把**数据转换**为能与接收者的系统格式兼容并适合传输的格式。e.g. 数据转换服务，加密解密，压缩解压缩，数据格式变换
+-   会话层 **Session Layer** : 负责在数据传输中设置和维护电脑网络中两台电脑之间的**通信连接**。简化会话实现机制。e.g. 音视频同步
+
+
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_OSI_7_layers.gif)
 
 ---
 
@@ -2202,6 +2204,21 @@ A在TIME-WAIT状态等待2MSL的理由：
 
 在IPv4中，“来源连接端口”和“校验和”是可选字段 
 
+
+
+
+
+## TLS(Transport Layer Security)
+
+> 传输层安全性协议, Transport Layer Security, TLS
+>
+> https://en.wikipedia.org/wiki/Transport_Layer_Security
+
+- 传输层安全性协议及其前身安全套接层（Secure Sockets Layer, SSL）是一种安全协议，目的是为互联网通信提供安全及数据完整性保障
+- 工作在4，5层之间，为第5层的协议提供服务，但基于可靠传输协议(e.g. TCP)
+
+
+
 ---
 
 # Application Layer 应用层
@@ -2684,16 +2701,7 @@ quit
 
 ---
 
-# ISO/OSI 七层体系结构
 
-
-
--   表示层 **Presentation Layer** : 把**数据转换**为能与接收者的系统格式兼容并适合传输的格式。e.g. 数据转换服务，加密解密，压缩解压缩，数据格式变换
--   会话层 **Session Layer** : 负责在数据传输中设置和维护电脑网络中两台电脑之间的**通信连接**。简化会话实现机制。e.g. 音视频同步
-
-
-
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_OSI_7_layers.gif)
 
 
 
