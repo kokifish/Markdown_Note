@@ -1,4 +1,4 @@
-[TOC]
+
 
 
 
@@ -209,6 +209,7 @@ uname -r #显示操作系统的发行编号/--release
 bc #计算器(scale=3 显示小数点后3位，否则默认显示整数)
 cal [month] [year] #显示日历(calendar)
 date #显示日期
+date -d 'Jan 1 1970 + 17875 days'  # Mon 10 Dec 2018 12:00:00 AM EST 
 locale #显示目前所支持的语系
 ls #列出文件 -a 包括隐藏文件 -l 详情
 LANG=en_US.utf8 #修改语系为英文语系(当次登录有效)
@@ -808,6 +809,85 @@ brctl delbr br0 # 删除网桥
 
 
 ## Privilege and Account
+
+> 特权与账户
+
+Linux用户分为超级用户(Superuser)和普通用户，超级用户可以做的包括但不限于：
+
+- 进程控制
+  - 改变任何进程的优先级(Nice)
+  - 向任何进程发送任何信号(Signal)
+  - 修改系统硬限制：最大CPU时间，最大打开文件句柄数等
+  - 调试任何进程：使用strace等
+  - 向运行中的内核动态加载、卸载模块
+  - 把所有用户踢下线并阻止其再次登录
+- 设备控制：
+  - 访问任何在线设备
+  - 格式化硬盘
+  - 关机和重启服务器
+  - 设置日期和时间
+  - 读取和修改任何内存区域
+- 网络控制
+  - 在受信任端口(1\~1024)上运行网络服务
+  - 配置和重新配置网络：修改IP、修改路由控制(Routing)，改为动态主机配置协议DHCP
+  - 把网卡设置为混杂模式(Promiscuous mode)，抓取网络接口上的所有数据包
+  - 网络防火墙设置：iptables, TCP Wrappers等
+- 文件系统控制
+  - 读取、修改、删除系统上的任何程序和文件
+  - 运行任何程序
+  - 修改磁盘的标签
+  - 挂载和卸载文件系统
+  - 启用和禁止磁盘配额
+- 用户控制
+  - 增加和删除用户、用户组
+  - 为任何用户包括超级用户自己修改密码、改变属性
+
+普通用户只能在高端口(1024以上)监听运行网络服务，只能修改自己的密码。但普通用户在某些情况下也能拥有超级用户的权限：
+
+- 经由超级用户合法授权：通过su, sudo拥有超级用户的权限
+- 在一些有提权漏洞的系统上，普通用户借由这些漏洞非法地将自己变成超级用户
+
+
+
+### groupadd / useradd
+
+```bash
+groupadd -g 501 robert
+useradd -g 501 -u 501 -c 'Robert Lee' robert
+```
+
+
+
+`/etc/passwd`默认权限为0644，属主是root，记录Linux系统中所有用户的信息
+
+字段说明：
+
+1. 用户名
+2. x表示密码参照`/etc/shadow`文件
+3. 用户的ID
+4. 用户属组的组ID
+5. 用户的一般信息：姓名、联系方式等
+6. 用户的home目录
+7. 用户的shell
+
+```python
+kali:x:1000:1000:Kali,,,:/home/kali:/usr/bin/zsh # 字段7：用户的shell：/usr/bin/zsh
+robert:x:501:501:Robert Lee:/home/robert:/bin/sh # 字段5：用户的一般信息：Robert Lee 无实际意义
+```
+
+```bash
+$ stat /etc/passwd
+  File: /etc/passwd
+  Size: 3091            Blocks: 8          IO Block: 4096   regular file
+Device: 801h/2049d      Inode: 3676976     Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)   # 注意Access(权限), Uid(代表属主)
+Access: 2021-04-07 10:17:40.472140570 -0400
+Modify: 2021-04-07 10:17:40.468140572 -0400
+Change: 2021-04-07 10:17:40.468140572 -0400
+ Birth: 2021-04-07 10:17:40.468140572 -0400
+```
+
+
 
 ### su / passwd
 

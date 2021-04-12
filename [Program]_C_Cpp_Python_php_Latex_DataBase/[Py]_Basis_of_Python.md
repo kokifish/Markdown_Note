@@ -1500,13 +1500,13 @@ import numpy as np
 
 ---
 
-## Built-in Module
+# Built-in Module
 
 
 
 ---
 
-### random
+## random
 
 ```python
 import random
@@ -1541,7 +1541,7 @@ random.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)
 
 ---
 
-### datetime
+## datetime
 
 > https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431937554888869fb52b812243dda6103214cd61d0c2000/ 廖雪峰datetime专题
 
@@ -1565,17 +1565,17 @@ datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S') #字符串todatetime
 
 
 
-### timeit
+## timeit
 
 - 可用于计算一段代码的使用时间
 
 
 
-### re 正则表达式
+## re 正则表达式
 
 
 
-#### match & search
+### match & search
 
 re.match只匹配字符串的开始，如果字符串开始不符合正则表达式，则匹配失败，函数返回None；而re.search匹配整个字符串，直到找到一个匹配 
 
@@ -1613,13 +1613,13 @@ print(re.search('www', 'awwwwwwwwwww')) #
 
 
 
-### sys
+## sys
 
 
 
 
 
-#### IO重定向
+### IO重定向
 
 ```python
 #stdout redirect
@@ -1647,7 +1647,7 @@ raise Exception, 'this error will be logged'
 >
 > 当程序由于异常而崩溃时，Python程序也结束了，Python会替我们清理和关闭文件
 
-### logging
+## logging
 
 > Python 标准库，用于事件日志系统
 >
@@ -1687,7 +1687,7 @@ raise Exception, 'this error will be logged'
 
 
 
-#### cases
+### cases
 
 ```python
 LOG_FORMAT = "%(asctime)s-[%(levelname)s]- %(message)s"
@@ -1697,11 +1697,25 @@ logging.info("[START] mawi_pcap2df.py START {}".format(time.asctime(time.localti
 
 
 
+## pickle
+
+```python
+file_handle = open("E:/aaa", 'wb+')
+pickle.dump(aaa, file_handle)
+file_handle.close()
+
+aaa = pickle.load(open("E:/aaa", "rb"))
+```
+
+
+
+
+
 
 
 ---
 
-## Module Interaction
+# Module Interaction
 
 > 模块之间的相互作用
 
@@ -1749,7 +1763,7 @@ print(__name__)
 
 
 
-### 格式化IO
+## 格式化IO
 
 ```python
 a=1
@@ -1757,6 +1771,24 @@ b=99
 print("% 4d" % 5)#填充空格至4位
 print("%+5d" % (a))#强制带符号,填充空格至5位
 ```
+
+
+
+
+
+
+
+# HTTP Server
+
+- 在当前目录运行一个HTTP服务器，端口为8010
+
+```python
+python -m http.server 8010
+```
+
+- 本地访问：`http://localhost:8010/`
+- 同局域网下访问：将上面的`localhost`改成服务器ip
+- 可以实现局域网下传输文件
 
 
 

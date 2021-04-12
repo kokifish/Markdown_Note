@@ -561,3 +561,101 @@ man -k man 查看说明文档中含有man字眼(不一定是单词是man)的文�
 - head 只看頭幾行
 - tail 只看尾巴幾行
 - od   以二進位的方式讀取檔案內容
+
+
+
+# Linux System Secure
+
+
+
+# Firewalls
+
+
+
+- 访问控制表(Access Control List, ACL)
+
+构建防火墙：
+
+- iptables构建网络防火墙：Linux主机上的网络防火墙
+- Cisco防火墙设置访问控制：在网络边界上防护
+- TCP Wrappers构建应用访问控制列表：Linux主机上的另一个防火墙
+- DenyHosts防止暴力破解：适用于对无固定来源IP地址访问SSHD服务器的防护
+
+# Network Traffic Analysis
+
+
+
+## tcpdump
+
+tcpdump一类的应用程序依赖的是libpcap，libpcap使用的是称为设备层的包接口技术( packet interface on device level )。应用程序可以直接读写内核驱动层的数据，而不经过完整的Linux网络协议栈。
+
+```c
+//C语言中调用设备层的包接口的方法
+#include <sys/socket.h>
+#include <netpacket/packet.h>
+#include <net/ethernet.h> // the L2 protocols
+packet_socket = socket(PF_PACKET, int socket_type, int protocol);
+```
+
+tcpdump与iptables的关系：
+
+tcpdump直接从网络驱动层面抓取输入的数据，不经过任何Linux网络协议栈，iptables依赖的netfilter模块工作在Linux网络协议栈中，故iptablse的入栈策略不影响tcpdump的抓取，但iptables的出栈策略会影响数据包发送到网络驱动层面，从而影响tcpdump抓取
+
+- tcpdump可以抓取被iptables在INPUT链上DROP掉的包
+- tcpdump不能抓取被iptables在OUTPUT链上DROP掉的包
+
+
+
+运营商的劫持方法，总结起来主要有以下三类：
+
+- 基于下载文件的缓存劫持：
+- 基于页面的iframe广告嵌入劫持
+- 基于伪造DNS响应的劫持 
+
+基于下载文件的缓存劫持：《Linux系统安全》p95案例
+
+运营商使用旁路设备在近用户端通过分析HTTP请求，获取感兴趣的流量（zip, rar, tar.gz, exe, patch, mp3, mp4, flv, 音视频等），然后引导到自有服务器上。
+
+1. 当用户发送HTTP `GET somefile`，想要请求下载某一文件时
+2. 运营商抢先回复`302 Found\r\n Connection close\r\n Location: http://some ip NOT from actual server`. Location被改为运营商自己服务器上的url
+3. 真实服务器的响应`302 Found\r\n Date:...\r\n Server:...\r\n Location: http://actual url in actual server Content-Length:...\r\n Connection close\r\n Content-Type:text/html; charset=...\r\n`
+
+- 旁路设备部署方便，无需改变现有网络结构，只需在近用户端的路由器上部署端口镜像即可
+- 旁路设备不产生单点故障，故障时不会导致用户上网异常。而串联到网络中，可能因劫持设备故障而导致大面积用户无法正常上网
+- 外网流量内网化，分担出口带宽压力，节约带宽扩容费用
+- 支持移动应用缓存，将大量移动应用下载到本地，节省下载费用
+- 劫持功能可以随时关闭、以应对政策等
+
+劫持设备的物理部署节点位置可包括：
+
+- 部署在城局域网，降低运营商间结算流量
+- 部署在WLAN网络中心
+- 部署在小区宽带出口
+- 部署在集团客户网络出口，降低集团客户对网络出口带宽的需求
+
+这种劫持带来的问题：真实服务器上的文件发生变化时，被运营商劫持后可能导致用户下载到老版本的文件。
+
+基于页面iframe广告嵌入劫持
+
+1. 用户浏览器和真是服务器经过TCP 3次握手建立连接
+2. 用户浏览器发送HTTP请求
+3. 近用户端的旁路劫持程序先于真实服务器发回HTTp响应，使用全屏iframe原URL，同时加入广告js代码
+
+p99 HTTP响应内容含js代码
+
+基于伪造DNS响应的劫持
+
+伪造DNS响应的劫持又称域名劫持，指在劫持的网络范围内拦截域名解析的请求，分析请求的域名，把审查范围以外的请求放行，否则返回假的IP地址，或者什么都不做，使请求失去响应。效果：不能访问特定网络 或 访问的是假网址
+
+
+
+网卡混杂模式，raw socket。两者结合可以构造任何tcp/ip数据
+
+
+
+# Linux User Management
+
+
+
+#  Linux File System
+

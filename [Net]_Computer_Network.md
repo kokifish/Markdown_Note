@@ -1,4 +1,4 @@
----
+
 
 # 计算机网络基础
 
@@ -52,7 +52,7 @@
 -   PDU 协议数据单元 Protocol Data Unit
 -   peer entity 对等实体。实现相同协议的两个实体
 
----
+
 
 ### TCP/IP Protocol Suite
 
@@ -2164,6 +2164,8 @@ A在TIME-WAIT状态等待2MSL的理由：
 -   用户数据报协议 
 -   不可靠，无连接。可能丢失、错序
 -   接收进程每次接收一个完整的数据报，如果进程设置的接收缓冲区不够大，收到的数据报将被截断
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Net_TCP_UDP_diff_animate.jpg)
 
 
 

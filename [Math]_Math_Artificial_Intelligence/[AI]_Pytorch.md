@@ -36,7 +36,7 @@ pip install torch==1.4.0 torchvision==0.5.0  -f https://download.pytorch.org/whl
 
 ### Test
 
-- 测试pytorch，CUDA是否安装成功
+- 测试pytorch / CUDA是否安装成功
 
 ```python
 import torch    # 如正常则静默
