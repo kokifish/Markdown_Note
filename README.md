@@ -16,7 +16,7 @@ If you have any questions or anything related to my research areas, feel free to
 - Pwn(CTF)
 - AI: EA, MOEA, Pytorch
 
-> For more notes related to CTF, visit https://github.com/hex-16/CTF-detailed-writeups
+> For more notes related to CTF, click https://github.com/hex-16/CTF-detailed-writeups
 
 # Contacts
 
