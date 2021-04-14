@@ -349,7 +349,49 @@ iotop #io版的top
 
 ## File
 
+文件权限相关的内容记录在**Privilege and Account**中
 
+Inode是Linux文件系统中的数据结构，描述了文件系统对象，例如文件、目录。每个Inode都存储了文件系统对象的属性以及硬盘块位置。Inode包含文件的原信息，有以下内容：（使用stat可以查看某个文件的Inode信息）
+
+- 文件的字节数
+- 文件分配的块的数量
+- 块大小字节数
+- 文件类型
+- 文件所在的设备位置
+- Inode号码
+- 硬链接的数量
+- 文件的属主ID
+- 文件的属组ID
+- 文件的访问权限
+- 最后一次访问文件的日期时间
+- 最后一些修改文件内容的日期时间
+- 最后一次修改文件的其他属性（e.g. 修改属主/组ID、访问权限）的日期时间
+
+
+### File Info: stat, touch
+
+```cmd
+stat FILENAME # file: size, Device, Access, Modify, Change
+ls -l --time=ctime fname
+```
+- touch 可以创建文件，也可以修改文件时间
+
+```bash
+# 如果touch后面接一个已经存在的文件，则该文件的3个时间（atime/ctime/mtime）都会更新为当前时间
+-a # 仅修改access time
+-c # 仅修改时间，而不建立文件
+-d # 后面可以接日期，也可以使用 --date="日期或时间"　
+-m # 仅修改mtime
+-t # 后面可以接时间，格式为 [YYMMDDhhmm]
+touch -d "2018-04-18 08:00:00" fname # 同时变更文件的修改时间和访问时间 Access, Modify; 不含 Change
+touch -m -d "2018-05-20 08:00:00" fname # 只变更文件的修改时间 Modify
+touch -a -d "2017-05-10 09:00:00" fname # 只变更文件的访问时间 Access
+touch -acmr f2  fname # 将 fname 的时间修改成和 f2 一样
+```
+
+- 访问时间：读一次文件内容就会更新。比如对这个文件使用more命令。ls、stat 不会修改文件的访问时间
+- 修改时间：对文件内容修改一次就会更新。比如：vim后保存文件。ls -l 列出的时间就是这个时间
+- 状态改变时间。通过chmod命令更改一次文件属性，这个时间就会更新
 
 
 
@@ -403,7 +445,7 @@ cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注
 
 ### find / grep / ls 
 
-- `lsof`(list open files)是一个列出当前系统打开文件的工具
+- `lsof`(list open files)是一个列出当前系统打开文件的工具 `COMMAND  PID  TID  TASKCMD  USER  FD  TYPE  DEVICE  SIZE/OFF  NODE NAME` 输出一般很长
 
 
 
@@ -419,8 +461,6 @@ find / -nouser #查找在系统中属于作废用户的文件
 find / -user fred #查找在系统中属于FRED这个用户的文件
 
 find / -name docker #全盘按照文件名搜索docker
-
-
 ```
 
 > https://blog.csdn.net/ydfok/article/details/1486451
@@ -428,7 +468,7 @@ find / -name docker #全盘按照文件名搜索docker
 ```cmd
 grep -r "test"  /path # 在路径 /path 下查找文件内容包含 test 的文件
 grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' / # 在根目录/下查找所有“abcdefg”的字符串，但不在以build_开头的目录、kernel和dirvers中查找，同时忽略所有以out为后缀的文件 
-grep -r --exclude-dir=sys --exclude-dir=proc --exclude-dir=dev "nf_conntrack" / # 根目录下除sys proc目录外查找含nf_conntrack的文件
+sudo grep -r --exclude-dir=sys --exclude-dir=proc --exclude-dir=run "nf_conntrack" /  # 根目录下除sys proc run目录外查找含nf_conntrack的文件
 ```
 
 ```bash
@@ -468,30 +508,7 @@ unzip file.zip # 解压zip
 
 
 
-### File Info: stat, touch
 
-```cmd
-stat FILENAME # file: size, Device, Access, Modify, Change
-ls -l --time=ctime fname
-```
-- touch 可以创建文件，也可以修改文件时间
-
-```bash
-# 如果touch后面接一个已经存在的文件，则该文件的3个时间（atime/ctime/mtime）都会更新为当前时间
--a # 仅修改access time
--c # 仅修改时间，而不建立文件
--d # 后面可以接日期，也可以使用 --date="日期或时间"　
--m # 仅修改mtime
--t # 后面可以接时间，格式为 [YYMMDDhhmm]
-touch -d "2018-04-18 08:00:00" fname # 同时变更文件的修改时间和访问时间 Access, Modify; 不含 Change
-touch -m -d "2018-05-20 08:00:00" fname # 只变更文件的修改时间 Modify
-touch -a -d "2017-05-10 09:00:00" fname # 只变更文件的访问时间 Access
-touch -acmr f2  fname # 将 fname 的时间修改成和 f2 一样
-```
-
-- 访问时间：读一次文件内容就会更新。比如对这个文件使用more命令。ls、stat 不会修改文件的访问时间
-- 修改时间：对文件内容修改一次就会更新。比如：vim后保存文件。ls -l 列出的时间就是这个时间
-- 状态改变时间。通过chmod命令更改一次文件属性，这个时间就会更新
 
 ## Process and Service
 
@@ -908,10 +925,54 @@ su #Once the root password is set, you can login as root by using the su command
 
 
 
-### chmod
+### File Privilege and chmod
+
+- 类似`drwxr-xr--` 十个字符用于表示文件类型、不同用户对该文件的权限：
+  1. 第一个字符: 文件类型。`-`文件，`d`目录，`l`链接，`c` character special file
+  2. 第一组`rwx`: 文件所有者的权限：可读、可写、可执行
+  3. 第二组`r-x`: 与文件所有者同一组的用户的权限：可读，不可写，可执行
+  4. 第二组`r--`: 不与文件所有者同组的其他用户的权限：可读，不可写，不可执行
+- r=4，w=2，x=1。`rwx` = 4+2+1 = 7, `r-x` = 4+1 = 5
 
 ```bash
-chmod +x a # 赋予可执行权限
+$ ls -l
+drwxr-xr-x.  3 root root       101 Apr  5 01:36 abrt    # 3 连接的文件数；101 文件大小；Apr 5 01:36 最后修改日期；abrt 文件名
+-rw-r--r--.  1 root root        16 Apr  5 01:48 adjtime # 1 连接的文件数；root 用户；root 用户所在的组
+drwxr-xr-x.  3 root root       245 Apr  5 01:47 ssh
+$ stat ssh
+  File: ssh
+  Size: 245             Blocks: 0          IO Block: 4096   directory
+Device: fd00h/64768d    Inode: 35049000    Links: 3
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)  # Uid 属主id # Gid 属主的属组id
+Context: system_u:object_r:etc_t:s0
+Access: 2021-04-05 01:40:00.779968595 +0000
+Modify: 2021-04-05 01:47:05.246831052 +0000
+Change: 2021-04-05 01:47:05.246831052 +0000
+ Birth: -
+```
+
+```bash
+chmod # 改变文件或目录的权限
+chmod +x abc # 为 abc 添加可执行权限
+chmod 755 abc  # 赋予abc权限rwxr-xr-x 
+chmod u=rwx，g=rx，o=rx abc # u=用户权限，g=组权限，o=不同组其他用户权限 给abc赋予属主的读写执行权限，属组的读 执行，其他用户的读 执行权限
+chmod u-x，g+w abc # 给abc去除用户执行的权限，增加组写的权限
+chmod a+r abc # 给所有用户添加读的权限
+```
+
+
+
+chown chgrp 
+
+```bash
+chown hex abc # 改变abc的属主为hex # change owner
+chown root ./abc # 改变abc这个目录的属主是root
+chown hex:hexgroup abc # 改变abc的属主为 hex 属组为hexgroup
+chown :512 /home/abc # 改变/home/abc的属组的id为512，属主不变
+chown ‐R root ./abc # 改变abc目录及其下面所有文件和目录的属主为root
+chown -R hex:hexgroup * # 将当前目录下的所有文件与子目录的属主设为 hex，属组为 hexgroup
+
+chgrp root abc # 改变abc所属的组为root
 ```
 
 
