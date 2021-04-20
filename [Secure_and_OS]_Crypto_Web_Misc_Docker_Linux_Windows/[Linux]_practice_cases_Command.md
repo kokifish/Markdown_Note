@@ -689,7 +689,7 @@ ip addr # 查看网路ip
 
 
 
-### port info
+### port info: lsof
 
 ```shell
 lsof -i:port_num # 查看某个端口的占用情况
@@ -799,8 +799,6 @@ brctl addbr br0 # 增加网桥br0
 brctl addif br0 eth0 # add an interface to an existing ethernet bridge
 brctl showmacs br0 # see all the learned MAC addresses of a bridge
 brctl setaging br0 120 # set the mac address ageing time to 120 seconds on “br0” ethernet bridge
-
-
 ```
 
 ```cmd
@@ -810,8 +808,6 @@ brctl stp br0 yes # enable spanning tree
 brctl stp br0 off # turn off spanning tree
 brctl showstp br0 # display the stp parameter and its current value
 ```
-
-
 
 
 
