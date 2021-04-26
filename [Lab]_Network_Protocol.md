@@ -475,3 +475,26 @@ for all pair in IPPort:
 
 95: host heuristics & flow statistics, pattern heuristics (set of rules)
 
+
+
+
+
+# 中文论文
+
+
+
+### [文件传输中P2P协议流量检测](https://kns.cnki.net/KCMS/detail/detail.aspx?filename=2009244330.nh&dbname=CMFD2010&dbcode=cdmd&uid=WEEvREcwSlJHSldSdmVqM1BLVW9SZEtFSm5XVlE4V0I5d2Q0MEtRVGJ6OD0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MTEwNjdhbXoxMVBIYmtxV0EwRnJDVVI3dWZZK1J0Rnkva1U3L1BWMTI3RjdHOEd0TFByNUViUElSK2ZuczR5Ulk=)
+
+> 朱守德
+
+P29/71  2.3.7 基于流量特征的检测技术。提到了启发式流量监测方法，
+
+p44：某一时间窗（T=10s）内某一IP向N=10以上的IP发送TCP SYN包时，判定为P2P。
+
+p45：10s内，某一个IP的一个确定的UDP端口，连接的不同IP(的 UDP)数\>3，判定为P2P
+
+过程特性：保持和许多IP地址的UDP包、TCP交互，而且P2P主机会用不同的端口（进程）监测与不同节点的连接
+
+在时间T=5分钟内，寻找看某一个IP的IP对和端口对数是否相等，如果一直保持相等或接近则认为是P2P。如果在连接过程中，连接的 IP 对数与端口对数有至少有 10 个不同那么我们认为其肯定不是 P2P 的应用。 在其他参考文献也提到了类似的特征，而且给出的实验数据认为这种方法有很好的性能，但我们认为这里需要考虑的情况有：P2P 用户可能同时用 P2P 应用和其它网络应用，这时就会影响识别的准确性，而且这种识别方式比较前几种特征来说实现起来代价相对较高。因此需要实验评测这种方法的具体性能，并对不同的网络环境中具体参数取值进行修正。
+
+在 10 秒内，TCP 长包(大于 1300 字节)的数量不少于 5 个作为判决标准。 首先要排除的是 FTP 和 HTTP 下载，通常采用 21 和 80 端口，但也可能使用其它端口，因此我们需与前面的识别方法组合起来进行识别。

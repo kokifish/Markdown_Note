@@ -216,3 +216,13 @@ Wannacry：勒索型病毒，有蠕虫的特点。探测扫描Windows主机端�
 额外的防御工具：
 
 防火墙，入侵检测系统，蜜罐，端口监视和扫描程序，漏洞扫描程序，Internet内容扫描程序，备份
+
+
+
+
+
+# 熊猫烧香
+
+- 可在Windows XP上使用process monitor监控病毒行为
+- 创建spoclsv.exe。在注册表创建自启，把杀毒软件在注册表中的自启动项删除。创建svcshare自启动，使得可以自启动。修改注册表使得隐藏文件不能通过普通操作显示出来（资源管理器的显示隐藏文件）`HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\Folder\Midden\SHOWALL`将`CheckedValue`的键值设置为0。将自身拷贝到根目录，命名为setup.exe，同时创建autorun.inf用于病毒启动，属性都是隐藏。向外发包，连接局域网中其他机器。
+

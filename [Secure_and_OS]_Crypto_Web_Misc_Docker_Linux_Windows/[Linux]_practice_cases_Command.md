@@ -867,9 +867,11 @@ Linux用户分为超级用户(Superuser)和普通用户，超级用户可以做�
 ```bash
 groupadd -g 501 robert
 useradd -g 501 -u 501 -c 'Robert Lee' robert
+groups hex # 查看hex所在的用户组
+sudo deluser aaa sudo # 将用户 aaa 从 sudo 组删除  只是让 aaa 不在sudo中 而不是删除 aaa
 ```
 
-
+> ubuntu建用户最好用adduser，虽然adduser和useradd都可以使用，但是使用useradd时，并没有创建同名的用户主目录
 
 `/etc/passwd`默认权限为0644，属主是root，记录Linux系统中所有用户的信息
 
