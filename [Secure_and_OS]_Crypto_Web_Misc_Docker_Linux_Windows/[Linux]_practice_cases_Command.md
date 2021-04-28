@@ -243,22 +243,29 @@ sudo alien package # convert .rpm to .deb files
 
 ### yum/rpm
 
+> yum rpm (CentOS)
+
 ```bash
-# yum rpm (CentOS)
-yum check-update #检查可更新的rpm包
-yum update #更新所有的rpm包
-yum upgrade #大规模的版本升级,与yum update不同的是,连旧的淘汰的包也升级
-yum list installed #列出已经安装的所有的rpm包
-yum list extras #列出已经安装的但是不包含在资源库中的rpm包
+yum install code # or code-insiders   yum-utils
+
+yum check-update # 检查可更新的rpm包
+yum update # 更新所有的rpm包
+yum update nginx # 更新指定的软件包
+yum upgrade # 大规模的版本升级,与yum update不同的是,连旧的淘汰的包也升级
 
 yum whatprovides libstdc++.so.6 # 查找哪个安装包有这个库文件
-yum check-update
-yum install code # or code-insiders
-yum install yum-utils
 
+yum list installed # 列出已经安装的所有的rpm包
+yum list installed | grep glibc # 查看安装了的 并且显示包含glibc的
+yum list extras # 列出已经安装的但是不包含在资源库中的rpm包
+
+yum info nginx* # 在资源库中查找软件包信息
+
+yum search nginx # 模糊搜索软件包
+```
+
+```bash
 rpm -i name.rpm #安装某个rpm包
-yum list installed |grep glibc # 查看安装了的 并且显示包含glibc的
-
 rpm -ql PKG_NAME # find the installation path for a software
 ```
 
@@ -329,18 +336,24 @@ dmidecode -t bios # 查看bios信息
 dmidecode -q # 查看所有有用信息
 ```
 
+```bash
+free -m # 显示系统内存状态（单位MB）
+```
+
 
 
 ### Disk Related
 
 ```python
 df -h #df命令是linux系统以磁盘分区为单位查看文件系统，可以加上参数查看磁盘剩余空间信息
+df -hT # 查看磁盘空间占用情况
 lsblk # 查看硬盘和分区分布
 fdisk -l # 查看硬盘的分区
 hdparm -i /dev/hda #查看IDE硬盘(hda)信息
 pidstat -d 1 #展示I/O统计，每秒更新一次
 iostat -xdm 1 #系统级IO监控
 iotop #io版的top
+du -h --max-depth=1 ./* # 查看当前目录下的文件及文件夹所占大小
 ```
 
 
@@ -378,6 +391,7 @@ ls -l --time=ctime fname
 
 ```bash
 # 如果touch后面接一个已经存在的文件，则该文件的3个时间（atime/ctime/mtime）都会更新为当前时间
+touch a # 创建文件a
 -a # 仅修改access time
 -c # 仅修改时间，而不建立文件
 -d # 后面可以接日期，也可以使用 --date="日期或时间"　
@@ -433,12 +447,16 @@ cat log.txt | tail -n +1000 | head -n 20 # 显示中间20行，从1000行开始
 
 
 
-### File Operation: rm cp
+### File Operation: rm cp mv
 
 ```cmd
 rm -r /path/* # 删除文件夹/path/下所有文件
 rm -rf /path/* # 删除文件夹/path/下所有文件 并且不用确认
 cp -r /path1/. /path2/  # 将文件夹/path1/下所有文件复制到/path2/ 注意中间有个 ‘.’ # 如果指定文件夹中有同名文件需要先删除，否则会一个个文件提示进行确认，使用cp -rf 也一样提示
+```
+
+```bash
+mv a b # 用于移动或覆盖文件
 ```
 
 
@@ -489,6 +507,9 @@ tar -xzvf file.tar.gz # 解压tar.gz
 tar -xjvf file.tar.bz2 # 解压 tar.bz2
 tar -xZvf file.tar.Z # 解压tar.Z
 tar -xf file.tar.xz
+```
+
+```bash
 unrar e file.rar # 解压rar
 unzip file.zip # 解压zip
 ```
@@ -548,6 +569,8 @@ sudo alternatives --set python3 /usr/bin/python3.9 # test on centos8 # 此后 py
 
 ```cmd
 ps aux | grep nginx # 进程中有nginx字样的
+ps -ef # 显示系统进程运行动态
+ps -ef | grep sshd # 查看sshd进程的运行动态
 ```
 
 
@@ -622,14 +645,21 @@ fuser -k 80/tcp #
 
 ### service / systemctl
 
+> systemctl命令是 service和 chkconfig命令的组合体，可用于管理系统。
+
 ```cmd
 service nginx status # 查看nginx运行情况
 systemctl status nginx # 查看nginx运行情况
 systemctl restart nginx # 重启nginx
 
-systemctl stop firewalld.service # fedora 关闭防火墙
 systemctl start firewalld.service
+systemctl stop firewalld.service # fedora 关闭防火墙
 systemctl restart  firewalld.service
+systemctl reload firewalld.service # 重新载入配置信息而不中断服务
+systemctl disable firewalld # 禁止服务开机自启动
+systemctl enable firewalld # 设置服务开机自启动
+
+systemctl list-units --type=service # 输出系统中各个服务的状态
 ```
 
 
@@ -678,13 +708,19 @@ crontab [-u username]　　　　# 省略用户表表示操作当前用户的cro
 ### Network Info: netstat ifconfig
 
 ```cmd
-netstat -rn # Ketnel IP routing table # 可以查看网关
 lspci | grep -i 'eth' #查看网卡硬件信息
 ifconfig -a #查看系统的所有网络接口
 ip link show
 ethtool eth0 #查看某个网络接口的详细信息，例如eth0的详细参数和指标
 ip r # routing info
 ip addr # 查看网路ip
+```
+
+```bash
+netstat -rn # Ketnel IP routing table # 查看当前路由信息 # 可以查看网关
+netstat -an # 查看所有有效TCP连接
+netstat -tulnp # 查看系统中启动的监听服务
+netstat -atunp # 查看处于连接状态的系统资源信息
 ```
 
 
@@ -920,6 +956,17 @@ sudo -i #sudo whoami
 sudo passwd #change the default blank root password and set root password
 su #Once the root password is set, you can login as root by using the su command
 ```
+
+
+
+### who
+
+```bash
+who -r # 查询系统处于什么运行级别
+who -buT # 显示目前登录到系统的用户
+```
+
+
 
 
 
