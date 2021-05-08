@@ -763,7 +763,7 @@ lsof -i:port_num # 查看某个端口的占用情况
 
 iptables命令选项输入顺序：
 
-```cmd
+```bash
 iptables -t 表名 <-A/I/D/R> 规则链名 [规则号] <-i/o 网卡名> -p 协议名 <-s 源IP/源子网> --sport 源端口 <-d 目标IP/目标子网> --dport 目标端口 -j 动作
 ```
 
@@ -804,7 +804,7 @@ iptables  -A FORWARD -s ! 192.168.0.1 -j  QUEUE # -A FORWARD: 向FORWARD规则�
 
 ```cmd
 # 配置ssh服务以实现远程访问
-yum install openssh # ssh软件包安装
+yum install openssh # ssh软件包安装 # centos
 service start sshd  # 开启ssh服务，ssh服务一般叫做 SSHD
 /etc/init.d/sshd start # 与上句等效
 PermitRootLogin yes# /etc/ssh/sshd_config中设置为允许root用户远程登录 
