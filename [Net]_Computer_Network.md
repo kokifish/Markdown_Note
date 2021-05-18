@@ -1292,7 +1292,6 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 >  **因特网控制消息协议** 因特网控制报文协议 **Internet Control Message Protocol**
 >
 > ping用的就是这个协议
->
 
 -   用于Host或Router之间发布传递网络级别的控制消息 //错误侦测与回报机制
 -   The **Internet Control Message Protocol** (**ICMP**) is a **supporting protocol** in the Internet protocol suite. It is used by network devices, including routers, to **send error messages and operational information** indicating, for example, that a requested service is not available or that a host or router could not be reached. ICMP differs from transport protocols such as TCP and UDP in that it is not typically used to exchange data between systems, nor is it regularly employed by end-user network applications (with the exception(例外) of some diagnostic(诊断的) tools like **ping** and **traceroute**) //https://tools.ietf.org/html/rfc792
@@ -2261,7 +2260,7 @@ A在TIME-WAIT状态等待2MSL的理由：
 -   网页(Web page)是由对象(objects)构成的，这些对象可以是HTML文件、JPEG图像文件、MP4视频文件等
 -   网页的HTML文件中指出了所需的其他对象
 
-##### URI
+#### URI
 
 HTTP resources are identified and located on the network by **Uniform Resource Locators** (**URL**s)(统一资源定位器), using the **Uniform Resource Identifiers** (**URI**'s)(统一资源标识符) schemes http and https. For example, including all optional components:
 

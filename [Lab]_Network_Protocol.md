@@ -304,11 +304,12 @@ FT = FlowTable # 依据 (srcIP, dstIP, srcPort, dstPort, prt) 建立
 for all (srcIP, dstIP) in FT:
 	if (srcIP, dstIP) 同时用TCP, UDP: 
 		P2PIP += srcIP += dstIP # set P2PIP记录了同时用TCP,UDP的所有IP
+        # contains IPs already classified as P2P by the TCP/UDP IP pair heuristic (section 5.1);
 for all flows in FT: # (srcIP, dstIP, srcPort, dstPort, prt)
     if srcIP/dstIP in P2PIP:
         P2PIP += srcIP += dstIP # put both IPs in P2P list (P2PIP)
     else if (srcPort == dstPort and srcPort < 501): # src dst端口相等且小于501
-        Rejected += {srcIP, srcPort} += {dstIP, dstPort}
+        Rejected += {srcIP, srcPort} += {dstIP, dstPort} # pair == {IP, Port}
     else if srcIP and dstIP not in MailServers:
     	for (srcIP, srcPort) and (dstIP, dstPort):
             if pair in P2PPairs:
@@ -319,10 +320,9 @@ for all flows in FT: # (srcIP, dstIP, srcPort, dstPort, prt)
                 IPPort += (srcIP, srcPort) += (dstIP, dstPort)
             else if pair in Rejected:
                 Rejected += (srcIP, srcPort) += (dstIP, dstPort) # 把srcPair dstPair 都并入 Rejected
-for all pair in IPPort:
-# examine pairs that were added during previous intervals and have not been yet classified  # 检测在之前时间段中添加的、尚未分类的pair
-    if IP not in MailServers and pair not in Rejected:
-    # IP不在邮箱服务器 且 pair 暂未 Rejected
+for all pair in IPPort: # 检测在之前时间段中添加的、尚未分类的pair
+# examine pairs that were added during previous intervals and have not been yet classified  
+    if IP not in MailServers and pair not in Rejected: # IP不在邮箱服务器 且 pair 暂未 Rejected
         if IP in P2PIP or pair(IP, port) in P2Ppairs: # 
             P2PPairs += pair
         else
@@ -332,18 +332,16 @@ for all pair in IPPort:
                 if Check_if_Mailserver == True: 
                 # 监测每个出现了{IP,25}的IP 的 dstPort, 如果set(dstPorts)也出现了port 25, 则认为该IP为MailServer，并将其所有的流视作nonP2P
                 	MailServer += IP
-                else if  Check_if_Malware == True:
-                # 恶意软件：有很多到不同IP/Port的连接 且带有相同的 包数量/字节数/包大小
+                else if  Check_if_Malware == True: # 恶意软件：有很多到不同IP/Port的连接 且带有相同的 包数量/字节数/包大小
                 	Rejected += pair
-    			else if  Check_if_scan == True:
-                # 端口扫描：拒绝出现在大量(IP, Port)中，同时目标IP较少的 所有IP
+    			else if  Check_if_scan == True: # 端口扫描：拒绝出现在大量(IP, Port)中，同时目标IP较少的 所有IP
                 	Rejected += pair
                 else if Port_History heuristic == True:
                 # 端口历史：对于(IP, Port)Pair，检查曾用于连接该Pair的所有Port，如果超过10个flow中，所有端口都是知名服务的端口，则判定为nonP2P
                     Rejected += pair
                 else
                 	P2PPairs += pair
-			else if diff > 10: # 该pair的IP数量和Port数量差距过大，归为nonP2P
+			else if diff > 10: # 该pair的IP数量和Port数量差距过大且端口不是知名P2P端口，归为nonP2P
                 Rejected += pair
 ```
 
