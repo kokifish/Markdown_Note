@@ -300,6 +300,8 @@ tracker服务器接收get请求，一个get请求由下列字段组成
 # Algorithm 1: Nonpayload algorithm for P2P flow identification #named: PTP
 # Rejected: nonP2P的Pair(IP, Port)
 # P2PPairs: P2P的Pair(IP, Port)
+# Specifically, the lists we maintain across time intervals include: the P2PIP list, which contains IPs already classified as P2P by the TCP/UDP IP pair heuristic (section 5.1);
+# P2PPairs list, P2P的Pair(IP, Port), which contains {IP,Port} pairs already classified as P2P by the {IP,Port} pair heuristic;
 FT = FlowTable # 依据 (srcIP, dstIP, srcPort, dstPort, prt) 建立
 for all (srcIP, dstIP) in FT:
 	if (srcIP, dstIP) 同时用TCP, UDP: 
@@ -481,9 +483,9 @@ for all pair in IPPort: # 检测在之前时间段中添加的、尚未分类的
 
 
 
-### [文件传输中P2P协议流量检测](https://kns.cnki.net/KCMS/detail/detail.aspx?filename=2009244330.nh&dbname=CMFD2010&dbcode=cdmd&uid=WEEvREcwSlJHSldSdmVqM1BLVW9SZEtFSm5XVlE4V0I5d2Q0MEtRVGJ6OD0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MTEwNjdhbXoxMVBIYmtxV0EwRnJDVVI3dWZZK1J0Rnkva1U3L1BWMTI3RjdHOEd0TFByNUViUElSK2ZuczR5Ulk=)
+## [文件传输中P2P协议流量检测](https://kns.cnki.net/KCMS/detail/detail.aspx?filename=2009244330.nh&dbname=CMFD2010&dbcode=cdmd&uid=WEEvREcwSlJHSldSdmVqM1BLVW9SZEtFSm5XVlE4V0I5d2Q0MEtRVGJ6OD0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&v=MTEwNjdhbXoxMVBIYmtxV0EwRnJDVVI3dWZZK1J0Rnkva1U3L1BWMTI3RjdHOEd0TFByNUViUElSK2ZuczR5Ulk=)
 
-> 朱守德
+> 朱守德 08年
 
 P29/71  2.3.7 基于流量特征的检测技术。提到了启发式流量监测方法，
 

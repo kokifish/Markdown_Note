@@ -815,6 +815,17 @@ iptables -I INPUT -p tcp --dport 22 -j ACCEPT
 
 
 
+- ubuntu
+
+```bash
+sudo apt-get install -y openssh-server
+sudo vim /etc/ssh/sshd_config # 编辑配置文件
+/etc/init.d/ssh start
+service ssh start
+```
+
+
+
 ### brctl
 
 >  https://www.thegeekstuff.com/2017/06/brctl-bridge/ 
