@@ -228,6 +228,8 @@ ca[tab][tab] #命令补全(指令串的第一个字后):连按两次tab后，ca�
 
 ### apt/dpkg
 
+> aptitude比apt-get更能处理包依赖
+
 ```bash
 # apt-get等安装更新卸载相关
 apt-get update # 列举本地更新
@@ -240,6 +242,35 @@ sudo alien package # convert .rpm to .deb files
 ```
 
 
+
+
+
+#### `apt-get install -f` failed
+
+> https://blog.csdn.net/lanyuxuan100/article/details/69457120  这个博客里是把info先备份 然后删除info 再apt-get install 再恢复原本的info
+
+解决apt-get 安装任何包都有依赖错误产生的错误
+
+1. 到/var目录下找到dpkg的lib目标：kali 1804为`/var/lib/dpkg`
+2. 删除该目录下的`info`文件夹
+3. 然后就可以aptitude/apt-get install了
+
+> 用这里列出的方法会导致dpkg: warning: files list file for package \*\*\* missing错误，这个错误可以用脚本 批量aptitude reinstall解决
+
+#### dpkg: warning: files list file for package \*\*\* missing
+
+> dpkg: warning: files list file for package '...' missing; assuming package has no files currently installed    错误的解决方案
+
+```bash
+#!/bin/bash
+for package in $(cat dpkg-warning.txt | grep "dpkg: warning: files list file for package " | grep -Po "'[^']*'" | sed "s/'//g")；
+do
+  aptitude reinstall "$package";
+  #也可用 apt-get --reinstall "$package";
+done
+```
+
+- 其中`dpkg-warning.txt`存储的内容为所有 dpkg: warning: files list file for package \*\*\* missing 内容，从console上复制到文本文件中
 
 ### yum/rpm
 
