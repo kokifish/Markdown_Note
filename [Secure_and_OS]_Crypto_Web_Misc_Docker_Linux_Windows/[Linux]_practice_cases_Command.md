@@ -166,6 +166,84 @@ ln oldfile newfile
 
 
 
+### VMess Server Installation and Configuration
+
+> https://github.com/v2fly/fhs-install-v2ray
+>
+> test passed in Ubuntu 20.04 on vultr.com
+
+```bash
+# 安裝和更新 V2Ray
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+# 上面这个指令在运行时会输出大量有用的信息，包括配置文件的位置等
+# 安裝最新發行的 geoip.dat 和 geosite.dat
+bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+# 移除v2ray
+# bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove 
+
+systemctl enable v2ray
+systemctl start v2ray
+cat /proc/sys/kernel/random/uuid
+dcbf4f66-5ef3-49b2-b163-b9ce3cf26f19
+vim /usr/local/etc/v2ray/config.json # 用下面的配置文件
+# after config /usr/local/etc/v2ray/config.json, restart v2ray:
+systemctl restart v2ray
+
+```
+
+- /usr/local/etc/v2ray/config.json   文件位置在前面运行 install-release.sh 时会显示
+```json
+{
+  "log":{
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [{
+    "port": 23233, // 自定义设置 需要在防火墙开启该端口的权限
+    "protocol": "vmess",
+    "settings": {
+      "clients": [{
+        "id": "dcbf4f66-5ef3-49b2-b163-b9ce3cf26f19",  // cat /proc/sys/kernel/random/uuid 的输出内容
+        "alterID": 64
+      }]
+    },
+    "sniffing": {
+      "enabled": true,
+      "destOverride": ["http", "tls"]
+    }
+  }],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private"], // 前面更新了的 geoip.dat
+        "outboundTag": "blocked"
+      },
+      {
+        "type": "field",
+        "protocol": ["bittorrent"], // 进制bt流量
+        "outboundTag": "blocked"
+      }
+    ]
+  }
+}
+```
+
+VMess客户端如windows的V2rayN在连接时，填写VMess服务端的IP，port，id，其余保持默认，即可连接
+
 
 
 
@@ -247,7 +325,7 @@ sudo alien package # convert .rpm to .deb files
 
 #### `apt-get install -f` failed
 
-> https://blog.csdn.net/lanyuxuan100/article/details/69457120  这个博客里是把info先备份 然后删除info 再apt-get install 再恢复原本的info
+> https://blog.csdn.net/lanyuxuan100/article/details/69457120  这个博客里是把info先备份 然后删除info 再apt-get install 再恢复原本的info，但是在ubuntu 1804中，我遇到的情况无法解决
 
 解决apt-get 安装任何包都有依赖错误产生的错误
 
@@ -692,6 +770,20 @@ systemctl enable firewalld # 设置服务开机自启动
 
 systemctl list-units --type=service # 输出系统中各个服务的状态
 ```
+
+
+
+#### Failed to reload daemon
+
+```bash
+$ systemctl status ssh.service
+Failed to get properties: Access denied
+$ systemctl daemon-reexec
+Failed to reload daemon: Access denied
+root@kali:/var/lib/dpkg# kill -TERM 1   # This reloaded the daemon, after which all the systemctl commands started working again.
+```
+
+
 
 
 

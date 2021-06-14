@@ -1483,7 +1483,6 @@ else:
 # Module
 
 >   模块. Python内置了很多模块
->
 
 -   一个.py文件就是一个module
 
@@ -1954,7 +1953,7 @@ pip install C:\Users\puretea\Downloads\xgboost-0.72-cp37-cp37m-win_amd64.whl
 1.  download get-pip.py     /https://pip.pypa.io/en/stable/installing/
 2.  python get-pip.py
 
-#### pip批处理 / requirements
+## pip批处理 / requirements
 
 ```python
 pip freeze >requirements.txt #在当前目录下，将当前环境下pip list能列出的几乎所有包列出，除去pip, setuptools等 
