@@ -168,6 +168,8 @@ ln oldfile newfile
 
 ### VMess Server Installation and Configuration
 
+> https://blog.chaos.run/dreams/debian-server-deploy-v2ray/
+>
 > https://github.com/v2fly/fhs-install-v2ray
 >
 > test passed in Ubuntu 20.04 on vultr.com
@@ -858,13 +860,26 @@ lsof -i:port_num # 查看某个端口的占用情况
 
 
 
-### Firewall: iptables
+### Firewall: iptables ufw
+
+```bash
+ufw status # 查看防火墙状态 ubuntu可用
+ufw enable
+ufw disable
+ufw default allow/deny # 外来访问默认允许/拒绝
+ufw allow/deny 20 # 允许/拒绝 访问20端口,20后可跟/tcp或/udp，表示tcp或udp封包
+ufw allow/deny servicename # ufw从/etc/services中找到对应service的端口，进行过滤
+ufw allow proto tcp from 10.0.1.0/10 to 本机ip port 25 # 允许自10.0.1.0/10的tcp封包访问本机的25端口
+ufw delete allow/deny 20 # 删除以前定义的"允许/拒绝访问20端口"的规则
+```
+
+
 
 **iptables命令**是Linux上常用的防火墙软件，是netfilter项目的一部分。可以直接配置，也可以通过许多前端和图形界面配置
 
 选项：`-short option, --long option`
 
-```
+```bash
 -t<表>：指定要操纵的表
 -A：向规则链中添加条目 --append
 -C：检查特定规则是否存在 --check
