@@ -35,7 +35,7 @@ export PATH=$PATH:/dir # 临时设置, 测试: echo $PATH
 
 
 
-### IFS
+### IFS 分隔符
 
 - 在linux中IFS是分隔符的意思，linux中变量分两种，全局变量env和局部变量set，set中包含了env的全部变量，我们查看IFS的值发现env | grep IFS为空，而set | grep IFS有值，说明IFS是局部变量
 
@@ -81,7 +81,7 @@ $ echo -n I | od -o | head -n1 | cut -f2 -d" " | cut -c6 # 1为小端模式，0�
 
 
 
-### 配置快捷键
+### Shortcuts 配置快捷键
 
 - 终端快捷键设置：命令如下，名称随意
 
@@ -420,7 +420,7 @@ top -u usr #查看usr用户的进程CPU内存等使用信息
 
 
 
-### Device Info: top lscpu lsblk lspci
+### Device Info: htop lscpu lsblk lspci
 
 - dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
 
@@ -1003,6 +1003,44 @@ brctl delif br0 eth1 # 先删除网桥br0的接口eth1
 ifconfig br0 down # 
 brctl delbr br0 # 删除网桥
 ```
+
+
+
+
+
+## GPU
+
+
+
+
+
+### Nivida and CUDA
+
+
+
+```bash
+# 以下指令适用于ubuntu
+ubuntu-drivers devices # 获取有关图形卡和可用驱动程序的信息
+sudo aptitude install nvidia-driver-465 # 在 ubuntu-drivers devices 输出里面挑了个最新的driver
+sudo reboot # 这样安装了的驱动才会起效
+sudo aptitude install -y nvidia-smi # 这个指令在20.04上执行会提示安装包含这个的包 Package nvidia-smi is a virtual package provided by:...
+sudo aptitude install -y nvidia-utils-465 # 从上面这条指令里面挑出一个最新的安装
+sudo aptitude install nvidia-cuda-toolkit
+prime-select query # 查看有什么可选的
+prime-select nvidia # 
+nvcc --version
+```
+
+- uninstall
+
+```bash
+dpkg -l | grep -i nvidia # 查看安装了什么nvidia相关的包
+sudo apt-get --purge remove "*nvidia*"
+apt purge nvidia*
+apt purge *cuda*
+```
+
+
 
 
 
