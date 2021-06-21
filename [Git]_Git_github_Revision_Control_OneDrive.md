@@ -470,6 +470,22 @@ git push origin main;
 - 在git中打开
 - `sh ./update.sh` or `sh update.sh`
 
+
+
+### config: proxy
+
+```bash
+git config --global --unset http.proxy # 取消http 代理
+git config --global --unset https.proxy # 取消https 代理
+
+git config --global http.proxy 'socks5://127.0.0.1:10808' # 连接 v2ray http代理用
+git config --global https.proxy 'socks5://127.0.0.1:10808' # 连接 v2ray https代理用
+```
+
+
+
+
+
 ---
 
 ## CMD Quick Find
@@ -517,7 +533,6 @@ git push -u origin main
 2. ```%localappdata%\Microsoft\OneDrive\onedrive.exe /reset```     //reset OneDrive
 3. Make sure the OneDrive icon is no longer visible in the taskbar's notification area (bottom right corner) to verify the command worked.
 4. According to Microsoft, the icon should re-appear after two minutes. If it doesn't re-appear, open Start, do a search for **OneDrive** and hit **Enter** to restart the desktop sync app.
-
 
 
 
