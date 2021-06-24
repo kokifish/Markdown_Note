@@ -1006,7 +1006,18 @@ brctl delbr br0 # 删除网桥
 
 
 
+### proxy 
 
+> 
+
+```bash
+# 在当前终端使用 只作用于当前终端
+export http_proxy=http://127.0.0.1:12333 # 走的http的代理 执行wget或者curl 等用http的
+export https_proxy=http://127.0.0.1:12333 # 走的http的代理端口是12333
+export ALL_PROXY=socks5://172.18.216.103:10808 # 全部都走 socks5 代理  代理全部流量
+```
+
+- 或者将以上信息写入shell配置文件.bashrc或者.zshrc，然后`source ~/.bashrc`生效，则把代理服务器永久保存
 
 ## GPU
 

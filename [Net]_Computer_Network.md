@@ -3082,7 +3082,7 @@ ipconfig -flushdns //刷新dns
 
 
 
-```cmd
+```bash
 //打开shadowsocks
 cat  shadowsocks
 

@@ -94,14 +94,32 @@ sudo apt-get install git-core #老一点的Debian, Ubuntu # 以前有个软件�
 
 ### config
 
-```python
-$ git config --global user.name "Your Name"
-$ git config --global user.email "email@example.com"
+```bash
+git config user.name # 查看当前用户名
+git config user.email 
+
+git config --global user.name "Your Name" # 设置自己的名字与Email地址
+git config --global user.email "email@example.com"
+git config --global user.password "passwd" # 配置密码
+git config --list # 查看配置
 ```
 
-- 设置自己的名字与Email地址
 - `--global`参数：表示该机器上所有的Git仓库都使用这个配置
 - 不使用global参数可以仅对该仓库设置名字与邮箱。也可以对某个仓库指定不同的用户名和Email地址
+
+
+
+#### credential helper
+
+> sh url需要在本地配置ssh key, http url 需要在每次同步操作输入用户名和密码。credential helper 证书/凭证小助手 可以存储用户名密码
+
+```bash
+git help -a | grep credential # 查看 系统支持哪种helper
+# cache是存储在内存中，可以设定有效时间但是时间过去后，将会失效
+# store是存储在磁盘上，不过用户名和密码是明文存储的，对于一般使用来说没太大差别，要是想加密存储，可是使用gnome-keyring来存储
+
+git config --global credential.helper store # 之后push一次 输入正确用户名密码后 以后就不需要输入了
+```
 
 
 
@@ -109,10 +127,10 @@ $ git config --global user.email "email@example.com"
 
 - 版本库，仓库，可以理解成一个目录，该目录下所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”
 
-```python
-$ mkdir learngit   #创建新文件夹
-$ cd learngit   #更改当前路径
-$ pwd   #显示当前目录路径
+```bash
+mkdir learngit   #创建新文件夹
+cd learngit   #更改当前路径
+pwd   #显示当前目录路径
 /Users/test/learngit
 git init   #把当前目录变成Git可以管理的仓库 #会被告知创建了空的仓库
 Initialized empty Git repository in /Users/test/learngit/.git/
