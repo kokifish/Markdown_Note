@@ -493,6 +493,8 @@ git push origin main;
 ### config: proxy
 
 ```bash
+git config --global http.proxy # 查看
+
 git config --global --unset http.proxy # 取消http 代理
 git config --global --unset https.proxy # 取消https 代理
 

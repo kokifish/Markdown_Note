@@ -162,11 +162,37 @@ docker run -p 80:80 --name mynginx -v $PWD/www:/www -v $PWD/conf/nginx.conf:/etc
 
 
 
+## Proxy
+
+> Docker使用socks5代理
+>
+> 真正操作docker的是运行在后台的docker daemon，也就是我们需要通过systemctl start docker来启动docker daemon。所以说即使我们设置了环境变量http_proxy，那么也只是针对前台docker console使用，而真正访问pull镜像的确是后台的daemon，因此，需要设置daemon访问proxy
+
+```bash
+sudo mkdir -p /etc/systemd/system/docker.service.d # 创建docker服务插件目录
+sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf # 创建一个名为http-proxy.conf的文件
+sudo vim /etc/systemd/system/docker.service.d/http-proxy.conf # 编辑http-proxy.conf的文件
+# 写入内容
+[Service]
+Environment="HTTP_PROXY=socks5://172.18.216.103:10808"
+Environment="HTTPS_PROXY=socks5://172.18.216.103:10808"
+### 
+sudo systemctl daemon-reload # 重新加载服务程序的配置文件
+sudo systemctl restart docker # 重启docker
+systemctl show --property=Environment docker # 验证是否配置成功 Environment= 后面会显示代理配置信息(如果配置成功)
+```
+
+
+
+
+
+
+
 ---
 
 ## Command Quick Find
 
-```cmd
+```bash
 sudo systemctl start docker
 systemctl restart docker
 service docker stop
@@ -188,7 +214,7 @@ docker search httpd #搜索镜像
 
 
 
-```cmd
+```bash
 docker build -t friendlyname .# 使用此目录的 Dockerfile 创建镜像
 docker run -p 4000:80 friendlyname  # 运行端口 4000 到 90 的“友好名称”映射
 docker run -d -p 4000:80 friendlyname         # 内容相同，但在分离模式下
@@ -213,7 +239,7 @@ docker run username/repository:tag                   # 运行镜像库中的镜�
 
 - 需要注意的是，不管容器有没有启动，拷贝命令都会生效
 
-```python
+```bash
 docker cp /hostPath/forCopy.file containerID:/some/path #将宿主机的文件拷贝到容器的路径中
 docker cp containerID:/path/to/file.txt /host/path/ #将容器的文件拷贝到宿主机中
 ```
@@ -419,7 +445,6 @@ IT资源（IT Resource）：一个与IT相关的物理的或虚拟的事物。�
 2. 社区云
 3. 私有云
 4. 混合云
-
 
 
 

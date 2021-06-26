@@ -848,6 +848,15 @@ netstat -tulnp # 查看系统中启动的监听服务
 netstat -atunp # 查看处于连接状态的系统资源信息
 ```
 
+```bash
+sudo apt-get install iptraf
+sudo iptraf-ng # 功能很多 适合做比较复杂的网络分析工作 有的监控具体到包级别
+sudo apt-get install nload
+nload # 回车键换显卡接口 ASCII 显示网速大小 显示几个统计数值 适合简单监控
+```
+
+
+
 
 
 ### port info: lsof
@@ -1008,7 +1017,7 @@ brctl delbr br0 # 删除网桥
 
 ### proxy 
 
-> 
+> Linux连接局域网内的代理 ping得通代理服务器的ip即可
 
 ```bash
 # 在当前终端使用 只作用于当前终端
@@ -1018,6 +1027,8 @@ export ALL_PROXY=socks5://172.18.216.103:10808 # 全部都走 socks5 代理  代
 ```
 
 - 或者将以上信息写入shell配置文件.bashrc或者.zshrc，然后`source ~/.bashrc`生效，则把代理服务器永久保存
+
+
 
 ## GPU
 
