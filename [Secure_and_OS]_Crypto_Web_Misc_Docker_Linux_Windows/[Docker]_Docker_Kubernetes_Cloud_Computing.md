@@ -1,10 +1,31 @@
-[TOC]
+- writer: www.github.com/hex-16   data: from 2019   contact: hexhex16@outlook.com  recommended viewer/editor: Typora
+- 主要记录docker相关知识以及基于docker的一些东西，后附上部分云计算的基础知识
 
 ---
 
-# Dcker Basis
+# Docker Basis
 
 > https://docker-curriculum.com/ 英语Docker beginner
+>
+> https://www.ruanyifeng.com/blog/2018/02/docker-tutorial.html  Docker 入门教程 作者： 阮一峰   日期 2018年2月9日
+>
+> https://www.ruanyifeng.com/blog/2018/02/docker-wordpress-tutorial.html Docker 微服务教程 阮一峰 2018年2月13日
+
+由于虚拟机一些缺点，Linux 发展出了另一种虚拟化技术：Linux 容器（Linux Containers， LXC）
+
+**Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔离。**或者说，在正常进程的外面套了一个保护层。对于容器里面的进程来说，它接触到的各种资源都是虚拟的，从而实现与底层系统的隔离。
+
+**Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。**它是目前最流行的 Linux 容器解决方案。
+
+Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。
+
+1. 提供一次性的环境。本地测试他人的软件、持续集成的时候提供单元测试和构建的环境。
+2. 提供弹性的云服务。因为 Docker 容器可以随开随关，很适合动态扩容和缩容。
+3. 组建微服务架构。通过多个容器，一台机器可以跑多个服务，因此在本机就可以模拟出微服务架构。
+
+
+
+
 
 - C/S架构模式，使用远程API来管理和创建Docker容器
 - Docker容器通过Docker镜像来创建。容器相当于面向对象编程语言(e.g. C++)得对象，镜像相当于类
@@ -20,151 +41,36 @@
 
 
 
-In simpler words, Docker is a tool that allows developers, sys-admins etc. to easily deploy their applications in a sandbox沙盒 (called containers) to run on the host operating system i.e. Linux. The key benefit of Docker is that it allows users to package an application with all of its dependencies into a standardized unit for software development. Unlike virtual machines, containers do not have the high overhead and hence enable more efficient usage of the underlying system and resources. 
+
 
 ## Installation
 
 
-
-### CentOS
-
-```cmd
+- centos 7
+```bash
 sudo yum update # 更新yum
 curl -fsSL https://get.docker.com -o get-docker.sh # 执行Docker安装脚本
 bash get-docker.sh
 
 sudo systemctl start docker #开启docker的daemon
 ```
+- kali
 
+> https://www.kali.org/docs/containers/installing-docker-on-kali/
 
+验证安装是否成功：
 
-
-
-## Basic Use
-
-```cmd
-docker pull training/webapp  # 载入镜像 拉取镜像
-docker run -d -P training/webapp python app.py # -d:后台运行 -P:容器内部使用的网络端口映射到我们使用的主机上
-docker run -d -p 5000:5000 training/webapp python app.py # 指定端口映射
-docker port bf08b7f2cd89 #查看容器的端口号
+```bash
+docker version
+docker info
+sudo usermod -aG docker $USER # Docker 需要用户具有 sudo 权限，为了避免每次命令都输入sudo，可以把用户加入 Docker 用户组
 ```
-
-
-
-
-
-#### docker run
-
-```cmd
--d # 后台运行
--P # 容器内部使用的网络端口映射到我们使用的主机上
--p port1:prot2# 指定端口映射
-docker run busybox echo "annms" #Output: annms
-```
-
-
-
-
-
-
-
-### Images
-
-- https://hub.docker.com/ Docker Hub 可以在此搜索镜像
-
-​		
-
-```cmd
-docker images #列出本地主机上的镜像
-docker pull ubuntu:13.10 # 下载镜像ubuntu, 并且指定版本号为13.10
-docker search httpd # 搜索镜像
-#NAME:镜像仓库源的名称 #DESCRIPTION:镜像的描述 #OFFICIAL:是否docker官方发布
-docker pull httpd # Using default tag: latest
-docker run httpd # 使用镜像
-```
-
-
-
-
-
-#### Images Creation and Update
-
-> http://www.runoob.com/docker/docker-image-usage.html 2019.3.14 15.53 等待继续学习
-
-
-
-```dockerfile
-# 利用已有镜像创新新的镜像
-docker run -t -i ubuntu:15.10 /bin/bash
-# 在运行的容器内使用 apt-get update 命令进行更新
-# 完成操作之后，输入 exit命令来退出这个容器
-# 此时该容器是按需求更改的容器。可以通过命令 docker commit来提交容器副本
-docker commit -m="has update" -a="runoob" e218edb10161 runoob/ubuntu:v2
-# 然后可用docker images查看创建的新镜像在不在
-```
-
-> **-m:**提交的描述信息
->
-> **-a:**指定镜像作者
->
-> **e218edb10161：**容器ID
->
-> **runoob/ubuntu:v2:**指定要创建的目标镜像名
-
-
-
-构建镜像：使用 docker build 从零开始创建一个新的镜像。
-
-```cmd
-vim Dockerfile # 创建编辑Dockerfile
-cat Dockerfile # 查看Dockerfile内容
-FROM    centos:6.7 #指定使用哪个镜像源
-MAINTAINER      Fisher "fisher@sudops.com"
-
-RUN     /bin/echo 'root:123456' |chpasswd #RUN 指令告诉docker 在镜像内执行命令，安装什么
-RUN     useradd runoob
-RUN     /bin/echo 'runoob:123456' |chpasswd
-RUN     /bin/echo -e "LANG=\"en_US.UTF-8\"" >/etc/default/local
-EXPOSE  22
-EXPOSE  80
-CMD     /usr/sbin/sshd -D
-```
-
-
-
-```cmd
-docker build . # 在当前目录查找Dockerfile创建新的镜像
-docker build -t runoob/centos:6.7 . # -t ：指定要创建的目标镜像名；. ：Dockerfile 文件所在目录，可以指定Dockerfile 的绝对路径
-
-docker tag 860c279d2fec runoob/centos:dev # 为镜像添加新标签
-```
-
-
-
-### Container Connection
-
-- 默认绑定的是TCP端口
-
-```cmd
-docker run -d -p 127.0.0.1:5001:5000 training/webapp python app.py #指定容器绑定的网络地址
-docker run -d -p 127.0.0.1:5000:5000/udp training/webapp python app.py #绑定UDP端口
-
-docker run -p 80:80 --name mynginx -v $PWD/www:/www -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf
-```
-
-- **-p 80:80：**将容器的80端口映射到主机的80端口
-- **--name mynginx：**将容器命名为mynginx
-- **-v $PWD/www:/www：**将主机中当前目录下的www挂载到容器的/www
-- **-v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf：**将主机中当前目录下的nginx.conf挂载到容器的/etc/nginx/nginx.conf
-- **-v $PWD/logs:/wwwlogs：**将主机中当前目录下的logs挂载到容器的/wwwlogs
-
-
 
 
 
 ## Proxy
 
-> Docker使用socks5代理
+> 让Docker使用socks5代理
 >
 > 真正操作docker的是运行在后台的docker daemon，也就是我们需要通过systemctl start docker来启动docker daemon。所以说即使我们设置了环境变量http_proxy，那么也只是针对前台docker console使用，而真正访问pull镜像的确是后台的daemon，因此，需要设置daemon访问proxy
 
@@ -184,62 +90,313 @@ systemctl show --property=Environment docker # 验证是否配置成功 Environm
 
 
 
+## Images
+
+- https://hub.docker.com/ Docker Hub 可以在此搜索镜像
+- image 文件是通用的，一台机器的 image 文件拷贝到另一台机器，照样可以使用。一般来说，为了节省时间，我们应该尽量使用别人制作好的 image 文件，而不是自己制作。即使要定制，也应该基于别人的 image 文件进行加工，而不是从零开始制作
+- 为了方便共享，image 文件制作完成后，可以上传到网上的仓库。Docker 的官方仓库 [Docker Hub](https://hub.docker.com/) 是最重要、最常用的 image 仓库。此外，出售自己制作的 image 文件也是可以的
+
+
+
+
+
+```cmd
+docker images # 列出本地主机上的镜像
+docker image ls # 列出本机的所有 image 文件
+docker image rm [imageName] # 删除 image 文件
+
+docker pull training/webapp  # 载入镜像 拉取镜像
+docker pull ubuntu:13.10 # 下载镜像ubuntu, 并且指定版本号为13.10 # 
+docker search httpd # 搜索镜像
+#NAME:镜像仓库源的名称 #DESCRIPTION:镜像的描述 #OFFICIAL:是否docker官方发布
+docker pull httpd # Using default tag: latest
+docker run httpd # 使用镜像
+docker run -d -P training/webapp python app.py # -d:后台运行 -P:容器内部使用的网络端口映射到我们使用的主机上
+docker run -d -p 5000:5000 training/webapp python app.py # 指定端口映射
+
+docker port bf08b7f2cd89 #查看容器的端口号
+```
+
+
+
+```cmd
+-d # 后台运行
+-P # 容器内部使用的网络端口映射到我们使用的主机上
+-p port1:prot2# 指定端口映射
+docker run busybox echo "annms" #Output: annms
+```
+
+
+
+
+
+### hello world demo
+
+```bash
+docker image pull library/hello-world # 将 image 文件从仓库抓取到本地 # docker image pull hello-world
+```
+
+- `docker image pull`是抓取 image 文件的命令。`library/hello-world`是 image 文件在仓库里面的位置，其中`library`是 image 文件所在的组，`hello-world`是 image 文件的名字。由于 Docker 官方提供的 image 文件，都放在`library`组，可以省略。因此，上面的命令可以写成`docker image pull hello-world`
+
+```bash
+docker image ls # 抓取成功以后，就可以在本机看到这个 image 文件了
+docker container run hello-world # 运行这个 image 文件
+```
+
+- `docker container run`命令具有自动抓取 image 文件的功能。如果发现本地没有指定的 image 文件，就会从仓库自动抓取。因此，前面的`docker image pull`命令并不是必需的步骤
+- 输出`Hello from Docker! ......` 提示以后，`hello world`就会停止运行，容器自动终止。
+- 有些容器不会自动终止，因为提供的是服务。比如，安装运行 Ubuntu 的 image，就可以在命令行体验 Ubuntu 系统
+
+```bash
+docker container run -it ubuntu bash
+docker container kill [containID] # 对于那些不会自动终止的容器，必须使用docker container kill 命令手动终止
+```
+
+
+
+```dockerfile
+# 利用已有镜像创新新的镜像
+docker run -t -i ubuntu:15.10 /bin/bash 
+# -t, --tty Allocate a pseudo-TTY 
+# -i, --interactive Keep STDIN open even if not attached
+# 在运行的容器内使用 apt-get update 命令进行更新
+# 完成操作之后，输入 exit命令来退出这个容器
+# 此时该容器是按需求更改的容器。可以通过命令 docker commit来提交容器副本
+docker commit -m="has update" -a="runoob" e218edb10161 runoob/ubuntu:v2
+# 然后可用docker images查看创建的新镜像在不在
+```
+
+> **-m:**提交的描述信息
+>
+> **-a:**指定镜像作者
+>
+> **e218edb10161：**容器ID
+>
+> **runoob/ubuntu:v2:**指定要创建的目标镜像名
+
+
+
+## Container File
+
+**image 文件生成的容器实例，本身也是一个文件，称为容器文件。**i.e. 一旦容器生成，就会同时存在两个文件： 
+
+1. image 文件
+2. 容器文件
+- 关闭容器并不会删除容器文件，只是容器停止运行而已
+
+```bash
+docker container ls # 列出本机正在运行的容器
+docker container ls --all # 列出本机所有容器，包括终止运行的容器 
+# CONTAINER ID   IMAGE         COMMAND    CREATED         STATUS                       PORTS     NAMES
+docker container rm [containerID] # 终止运行的容器文件，依然会占据硬盘空间，可以使用docker container rm命令删除
+```
+
+- 运行上面的命令之后，再使用`docker container ls --all`命令，就会发现被删除的容器文件已经消失了
+
+
+
+## Create a Self-Defiened Container
+
+### Dockerfile File
+
+Dockerfile: 文本文件，用来配置 image。Docker 根据该文件生成二进制的 image 文件
+
+- `.dockerignore`保存要排除的路径，不要打包进入 image 文件。如果没有路径要排除，这个文件可以不新建
+
+```.dockerignore
+.git
+dir_need2ignore
+```
+
+- 项目的根目录下，文本文件 `Dockerfile`内容：
+
+```dockerfile
+FROM node:8.4 # FROM node:8.4：该 image 文件继承官方的 node image，冒号表示标签，这里标签是8.4，即8.4版本的 node
+COPY . /app # 将当前目录下的所有文件(除 .dockerignore 排除的路径，都拷贝进入 image 文件的/app目录
+WORKDIR /app # 指定接下来的工作路径为/app
+RUN npm install --registry=https://registry.npm.taobao.org # 在/app目录下，运行npm install命令安装依赖。注意，安装后所有的依赖，都将打包进入 image 文件
+EXPOSE 3000 # 将容器 3000 端口暴露出来，允许外部连接这个端口
+# CMD node demos/01.js # CMD 启动容器后自动执行这条命令  CMD some_cmd
+```
+
+- `RUN`命令在 image 文件的构建阶段执行，执行结果都会打包进入 image 文件
+- `CMD`命令在容器启动后执行。另外，一个 Dockerfile 可以包含多个`RUN`命令，但是只能有一个`CMD`命令。指定了`CMD`命令以后，`docker container run`命令就不能附加命令了（e.g. `/bin/bash`），否则会覆盖`CMD`命令
+
+### Build Container
+
+> 创建image文件
+
+- 有了 Dockerfile 文件以后，就可以使用`docker image build`命令创建 image 文件:
+
+```bash
+docker image build -t koa-demo . # -t 指定 image 文件名字 名字为koa-demo # 用的是pwd的Dockerfile
+docker image build -t koa-demo \path\to\Dockerfile # 指定Dockerfile的路径为 \path\to\Dockerfile
+docker image build -t koa-demo:0.0.1 . # 用冒号指定标签，如果不指定，默认的标签是latest # . 表示Dockerfile在当前路径
+```
+
+- 如果运行成功，则可以使用`docker image ls`看到刚刚创建好的image文件
+- `docker container run`命令会从 image 文件生成容器
+
+```bash
+docker container run -p 8000:3000 -it koa-demo /bin/bash # container 可省略 # 容器的 3000 端口映射到本机的 8000 端口
+docker container run -p 8000:3000 -it koa-demo:0.0.1 /bin/bash # :0.0.1 指定版本
+```
+
+
+
+### Release Image File
+
+首先，去 hub.docker.com 或 cloud.docker.com 注册一个账户。然后：
+
+```bash
+docker login # 登录
+docker image tag [imageName] [username]/[repository]:[tag] # 为本地的 image 标注用户名和版本
+docker image tag koa-demos:0.0.1 urname/koa-demos:0.0.1 # 上面语句的一个实例
+docker image build -t [username]/[repository]:[tag] . # 也可以不标注用户名，重新构建一下 image 文件
+docker image push [username]/[repository]:[tag] # 发布 image 文件 # 登录 hub.docker.com，就可以看到已经发布的 image 文件
+```
+
+
+
+## Run/Stop Container
+
+`docker container run`命令会从 image 文件生成容器 container 可省略 
+
+```cmd
+docker container run -p 8000:3000 -it koa-demo /bin/bash # 容器的 3000 端口映射到本机的 8000 端口
+docker container run -p 8000:3000 -it koa-demo:0.0.1 /bin/bash # :0.0.1 指定版本
+docker container run --rm -p 8000:3000 -it koa-demo /bin/bash # --rm 在容器终止运行后自动删除容器文件
+docker run -d -p 127.0.0.1:5001:5000 training/webapp python app.py #指定容器绑定的网络地址
+docker run -d -p 127.0.0.1:5000:5000/udp training/webapp python app.py #绑定UDP端口
+docker run -p 80:80 --name mynginx -v $PWD/www:/www -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf
+```
+
+- `-p 81:80`: 将容器的80端口映射到主机的81端口，默认绑定的是TCP端口
+- `--name mynginx`: 将容器命名为`mynginx`
+- `-v $PWD/www:/www`: 将主机中当前目录下的`www`挂载到容器的`/www`
+- `-v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf`: 将主机中当前目录下的`nginx.conf`挂载到容器的`/etc/nginx/nginx.conf`
+- `-v $PWD/logs:/wwwlogs`: 将主机中当前目录下的`logs`挂载到容器的`/wwwlogs`
+- `-it`: 容器的 Shell 映射到当前的 Shell，然后在本机窗口输入的命令，就会传入容器
+
+容器停止运行之后，并不会消失，可用下面的命令删除容器文件。或用`--rm` 在容器终止运行后自动删除容器文件
+
+```bash
+docker container ls --all # 查出容器的 ID
+docker container rm [containerID] # 删除指定的容器文件
+docker container run --rm -it koa-demo /bin/bash # --rm 在容器终止运行后自动删除容器文件
+```
+
+- 前面的`docker container run`命令是新建容器，每运行一次，就会新建一个容器。同样的命令运行两次，就会生成两个一模一样的容器文件。如果希望重复使用容器，就要使用`docker container start`命令，它用来启动已经生成、已经停止运行的容器文件
+
+```bash
+docker container start [containerID] # 启动已经生成、已经停止运行的容器文件
+```
+
+- 前面的`docker container kill`命令终止容器运行，相当于向容器里面的主进程发出 SIGKILL 信号。而`docker container stop`命令也是用来终止容器运行，相当于向容器里面的主进程发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号
+
+```bash
+docker container stop [containerID] # 发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号
+```
+
+- 这两个信号的差别是，应用程序收到 SIGTERM 信号以后，可以自行进行收尾清理工作，但也可以不理会这个信号。如果收到 SIGKILL 信号，就会强行立即终止，那些正在进行中的操作会全部丢失
+
+- `docker container logs`命令用来查看 docker 容器的输出，即容器里面 Shell 的标准输出。如果`docker run`命令运行容器的时候，没有使用`-it`参数，就要用这个命令查看输出
+
+```bash
+docker container logs [containerID] # 查看 docker 容器的输出 # 如果docker run命令运行容器的时候，没有使用-it参数
+```
+
+- `docker container exec`命令用于进入一个正在运行的 docker 容器。如果`docker run`命令运行容器的时候，没有使用`-it`参数，就要用这个命令进入容器。一旦进入了容器，就可以在容器的 Shell 执行命令了
+
+```bash
+docker container exec -it [containerID] /bin/bash # 进入一个正在运行的 docker 容器
+```
+
+- `docker container cp`命令用于从正在运行的 Docker 容器里面，将文件拷贝到本机。下面是拷贝到当前目录的写法
+
+```bash
+docker container cp [containID]:[/path/to/file] . # 从Docker容器里拷贝某个文件到当前目录
+```
+
 
 
 
 
 ---
 
-## Command Quick Find
+# Docker CMD Lookup Table
 
 ```bash
 sudo systemctl start docker
-systemctl restart docker
+sudo systemctl restart docker
+sudo systemctl stop docker
 service docker stop
-docker ps # 查看docker进程 查看我们正在运行的容器
-docker ps -a # 查看所有docker进程 包括结束了的
-docker ps -l # 查看最后一次创建的容器
-docker stop NAMES/CONTAINER_ID 
-docker command --help #更深入的了解指定的 Docker 命令使用方法
-docker images #列出本地主机上的镜像 #see a list of all images on your system
-docker run -t -i ubuntu:15.10 /bin/bash#使用版本为15.10的ubuntu系统镜像来运行容器 # 不适用TAG指明版本则默认使用latest
-docker port CONTAINER_ID # 查看容器的端口映射
-docker logs NAMES/CONTAINER_ID #查看日志
-docker start NAMES/CONTAINER_ID #已经停止的容器，可以使用命令 docker start 来启动
-docker rm NAMES/CONTAINER_ID # 删除不需要的容器，但容器必须处于停止状态
 
+docker command --help #更深入的了解指定的 Docker 命令使用方法
+docker container --help #更深入的了解指定的 Docker 命令使用方法
+docker images # 列出本地主机上的镜像 # see a list of all images on your system
+docker images -a  # 显示此机器上的所有镜像
 docker pull ubuntu:13.10 #下载镜像 拖取镜像
 docker search httpd #搜索镜像
 ```
 
-
-
 ```bash
 docker build -t friendlyname .# 使用此目录的 Dockerfile 创建镜像
-docker run -p 4000:80 friendlyname  # 运行端口 4000 到 90 的“友好名称”映射
-docker run -d -p 4000:80 friendlyname         # 内容相同，但在分离模式下
-docker ps                                 # 查看所有正在运行的容器的列表
-docker stop <hash>                     # 平稳地停止指定的容器
-docker ps -a           # 查看所有容器的列表，甚至包含未运行的容器
-docker kill <hash>                   # 强制关闭指定的容器
-docker rm <hash>              # 从此机器中删除指定的容器
-docker rm $(docker ps -a -q)           # 从此机器中删除所有容器
-docker images -a                               # 显示此机器上的所有镜像
-docker rmi <imagename>            # 从此机器中删除指定的镜像
-docker rmi $(docker images -q)             # 从此机器中删除所有镜像
-docker login             # 使用您的 Docker 凭证登录此 CLI 会话
+docker login      # 使用您的 Docker 凭证登录此 CLI 会话
 docker tag <image> username/repository:tag  # 标记 <image> 以上传到镜像库
-docker push username/repository:tag            # 将已标记的镜像上传到镜像库
-docker run username/repository:tag                   # 运行镜像库中的镜像
+docker push username/repository:tag   # 将已标记的镜像上传到镜像库
+```
+
+- 貌似`docker container`命令中的`container`都可以省略
+
+```bash
+docker container ps # 查看docker进程 查看我们正在运行的容器
+docker container ls # 与上一句等效
+docker container ps -a # 查看所有docker进程 包括结束了的 # 列出本机所有容器，包括终止运行的容器 
+docker container ls --all # 与上一句等效 # 可查出容器的 ID
+docker container ps -l # 查看最后一次创建的容器
+
+docker port CONTAINER_ID # 查看容器的端口映射
+docker container logs [containerID] # 查看 docker 容器的输出 # 如果docker run命令运行容器的时候，没有使用-it参数
+
+docker container rm [containerID] # 删除指定的容器文件 # rm: Remove one or more containers
+docker container rm $(docker ps -a -q) # 从此机器中删除所有容器
+docker container rmi imageA # 删除iamge # rmi: Remove one or more images # -f 强制删除
+```
+
+## run, start, exec, stop
+
+- 貌似`docker container`命令中的`container`都可以省略
+
+```bash
+docker container run -p 8000:3000 -it imageA /bin/bash # 容器的 3000 端口映射到本机的 8000 端口 # i 交互; t tty;
+docker container run -d -p 4000:80 imageA    # -d : 在分离模式下
+docker container run -p 8000:3000 -it imageA:1.0.1 /bin/bash # :1.0.1 指定版本
+docker container run --rm -it imageA /bin/bash # --rm 在容器终止运行后自动删除容器文件
+docker run -d -p 127.0.0.1:5000:5000/udp imageA python app.py #绑定UDP端口
+docker run -p 80:80 --name imageA -v $PWD/www:/www -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf # 挂载一些目录
+docker run username/repository:tag   # 运行镜像库中的镜像
+
+docker container start NAMES/CONTAINER_ID # 已经停止的容器，可以使用命令 docker start 来启动
+docker container exec -it [containerID] /bin/bash # 进入一个正在运行的 docker 容器
+```
+- docker内命令行用exit退出，或`ctrl+d`
+```bash
+docker kill NAMES/CONTAINER_ID # 强制关闭指定的容器 # 相当于向容器里面的主进程发出 SIGKILL 信号
+docker stop NAMES/CONTAINER_ID # 发出 SIGTERM 信号，然后过一段时间再发出 SIGKILL 信号
+docker rm NAMES/CONTAINER_ID # 删除不需要的容器，但容器必须处于停止状态
 ```
 
 
 
-### copy/transfer
+
+
+## copy/transfer
 
 - 需要注意的是，不管容器有没有启动，拷贝命令都会生效
 
 ```bash
+docker container cp [containID]:[/path/to/file] . # 从Docker容器里拷贝某个文件到当前目录
 docker cp /hostPath/forCopy.file containerID:/some/path #将宿主机的文件拷贝到容器的路径中
 docker cp containerID:/path/to/file.txt /host/path/ #将容器的文件拷贝到宿主机中
 ```
@@ -351,7 +508,7 @@ Label Selector示例：select * from pod where pod’s name=’XXX’,env=’YYY
 
 
 
-##### 商业驱动力
+**商业驱动力**
 
 1. 容量规划：是确定和满足一个组织未来对IT资源、产品和服务需求的过程。这里的容量（capacity）是指在一段给定的时间内，一个IT资源能够提供的最大工作量。IT资源容量与起需求之间的差异会导致：系统效率低下（过度配置）；无法满足用户需求（配置不足）。规划的重点是将这个差异最小化，以便系统获得预期的效率和性能。容量规划策略分为：
    - 领先策略 Lead Strategy
@@ -362,7 +519,7 @@ Label Selector示例：select * from pod where pod’s name=’XXX’,env=’YYY
 
 
 
-##### 技术创新
+**技术创新**
 
 这里介绍对云计算产生主要影响的前期技术
 
@@ -386,7 +543,7 @@ Label Selector示例：select * from pod where pod’s name=’XXX’,env=’YYY
 
 
 
-### 基本概念与术语
+## 基本概念与术语
 
 云（Cloud）：一个独特的IT环境其设计目的是为了远程供给可扩展和可测量的IT资源。云可以基于任何允许远程访问其IT资源的协议。
 
@@ -398,7 +555,7 @@ IT资源（IT Resource）：一个与IT相关的物理的或虚拟的事物。�
 
 
 
-### 角色与边界
+**角色与边界**
 
 1. **云提供者** Cloud Provider：**提供**基于云的IT资源的组织或个人。IT资源可以是云提供者自有或者租赁的。是指拥有云中的 IT 资源的实体。云提供者需要
    购置、部署、运维 IT 资源，包括计算、网络、软件等各类资源
@@ -418,7 +575,7 @@ IT资源（IT Resource）：一个与IT相关的物理的或虚拟的事物。�
 
 
 
-### 云特性
+**云特性**
 
 - **按需使用**：云用户不需要拥有 IT 资源，而是以服务的形式，需要的时候可以使用资源，不需要的时候就停止使用。
 - **随处访问（泛在接入）**：一个云服务可以被广泛访问的能力。拥有 IT 基础资源的云服务提供者可以通过网络线路来让大范围云用户访问到云资源，只要云用户与 IT资源有线路链接
@@ -429,7 +586,7 @@ IT资源（IT Resource）：一个与IT相关的物理的或虚拟的事物。�
 
 
 
-### 云交付模型
+## 云交付模型
 
 **云交付模型**：是云提供者提供的具体的、事先打包好的IT资源组合
 
@@ -439,7 +596,7 @@ IT资源（IT Resource）：一个与IT相关的物理的或虚拟的事物。�
 
 
 
-### 云部署模型
+## 云部署模型
 
 1. 公有云
 2. 社区云
