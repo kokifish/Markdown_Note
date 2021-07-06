@@ -10,7 +10,7 @@
 
 
 
-### Environment, zsh, bash (`$PATH`, etc
+### Environment, zsh, bash `$PATH`, etc
 
 - 环境配置，zsh，bash，
 - zsh uses env profile `~/.zshrc`, not `~/.bashrc`. Kali默认使用的zsh，而不是常见的bash
@@ -162,7 +162,7 @@ ln oldfile newfile
 
 
 
-### VMess Server Installation and Configuration
+### VMess Server Config
 
 > https://blog.chaos.run/dreams/debian-server-deploy-v2ray/
 >
@@ -382,6 +382,15 @@ rpm -ql PKG_NAME # find the installation path for a software
 
 - Snap是一个全新的软件包架构,它与其它包管理器的区别在于snap安装的app互相之间是高度隔离的,减少了互相引用. 避免了很多冲突问题. 不过这也导致了其占用的磁盘比较多.
 
+```bash
+# install snap in kali20.04  https://www.kali.org/docs/tools/snap/
+sudo apt update -y
+sudo apt install -y snapd
+sudo systemctl enable --now snapd apparmor # Enabling and starting snapd and snapd.apparmor services
+```
+
+
+
 ```sh
 sudo dnf install snapd # install
 sudo ln -s /var/lib/snapd/snap /snap # to enable classic snap support #  create a symbolic link between
@@ -391,6 +400,7 @@ sudo snap install hello-world # test # after install, ex cmd: hello-world
 ```bash
 snap search abc
 snap install abc
+sudo snap install --classic code # install vscode using snap 
 snap list
 snap remove
 ```
@@ -868,14 +878,19 @@ lsof -i:port_num # 查看某个端口的占用情况
 ### Firewall: iptables ufw
 
 ```bash
+apt-get install ufw
 ufw status # 查看防火墙状态 ubuntu可用
 ufw enable
 ufw disable
 ufw default allow/deny # 外来访问默认允许/拒绝
 ufw allow/deny 20 # 允许/拒绝 访问20端口,20后可跟/tcp或/udp，表示tcp或udp封包
+ufw allow 22/tcp # 开放22/TCP端口
+ufw deny 8888 # 禁止对8888端口的访问
 ufw allow/deny servicename # ufw从/etc/services中找到对应service的端口，进行过滤
 ufw allow proto tcp from 10.0.1.0/10 to 本机ip port 25 # 允许自10.0.1.0/10的tcp封包访问本机的25端口
 ufw delete allow/deny 20 # 删除以前定义的"允许/拒绝访问20端口"的规则
+ufw status numbered # 查看规则，显示行号
+ufw delete 3 # 删除第3条规则 
 ```
 
 
@@ -1034,7 +1049,7 @@ export ALL_PROXY=socks5://172.18.216.103:10808 # 全部都走 socks5 代理  代
 
 ### Nivida and CUDA
 
-
+> https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html  NVIDIA CUDA Toolkit Release Notes  可查看显卡驱动与CUDA版本对应关系
 
 ```bash
 # 以下指令适用于ubuntu
@@ -1045,7 +1060,7 @@ sudo aptitude install -y nvidia-smi # 这个指令在20.04上执行会提示安�
 sudo aptitude install -y nvidia-utils-465 # 从上面这条指令里面挑出一个最新的安装
 sudo aptitude install nvidia-cuda-toolkit
 prime-select query # 查看有什么可选的
-prime-select nvidia # 
+prime-select nvidia # 从上面输出里选nvidia
 nvcc --version
 ```
 
@@ -1054,8 +1069,8 @@ nvcc --version
 ```bash
 dpkg -l | grep -i nvidia # 查看安装了什么nvidia相关的包
 sudo apt-get --purge remove "*nvidia*"
-apt purge nvidia*
-apt purge *cuda*
+sudo apt purge nvidia*
+sudo apt purge *cuda*
 ```
 
 

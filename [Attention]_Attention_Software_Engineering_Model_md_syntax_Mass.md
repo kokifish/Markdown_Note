@@ -186,6 +186,10 @@ They suggest he (should) write more books. // suggest: 表建议时，使用虚�
 
 They suggest (that) he writes more books. // suggest: 表暗示时，不使用虚拟语气，宾语从句的that可以省略 
 
+# Software/App
+
+- Droid cam x 手机做摄像头
+
 # Movies
 
 -   寂静之地

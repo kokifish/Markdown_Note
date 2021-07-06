@@ -98,8 +98,6 @@ systemctl show --property=Environment docker # 验证是否配置成功 Environm
 
 
 
-
-
 ```cmd
 docker images # 列出本地主机上的镜像
 docker image ls # 列出本机的所有 image 文件
@@ -117,13 +115,12 @@ docker run -d -p 5000:5000 training/webapp python app.py # 指定端口映射
 docker port bf08b7f2cd89 #查看容器的端口号
 ```
 
-
+- 参数解释: 
 
 ```cmd
 -d # 后台运行
 -P # 容器内部使用的网络端口映射到我们使用的主机上
 -p port1:prot2# 指定端口映射
-docker run busybox echo "annms" #Output: annms
 ```
 
 
@@ -338,6 +335,7 @@ docker images # 列出本地主机上的镜像 # see a list of all images on you
 docker images -a  # 显示此机器上的所有镜像
 docker pull ubuntu:13.10 #下载镜像 拖取镜像
 docker search httpd #搜索镜像
+docker inspect ubuntu # 查看ubuntu latest版本的信息
 ```
 
 ```bash
@@ -369,8 +367,10 @@ docker container rmi imageA # 删除iamge # rmi: Remove one or more images # -f 
 - 貌似`docker container`命令中的`container`都可以省略
 
 ```bash
+docker run -it ubuntu:18.04 bash
+docker container run -t -i ubuntu:15.10 /bin/bash # docker container run 具有自动抓取 image 文件的功能
 docker container run -p 8000:3000 -it imageA /bin/bash # 容器的 3000 端口映射到本机的 8000 端口 # i 交互; t tty;
-docker container run -d -p 4000:80 imageA    # -d : 在分离模式下
+docker container run -d -p 4000:80 imageA    # -d : 在分离模式下 
 docker container run -p 8000:3000 -it imageA:1.0.1 /bin/bash # :1.0.1 指定版本
 docker container run --rm -it imageA /bin/bash # --rm 在容器终止运行后自动删除容器文件
 docker run -d -p 127.0.0.1:5000:5000/udp imageA python app.py #绑定UDP端口

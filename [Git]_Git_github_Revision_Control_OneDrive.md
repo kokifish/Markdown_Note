@@ -510,35 +510,39 @@ git config --global https.proxy 'socks5://127.0.0.1:10808' # 连接 v2ray https�
 
 ## CMD Quick Find
 
-```python
-$ git init   #初始化Git repository #创建.git文件夹 #解决: fatal: Not a git repository (or any of the parent directories): .git
-$ git add file.txt  #添加文件到仓库
-$ git add .  #将当前目录的所有文件添加至仓库中
-$ git commit -m "test commit node"  #将文件提交到仓库，-m后问提交说明
-$ git push origin main #push files to online repository #推送至远程main分支
+```bash
+git init   #初始化Git repository #创建.git文件夹 #解决: fatal: Not a git repository (or any of the parent directories): .git
+git add file.txt  #添加文件到仓库
+git add .  #将当前目录的所有文件添加至仓库中
+git commit -m "test commit node"  #将文件提交到仓库，-m后问提交说明
+git push origin main #push files to online repository #推送至远程main分支
 
-$ git clone git@github.com:hex-16/pictures.git #将远程仓库clone到本地
-$ git status  #查看仓库当前状态
-$ git remote -v #列出所有远程仓库
-$ git checkout -- file #撤销工作区文件的修改至上次add/commit
-$ git reset HEAD <file> #把stage中的修改撤销掉(unstage)
+git clone git@github.com:hex-16/pictures.git #将远程仓库clone到本地
+git status  #查看仓库当前状态
+git remote -v #列出所有远程仓库
+git checkout -- file #撤销工作区文件的修改至上次add/commit
+git reset HEAD <file> #把stage中的修改撤销掉(unstage)
 
-$ git config --global core.autocrlf false # global 不自动转换crlf #默认为true
-$ git pull # 将远程仓库同步到本地
-$ git pull origin main # 将远程仓库同步到本地
-$ gitk # 图像化界面
+git config --global core.autocrlf false # global 不自动转换crlf #默认为true
+git pull # 将远程仓库同步到本地
+git pull origin main # 将远程仓库同步到本地
+gitk # 图像化界面
+
+git reflog # 查看执行过的历史git命令
+git log # 查看历史记录 比较详细 含 commit Author Date
 ```
 
 
 
 
 
-```cmd
+```bash
 git init
 git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/pureteap/Ali.git
 git push -u origin main
+
 ```
 
 
