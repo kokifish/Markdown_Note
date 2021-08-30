@@ -494,12 +494,12 @@ git push origin main;
 
 ```bash
 git config --global http.proxy # 查看
-
-git config --global --unset http.proxy # 取消http 代理
-git config --global --unset https.proxy # 取消https 代理
-
-git config --global http.proxy 'socks5://127.0.0.1:10808' # 连接 v2ray http代理用
-git config --global https.proxy 'socks5://127.0.0.1:10808' # 连接 v2ray https代理用
+# 取消http 代理 # 取消https 代理
+git config --global --unset http.proxy 
+git config --global --unset https.proxy 
+# 连接 v2ray http代理用  # 连接 v2ray https代理用
+git config --global http.proxy 'socks5://127.0.0.1:10808' 
+git config --global https.proxy 'socks5://127.0.0.1:10808' 
 ```
 
 
