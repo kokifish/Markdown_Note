@@ -1,33 +1,10 @@
 
 
-
-
 ---
 
 # Cases
 
 
-
-
-
-### Environment, zsh, bash `$PATH`, etc
-
-- 环境配置，zsh，bash，
-- zsh uses env profile `~/.zshrc`, not `~/.bashrc`. Kali默认使用的zsh，而不是常见的bash
-
-```bash
-exec bash # Switch to bash  # 传统Linux常用的
-source ~/.bashrc
-
-exec zsh # Switch to zsh  # Kali 20.04 等使用的
-source ~/.zshrc
-```
-
-
-
-```bash
-export PATH=$PATH:/dir # 临时设置, 测试: echo $PATH
-```
 
 
 
@@ -308,11 +285,40 @@ uname -r #显示操作系统的发行编号/--release
 
 
 
+### Environment: zsh, bash `$PATH`...
+
+- 环境配置，zsh，bash，
+- zsh uses env profile `~/.zshrc`, not `~/.bashrc`. Kali默认使用的zsh，而不是常见的bash
+
+```bash
+exec bash # Switch to bash  # 传统Linux常用的
+source ~/.bashrc
+
+exec zsh # Switch to zsh  # Kali 20.04 等使用的
+source ~/.zshrc
+
+sudo vim /etc/zsh/zshrc # 所有用户的 kali 2021
+```
+
+
+
+```bash
+# 命令行执行则为临时的 在bashrc zshrc里则为永久的
+export PATH=$PATH:/dir # 临时设置, 测试: echo $PATH
+```
+
 
 
 
 
 ## Software Manager
+
+```bash
+sudo vim /etc/apt/sources.list # kali的更新源
+# 注释掉原本的官方源 可以换上aliyun的源
+deb http://mirrors.aliyun.com/kali kali-rolling main non-free contrib
+deb-src http://mirrors.aliyun.com/kali kali-rolling main non-free contrib
+```
 
 
 
@@ -322,7 +328,7 @@ uname -r #显示操作系统的发行编号/--release
 
 ```bash
 # apt-get等安装更新卸载相关
-apt-get update # 列举本地更新
+apt-get update # 更新源
 apt-get upgrade # 安装可用更新
 apt-cache search package_name # 查询软件包
 apt-get install package_name # 安装一个软件包
@@ -331,11 +337,15 @@ dpkg -i package_file.deb ,sudo dpkg -r package_filename # install/unstall .deb f
 sudo alien package # convert .rpm to .deb files
 ```
 
+```bash
+sudo apt-get install software-properties-common
+```
 
 
 
 
-#### `apt-get install -f` failed
+
+#### apt-get install -f  failed
 
 > https://blog.csdn.net/lanyuxuan100/article/details/69457120  这个博客里是把info先备份 然后删除info 再apt-get install 再恢复原本的info，但是在ubuntu 1804中，我遇到的情况无法解决
 

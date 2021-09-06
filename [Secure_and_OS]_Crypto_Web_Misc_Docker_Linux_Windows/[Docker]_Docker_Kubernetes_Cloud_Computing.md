@@ -57,6 +57,8 @@ sudo systemctl start docker #开启docker的daemon
 - kali
 
 > https://www.kali.org/docs/containers/installing-docker-on-kali/
+>
+> https://blog.csdn.net/Huangshanyoumu/article/details/115037413 kali2021安装docker 换aliyun加速
 
 验证安装是否成功：
 
@@ -120,7 +122,8 @@ docker port bf08b7f2cd89 #查看容器的端口号
 ```cmd
 -d # 后台运行
 -P # 容器内部使用的网络端口映射到我们使用的主机上
--p port1:prot2# 指定端口映射
+-p port1:prot2 # 指定端口映射
+-p IP:HOSTPORT:CONTAINERPORT # 宿主机Port:容器端口Port
 ```
 
 
