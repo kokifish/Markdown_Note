@@ -1812,6 +1812,35 @@ DD: Database Description Packet
 - 注册端口 registered ports : 1024~49151。在IANA注册的专用端口号，为企业软件所用
 - 动态端口 private ports : 49152~65535 (2^15^ + 2^14^ to 2^16^ − 1), 私用、暂用端口号。没有规定用途的端口号，一般用户可以随意使用, dynamic or private ports that cannot be registered with IANA 。
 
+**TCP Port**
+
+| TCP Port | Description          |
+| -------- | -------------------- |
+| 21       | FTP                  |
+| 22       | ssh                  |
+| 23       | telnet               |
+| 25       | SMTP简单邮件传输服务 |
+| 80       | HTTP                 |
+| 110      | POP3                 |
+| 443      | HTTPS                |
+| 1521     | Oracle数据库服务     |
+| 3389     | 微软远程桌面         |
+| 5000     | MS SQL Server        |
+
+**UDP Port**
+
+| UDP Port  | Description     |
+| --------- | --------------- |
+| 53        | DNS域名解析服务 |
+| 4000/8000 | 腾讯QQ          |
+|           |                 |
+|           |                 |
+|           |                 |
+|           |                 |
+|           |                 |
+|           |                 |
+|           |                 |
+
 
 
 ### Error Control in Transport Layer
@@ -1873,27 +1902,30 @@ TCP协议的运行阶段:
  0|                     Source Port               |                Destination Port               |
  4|                                Sequence number (if SYN=1, its initial number)                 |
  8|                      确认号 Acknowledgment number (if ACK set)                                 |
-12|Data offset|Reserved|  Flags    (6b)           |                   Window size                 |
+12|Data offset|Reserved|  Flags    (9b)           |                   Window size                 |
 16|                    Check Sum                  |            Urgent Pointer(if URG set)         |
 20|       Options(if data offset > 5. Padded at the end with "0" bytes if necessary)MAX:40 B      | 
 ```
 
 - 序号 Sequence number(以字节流为单位): [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为**ISN+1**。如果SYN != 1，则此为第一个数据比特的序列码 
-- 确认号 Acknowledgment number: 确认号为期待接收的下一个数据段的开始序号，也即已经收到的数据的字节长度加1 。ACK = 1时，确认号才有效
-- 头部长度 **Data offset** : 以32bit(**4B**)为单位，**头部长度的实际大小为[20, 60] Bytes,故选项字段最大40B**。Data Offset最小值为5
+- Acknowledgment number 确认号: 确认号为期待接收的下一个数据段的开始序号，也即已经收到的数据的字节长度加1 。ACK = 1时，确认号才有效
+- **Data offset** 头部长度: 以32bit(**4B**)为单位，**头部长度的实际大小为[20, 60] Bytes, 选项字段最大40B**。Data Offset最小值为5
 - 保留 Reserved 0:  For future use and should be set to zero.应置为0
-- 标志 Flags (aka Control bits): 6 bits, wiki写的是9 bit(即)
-- 通知窗口大小 Window size: 接收窗口的大小(Byte)。接收方用通知窗口大小(advertised window)告知发送方接收窗口的大小，发送方会据此修改发送窗口大小。即空闲块的大小，若接收方尚未将数据交付上层，数据还在缓冲区中，窗口大小变小。（包含错序到达的数据段）
+- Flags: 标志 (aka Control bits) 6 bits, wiki写的是9 bit(有3bit实际未使用)
+- Window size 通知窗口大小: 接收窗口的大小(Byte)。接收方用通知窗口大小(advertised window)告知发送方接收窗口的大小，发送方会据此修改发送窗口大小。即空闲块的大小，若接收方尚未将数据交付上层，数据还在缓冲区中，窗口大小变小。（包含错序到达的数据段）
 - 校验和 Check Sum: 伪IP头、TCP头和TCP数据部分形成。
 - 紧急指针 Urgent Pointer: 指出**带外数据** out-of-band data(OOB)的边界。标志**URG**为1时有效
 - 选项: MSS(Maximum Segment Size)、窗口比例(Scale) ；是否使用选择性确认(SACK-Permitted)。数据传送时的选项：选择性确认的序号范围(Selective ACK,SACK)，时间戳等。// Unix 默认值: MSS=536，SACK-Permitted=False。Windows 默认值: MSS=1460，SACK-Permitted=True
 
-| 标识符 | 为1表示的内容 |
+| Flags | Content When set to 1 |
 | --- | --- |
+| NS | ECN-nonce - concealment protection |
+| CWR | Congestion Window Reduced |
+| ECE | ECN-Echo |
 |URG | 高优先级数据包，紧急指针字段有效。表示本数据段**包含紧急数据**(带外数据，不属字节流) |
 | ACK | 确认号字段(Acknowledgment number)有效 |
 | PSH | 是带有PUSH标志的数据，指示接收方应该**尽快**将这个报文段**交给应用层**而不用等待缓冲区装满 |
-| RST| 重置连接。出现严重差错。通知对方立即中止连接并释放相关资源。还可以用于拒绝非法的报文段和拒绝连接请求 |
+| RST| 重置连接。出现严重差错。通知对方立即中止连接并释放相关资源。还可拒绝非法的报文段 / 拒绝连接请求 |
 | SYN| 同步(Synchronize)序号标志，用来发起一个TCP连接。这是**连接请求**或是**连接接受请求**，用于创建连接和使顺序号同步 |
 | FIN| 结束(Finish)标志，发送方没有数据要传输了，要求释放连接 |
 
