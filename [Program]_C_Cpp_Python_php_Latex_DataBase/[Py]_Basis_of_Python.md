@@ -1964,47 +1964,6 @@ pip install -r requirements.txt #根据requirements.txt安装需要的包，注�
 
 
 
-# Conda
-
-`Anaconda`是专注于数据分析的Python发行版本，包含了conda、Python等190多个科学包及其依赖项。
-
-`conda` 是开源包（packages）和虚拟环境（environment）的管理系统。
-
-- **packages 管理**： 可以使用 conda 来安装、更新 、卸载工具包 ，并且它更关注于数据科学相关的工具包。在安装 anaconda 时就预先集成了像 Numpy、Scipy、 pandas、Scikit-learn 这些在数据分析中常用的包。
-- **虚拟环境管理**： 在conda中可以建立多个虚拟环境，用于隔离不同项目所需的不同版本的工具包，以防止版本上的冲突。对纠结于 Python 版本的同学们，我们也可以建立 Python2 和 Python3 两个环境，来分别运行不同版本的 Python 代码
-
-
-
-
-
-## CMD Cheat Sheet
-
-> https://zhuanlan.zhihu.com/p/351348108
-
-```bash
-conda install package_name # 对于使用conda install不可用的软件包，可以尝试通过Anaconda.org通道下载
-conda install numpy=1.10 # 指定安装版本
-conda remove package_name
-conda update package_name
-conda list # 查看所有package
-conda search search_term # 支持模糊查询
-conda create -n env_name  list of packages # 创建一个新环境
-# -n:  name, env_name:需要创建的环境名称，list of packages 列出在新环境中需要安装的工具包
-conda create -n py2 python=2.7 pandas  # 指定创建环境的python版本
-source activate env_name # 进入名为 env_name 的环境
-source deactivate # 退出当前环境
-conda env remove -n env_name # 删除名为 env_name 的环境
-conda env list # 显示所有的环境
-conda info --envs
-conda create --name flowers --clone snowflakes # 制作环境的完整副本
-```
-
-
-
-对于使用conda install不可用的软件包，可以尝试通过Anaconda.org通道下载
-要从Anaconda.org下载到当前环境，我们将通过键入我们想要的包的完整的URL来指定Anaconda.org作为“通道”。
-在浏览器中，转到[http://anaconda.org](http://anaconda.org)。我们正在寻找一个名为“bottleneck”的包，在左上角名为“Search Anaconda Cloud”的框中，输#入“bottleneck”，然后点“Search”按钮 `conda install --channel https://conda.anaconda.org/pandas bottleneck`
-
 
 
 ---

@@ -309,6 +309,23 @@ export PATH=$PATH:/dir # 临时设置, 测试: echo $PATH
 
 
 
+### System Monitoring: htop glances
+
+```bash
+top
+htop # sudo apt-get install htop # 样式更易读的top
+glances # 更好用的htop  snap install glances
+```
+
+```bash
+htop
+VIRT：virtual memory usage 虚拟内存
+RES：resident memory usage 常驻内存
+SHR：shared memory 共享内存
+```
+
+
+
 
 
 ## Software Manager
@@ -410,21 +427,17 @@ rpm -ql PKG_NAME # find the installation path for a software
 # install snap in kali20.04  https://www.kali.org/docs/tools/snap/
 sudo apt update -y
 sudo apt install -y snapd
+# opt: sudo ln -s /var/lib/snapd/snap /snap # to enable classic snap support #  create a symbolic link between
 sudo systemctl enable --now snapd apparmor # Enabling and starting snapd and snapd.apparmor services
-```
-
-
-
-```sh
-sudo dnf install snapd # install
-sudo ln -s /var/lib/snapd/snap /snap # to enable classic snap support #  create a symbolic link between
 sudo snap install hello-world # test # after install, ex cmd: hello-world
 ```
+
+
 
 ```bash
 snap search abc
 snap install abc
-sudo snap install --classic code # install vscode using snap 
+sudo snap install code --classic # install vscode using snap 
 snap list
 snap remove
 ```
@@ -450,17 +463,9 @@ top -u usr #查看usr用户的进程CPU内存等使用信息
 
 
 
-### Device Info: htop lscpu lsblk lspci
+### Device Info: lscpu lsblk lspci
 
 - dmidecode以一种可读的方式dump出机器的DMI(Desktop Management Interface)信息。这些信息包括了硬件以及BIOS，既可以得到当前的配置，也可以得到系统支持的最大配置，比如说支持的最大内存数等
-
-```bash
-sudo apt-get install htop # 样式更易读的top
-htop
-VIRT：virtual memory usage 虚拟内存
-RES：resident memory usage 常驻内存
-SHR：shared memory 共享内存
-```
 
 ```cmd
 lscpu # cpu的统计信息

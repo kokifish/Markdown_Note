@@ -386,7 +386,9 @@ Default
 
 # VMware
 
+## Shared Folder
 
+kali官网有文档，安装过程更简单： https://www.kali.org/docs/virtualization/install-vmware-guest-tools/
 
 
 

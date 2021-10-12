@@ -2,6 +2,47 @@
 
 
 
+# Conda
+
+`Anaconda`是专注于数据分析的Python发行版本，包含了conda、Python等190多个科学包及其依赖项。
+
+`conda` 是开源包（packages）和虚拟环境（environment）的管理系统。
+
+- **packages 管理**： 可以使用 conda 来安装、更新 、卸载工具包 ，并且它更关注于数据科学相关的工具包。在安装 anaconda 时就预先集成了像 Numpy、Scipy、 pandas、Scikit-learn 这些在数据分析中常用的包。
+- **虚拟环境管理**： 在conda中可以建立多个虚拟环境，用于隔离不同项目所需的不同版本的工具包，以防止版本上的冲突。对纠结于 Python 版本的同学们，我们也可以建立 Python2 和 Python3 两个环境，来分别运行不同版本的 Python 代码
+
+
+
+
+
+## CMD Cheat Sheet
+
+> https://zhuanlan.zhihu.com/p/351348108
+
+```bash
+conda info -e # 查看已有环境  conda info --envs
+conda env list # 显示所有的环境
+conda create -n py35 python=3.5 # 创建名为 py35 私有环境，指定 Python 版本为 3.5
+conda activate py35 # 激活并进入 py35 私有环境 # source activate py35 # 等效
+conda deactivate # 退出当前私有环境
+conda deactivate py35 # 从私有环境返回公共环境 # source deactivate py35
+conda remove -n py35 --all # 删除 py35 私有环境 
+```
+
+```bash
+conda install package_name=1.10 # 对于使用conda install不可用的软件包，可以通过Anaconda.org下载
+conda remove package_name
+conda update package_name
+conda list # 查看所有package
+conda search search_term # 支持模糊查询
+conda create --name flowers --clone snowflakes # 制作环境的完整副本
+```
+
+给某个特定环境安装package：
+
+1. 切换到该环境下直接安装
+2. 安装时指定环境参数-n
+
 
 
 # Cases

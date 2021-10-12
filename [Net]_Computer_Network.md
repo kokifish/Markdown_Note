@@ -784,14 +784,14 @@ address size（地址字段长） 48比特
 
 | 字段           | bit  | 说明                                                         |
 | -------------- | :--- | ------------------------------------------------------------ |
-| 版本           | 4    | 共两个版本：4 for IPv4, 6 for IPv6                           |
-| 头部长度(IHL)  | 4    | 头部的长度，以字(**4B**、32-bit)为单位 **20B \~ 60B**        |
+| 版本           | 4    | 共两个版本：4: IPv4, 6: IPv6                                 |
+| 头部长度(IHL)  | 4    | 头部的长度，以字(**4B**, 32bit)为单位 **20B \~ 60B**         |
 | 服务类型(TOS)  | 8    | (Type of Service)本IP数据报希望得到的服务。该字段被重新定义为**区分服务** |
 | 总长度         | 16   | 整个数据报的长度，以**字节**为单位(含头部长度)               |
 | 标识           | 16   | 每产生一个IP数据报，加一(被分段的IP数据报标识一样)           |
 | Flags(DF,MF)   | 3    | Reserved. DF: Don’t Fragment(1:不分片). MF: More Fragment(1:还有分片). |
 | 片偏移量offset | 13   | **片偏移量以8B(64bit)为单位**                                |
-| 生存期TTL      | 8    | 记载经过的router数(跳数)hop count //TTL限制了因特网的直径    |
+| 生存期TTL      | 8    | 路由器收到后-1，为0时丢弃 //TTL限制internet直径，可用作OS指纹 |
 | 协议           | 8    | 定义数据部分的协议//**TCP:6**, **UDP:17**, ICMP:1, IGMP:2, ENCAP(IPv6 encapsulation): 41 |
 | 头部校验       | 16   | 头部校验和checksum。路由器会丢弃出错的数据报                 |
 | 源IP地址       | 32   | 发出本数据报的地址                                           |
@@ -1184,7 +1184,8 @@ Any service provided to users on the public internet should be placed in the DMZ
 
 ## ARP Protocol
 
--   **Address Resolution Protocol** 地址解析协议 //动态解析以太网硬件的地址
+> **Address Resolution Protocol** 地址解析协议 //动态解析以太网硬件的地址
+
 -   通过解析网络层IP地址来找寻数据链路层MAC地址的网络传输协议
 -   地址解析(address resolution): 主机在发送帧前将目标IP地址转换成目标MAC地址的过程
 
@@ -1194,15 +1195,27 @@ Any service provided to users on the public internet should be placed in the DMZ
 
 ARP 协议工作过程: e.g. Host A(192.168.0.1)向Host B(192.168.0.2)发送IP数据报
 
-1.  A在自己地ARP缓存表中查询是否有目标IP address(192.168.0.2)。若找到，则将对应地目标MAC地址写入帧里发送
-2.  
+1.  A在自己地ARP缓存表中查询是否有dst.IP(192.168.0.2)。若找到，则将dst.MAC写入帧里发送
+2.  若1没找到，发送ARP req：以太网广播包(src.MAC=A.MAC, src.ip=A.ip, dst.MAC=ff:ff:ff:ff:ff:ff, dst.ip=B.ip)
+3.  交换机广播该ARP req
+4.  B收到ARP req，返回ARP rep：以太网单播包(src.MAC=B.MAC, src.ip=B.IP, dst.MAC=A.MAC, dst.ip=A.IP)
+
+
+
+ARP包的格式如下，在外层还需封装成Ethernet packet(14B Ethernet首部 = 6B目标MAC + 6B源MAC + 2B帧类型 )
+
+| len(bit)  |    16    |    16    |      8       |      8       |   16   |   48    |   32   |   48    |   32   |
+| :-------: | :------: | :------: | :----------: | :----------: | :----: | :-----: | :----: | :-----: | :----: |
+| Data Type | 硬件类型 | 协议类型 | 硬件地址长度 | 协议地址长度 | 操作码 | src.MAC | src.IP | dst.MAC | dst.IP |
 
 
 
 
 
--   Source Host: 源主机获得的映射结果缓存在ARP表中<IP address，MAC address，TTL>。TTL超时则会删除对应的ARP表项，TTL取值由系统确定，一般为2~20分钟
--   Destination Host: 当收到ARP请求，目的Host会**缓存源主机的映射**，其它host如果已缓存该映射，则会**重置TTL**
+
+
+-   src.Host: 老化机制：源主机获得的映射结果缓存在ARP表中<IP address，MAC address，TTL>。TTL超时则会删除对应的ARP表项，TTL取值由系统确定，一般为2~20分钟。
+-   dst.Host: 当收到ARP请求，目的Host会**缓存源主机的映射**，其它host如果已缓存该映射，则会**重置TTL**
 -   也可以把映射直接加入ARP缓存，称为**静态ARP映射**。静态ARP映射不会因超时而被删除
 
 ```c
@@ -1227,22 +1240,9 @@ e.g. 224.1.2.3 0xE0010203  ->ARP-> 0x01-00-5E-01-02-03//详见相关专题
 
 
 
-### ARP datagram
-
--   下图是ARP包的格式，在后面还需要封装成Ethernet packet(14B Ethernet首部 = 6B目标MAC + 6B源MAC + 2B帧类型 )
-
-![](http://op4fcrj8y.bkt.clouddn.com/18-4-26/87865474.jpg)
-
--   操作字段后，依次：源MAC地址(6B)，源IP地址(4B)，目标MAC地址(6B)，目标IP地址(4B)
--   目标MAC/IP地址一般在请求时为0
-
 >   RARP(Reverse ARP)用于无盘工作站把MAC地址映射为IP地址
 >
 >   InARP(Inverse ARP)用于NBMA(Non-Broadcast Multiple Access)网络把VCI映射为IP地址
-
-![](http://op4fcrj8y.bkt.clouddn.com/18-4-26/79174259.jpg)
-
-
 
 
 
@@ -1857,14 +1857,17 @@ DD: Database Description Packet
 
 ## TCP
 
-> 协议号: 6(在IP packet中) OS将TCP连接抽象为 Socket 表示的本地端点 local end-point，作为编程接口给程序使用 
+> 协议号: 6(IP Header的协议号) OS将TCP连接抽象为 Socket 表示的本地端点 local end-point，作为编程接口给程序使用
+>
+> **传输控制协议** Transmission Control Protocol         RFC793
 
-- **传输控制协议** Transmission Control Protocol
-- 面向连接的、可靠的、基于**字节流**、**全双工**通信的运输层传输层通信协议。提供**流控制**机制，即控制发送方的发送速度，使发送的数据不会淹没接收方。作为因特网的主要数据发源地，TCP还提供**拥塞控制**功能
-- 一个TCP连接提供无比特错的数据传送 
-- 由于IP层只提供无连接的不可靠的尽力服务，所以TCP必须采取措施使通信变为可靠的
+- 面向连接的、可靠的、面向**字节流**、**全双工**通信的运输层传输层通信协议。提供**流控制**机制，即控制发送方的发送速度，使发送的数据不会淹没接收方。作为因特网的主要数据发源地，TCP还提供**拥塞控制**功能
+- 一个TCP连接提供**无比特错**的数据传送 
+- 由于IP层只提供无连接的不可靠的尽力服务，所以TCP必须采取措施使通信变可靠
 - 字节流服务表示没有消息边界。e.g. 多次发送的数据可以放在一个数据段中传送且不标识边界
 - 最大分段大小 **MSS (Maximum Segment Size)** : 每个数据段的**数据部分的最大长度**(Byte)
+
+> 面向字节流：每个字节都有序号，故序列号每次+=发送的字节数，ack表示想要收到的下一个字节序号
 
 TCP在网络中的大致过程:
 
@@ -1907,15 +1910,17 @@ TCP协议的运行阶段:
 20|       Options(if data offset > 5. Padded at the end with "0" bytes if necessary)MAX:40 B      | 
 ```
 
-- 序号 Sequence number(以字节流为单位): [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为**ISN+1**。如果SYN != 1，则此为第一个数据比特的序列码 
+- Sequence number(以字节流为单位) 序号: [0, 2^32^-1] **字节序号**。若SYN = 1, 数据部分的第一个字节的编号为**ISN+1**。如果SYN != 1，则此为第一个数据比特的序列码 
 - Acknowledgment number 确认号: 确认号为期待接收的下一个数据段的开始序号，也即已经收到的数据的字节长度加1 。ACK = 1时，确认号才有效
 - **Data offset** 头部长度: 以32bit(**4B**)为单位，**头部长度的实际大小为[20, 60] Bytes, 选项字段最大40B**。Data Offset最小值为5
 - 保留 Reserved 0:  For future use and should be set to zero.应置为0
-- Flags: 标志 (aka Control bits) 6 bits, wiki写的是9 bit(有3bit实际未使用)
-- Window size 通知窗口大小: 接收窗口的大小(Byte)。接收方用通知窗口大小(advertised window)告知发送方接收窗口的大小，发送方会据此修改发送窗口大小。即空闲块的大小，若接收方尚未将数据交付上层，数据还在缓冲区中，窗口大小变小。（包含错序到达的数据段）
-- 校验和 Check Sum: 伪IP头、TCP头和TCP数据部分形成。
-- 紧急指针 Urgent Pointer: 指出**带外数据** out-of-band data(OOB)的边界。标志**URG**为1时有效
-- 选项: MSS(Maximum Segment Size)、窗口比例(Scale) ；是否使用选择性确认(SACK-Permitted)。数据传送时的选项：选择性确认的序号范围(Selective ACK,SACK)，时间戳等。// Unix 默认值: MSS=536，SACK-Permitted=False。Windows 默认值: MSS=1460，SACK-Permitted=True
+- Flags Code Bits 标记位 (aka Control bits) : 6 bits, wiki写的是9 bit(有3bit实际未使用)
+- Window size 滑动窗口大小: 接收窗口的大小(Byte)。接收方用通知窗口大小(advertised window)告知发送方接收窗口的大小，发送方会据此修改发送窗口大小。即空闲块的大小，若接收方尚未将数据交付上层，数据还在缓冲区中，窗口大小变小。（包含错序到达的数据段）
+- Check Sum 校验和: 伪IP头、TCP头和TCP数据部分形成。
+- Urgent Pointer 紧急指针: 指出**带外数据** out-of-band data(OOB)的长度(边界)。标志**URG**为1时有效
+- Option 选项: MSS(Maximum Segment Size)、窗口比例(Scale) ；是否使用选择性确认(SACK-Permitted)。数据传送时的选项：选择性确认的序号范围(Selective ACK,SACK)，时间戳等。// Unix 默认值: MSS=536，SACK-Permitted=False。Windows 默认值: MSS=1460，SACK-Permitted=True
+
+#### TCP Flags
 
 | Flags | Content When set to 1 |
 | --- | --- |
@@ -1929,7 +1934,7 @@ TCP协议的运行阶段:
 | SYN| 同步(Synchronize)序号标志，用来发起一个TCP连接。这是**连接请求**或是**连接接受请求**，用于创建连接和使顺序号同步 |
 | FIN| 结束(Finish)标志，发送方没有数据要传输了，要求释放连接 |
 
-带外数据out-of-band data(OOB)是指对紧急数据，中断或放弃排队中的数据流；接收方应立即处理紧急数据。完成后，TCP通知应用程序恢复流队列的正常处理。OOB并不影响网络，“紧急”仅影响远程端的处理。这一协议很少被实现。**紧急数据(urgent data)是带外数据，不属于字节流** 
+带外数据out-of-band data(OOB)是指对紧急数据，中断或放弃排队中的数据流；接收方应立即处理紧急数据。完成后，TCP通知应用程序恢复流队列的正常处理。OOB并不影响网络，“紧急”仅影响远程端的处理。这一协议很少被实现。**紧急数据(urgent data)是带外数据，不属于字节流**
 
 
 
@@ -2191,8 +2196,9 @@ A在TIME-WAIT状态等待2MSL的理由：
 ## UDP
 
 > 协议号: 17(在IP packet中)
+>
+> 用户数据报协议 User Datagram Prot
 
--   用户数据报协议 
 -   不可靠，无连接。可能丢失、错序
 -   接收进程每次接收一个完整的数据报，如果进程设置的接收缓冲区不够大，收到的数据报将被截断
 
