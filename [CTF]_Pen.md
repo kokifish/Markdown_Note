@@ -99,3 +99,12 @@ DAI动态ARP检测。用在企业级交换机上
 
 ARP防火墙。e.g. 彩影防火墙
 
+
+
+```bash
+netstat -aon # windows查看端口占用
+tasklist | findstr "123"
+netstat -noab | findstr WeChat # 但只显示了进程名 没有显示IP Port
+lsof -i tcp # linus 查看tcp端口占用
+```
+

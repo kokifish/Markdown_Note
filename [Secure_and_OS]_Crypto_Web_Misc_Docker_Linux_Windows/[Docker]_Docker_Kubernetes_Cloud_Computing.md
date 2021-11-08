@@ -80,10 +80,10 @@ sudo usermod -aG docker $USER # Docker 需要用户具有 sudo 权限，为了�
 sudo mkdir -p /etc/systemd/system/docker.service.d # 创建docker服务插件目录
 sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf # 创建一个名为http-proxy.conf的文件
 sudo vim /etc/systemd/system/docker.service.d/http-proxy.conf # 编辑http-proxy.conf的文件
-# 写入内容
+# 写入内容 # 这里的ip是宿主机(win10运行着v2ray)的ip
 [Service]
-Environment="HTTP_PROXY=socks5://172.18.216.103:10808"
-Environment="HTTPS_PROXY=socks5://172.18.216.103:10808"
+Environment="HTTP_PROXY=socks5://172.18.34.8:10808"
+Environment="HTTPS_PROXY=socks5://172.18.34.8:10808"
 ### 
 sudo systemctl daemon-reload # 重新加载服务程序的配置文件
 sudo systemctl restart docker # 重启docker
