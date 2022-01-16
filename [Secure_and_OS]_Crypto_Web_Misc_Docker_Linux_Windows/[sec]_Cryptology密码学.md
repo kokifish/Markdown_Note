@@ -495,7 +495,7 @@ DES是16轮的Feistel型密码，分组长度为64，用一个56bit的密钥来�
 
 ### AES描述
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/1540263149(1).jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/crypt_AES_whole_process.jpg)
 
 各轮AES加密循环(除最后一轮)均包含4个步骤:
 
@@ -508,41 +508,42 @@ DES是16轮的Feistel型密码，分组长度为64，用一个56bit的密钥来�
 
 1. SubBytes: 使用S Box对每一个字节都进行一个独立的代换(非线性变换)。State为4x4个Byte，即分组大小为128bits
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/810px-AES-SubBytes.svg.png)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_AES_SubBytes.png)
 
 2. ShiftRows:
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/810px-AES-ShiftRows.svg.png)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_AES_ShiftRows.png)
 
 3. MixColumns: 
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/810px-AES-MixColumns.svg.png)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_AES_MixColumns.png)
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/810px-AES-AddRoundKey.svg.png)
-
-
-
-### AES工作模式
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/crypt_AES_AddRoundKey.png)
 
 
 
+## Encryption Mode
 
 
-#### ECB 电码本
+
+
+
+### ECB 电码本
 
 分组密码的直接使用，对给定的明文分组序列$x_1x_2...$，每个$x_i$都用同一个密钥来加密，产生密文分组序列$y_1y_2...$.
 
 
 
-#### CBC
+### CBC
 
 每一个密文分组$y_i$在用密钥K加密之前，都要先跟下一个明文分组$x_{i+1}$相异或。从一个初始向量$IV$开始，定义$y_0 = IV$(注意$IV$与明文分组有同样的长度)，用下列公式构造$y_1,y_2...$
 $$
 y_i = e_{K}(y_{i-1}\oplus x_i)
 $$
 
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_CBC_mode.png)
 
-#### OFB
+### OFB
 
 产生一个密钥流，然后将其与明文相异或（即像流密码一样工作）。OFB模式实际上就是一个同步流密码：密钥流由反复加密一个初始向量IV而产生。定义$z_0 = IV$，然后用下列公式计算密钥流$z_1z_2....$和密文分组序$y_1,y_2...$:
 $$
@@ -550,8 +551,7 @@ z_i = e_{K}(z_{i-1})\\
 y_i = x_{i}\oplus z_i
 $$
 
-
-#### CFB
+### CFB
 
 也产生一个密钥流，用于一个同步流密码。由$y_0 = IV$(一个**初始向量**)开始，然后通过加密以前的密文分组来产生密钥流元素$z_i$:
 $$
@@ -560,13 +560,13 @@ y_i = x_{i}\oplus z_{i}
 $$
 CFB模式中，加密和解密都是用加密函数$e_{K}$
 
-#### 计数模式
+### 计数模式
 
 类似于OFB模式，唯一差别是如何构造密钥流。
 
 
 
-#### CCM模式
+### CCM模式
 
 基本上是计数模式(用于加密)和CBC模式(用于认证)的组合使用
 
@@ -675,7 +675,7 @@ $$
 
 
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/365px-SHA-1.png)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_SHA1_process.png)
 
 
 

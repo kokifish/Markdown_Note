@@ -10,6 +10,30 @@
 
 
 
+## ssh
+
+`C:\Users\hyhua\.ssh\config`的内容应类似于
+
+```c
+Host kali@192.168.223.128:22
+  HostName kaliCTF
+```
+
+Host后面跟的是 `用户名@IP:Port`
+
+连接的服务器要能联网，因为连接上之后会安装一些东西，当然也能提前下载好上传上去安装。
+
+免密登录：
+
+1. `ssh-keygen -t rsa`生成公钥私钥，会保存在`C:\Users\name\.ssh`
+2. 把公钥`id_rsa.pub`发送到Linux服务器上，改名为`authorized_keys`并放到`~/.ssh`
+3. `sudo vim /etc/ssh/sshd_config`，然后找到并修改下列内容
+
+```config
+PubkeyAuthentication yes
+StrictModes no
+```
+
 
 
 ## Use in Linux

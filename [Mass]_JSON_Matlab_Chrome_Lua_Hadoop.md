@@ -667,3 +667,12 @@ usermod -aG wheel hadoop
 
 
 
+
+
+# Links
+
+```python
+https://www.youtube.com/watch?v=n6d4KHSKqGk&t=107s   # 第八分钟有介绍github action实现profile更新最近动态
+https://pufler.dev/git-badges/
+```
+

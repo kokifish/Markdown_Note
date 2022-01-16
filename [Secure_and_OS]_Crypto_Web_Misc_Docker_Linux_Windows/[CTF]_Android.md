@@ -80,3 +80,22 @@ win GUI app，可以完全解开apk，
 
 
 
+## Frida
+
+python+javascript的hook框架，适用于android/ios/linux/win/osx等平台。动态代码执行功能在核心引擎Gum中用C实现
+
+
+
+
+
+### Installation
+
+> https://www.cnblogs.com/aWxvdmVseXc0/p/12463319.html#autoid-0-1-0
+
+安装案例：雷电模拟器(Android7)+frida15.1.10
+
+1. `pip install frida; pip install frida-tools`
+2. 在 https://github.com/frida/frida/releases 下载目标机上的frida-server二进制，注意要对应平台、指令集。例如雷电模拟器要用的是`frida-server-15.1.10-android-x86`。`adb shell; cat /proc/cpuinfo`的方法在雷电模拟器上行不通，cpu会显示host的
+3. 把frida-server二进制push到模拟器并运行：`adb push path/to/frida-server-15.1.10-android-x86 \data\local\tmp; adb shell; cd /data/local/tmp; chmod +x frida-server-15.1.10-android-x86; ./frida-server-15.1.10-android-x86`
+4. 在宿主机中查看模拟器进程`frida-ps -U`
+

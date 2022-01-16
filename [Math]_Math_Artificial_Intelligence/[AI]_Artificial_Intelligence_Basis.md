@@ -53,7 +53,7 @@ What Is A.I. ?
   - Deep learning, artificial neural networks
 - 2010s : heavy industry investment in deep learning
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/1538243246(1).jpg)
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_develop_process.jpg)
 
 
 
@@ -75,7 +75,7 @@ Reinforcement learning 增强学习: determine what to do based on a series of r
 
 Mainly three schools: 主要是三个流派
 
-| 派别                    | 起源        | 擅长算法                         |
+| 派别                    | 起源        | 擅长算法(Part)                   |
 | ----------------------- | ----------- | -------------------------------- |
 | Symbolists 符号主义     | 逻辑学 哲学 | Inverse deduction 逆演绎算法     |
 | Connectionists 联结主义 | 神经科学    | Backpropagation 反向传播算法(BP) |
@@ -139,7 +139,7 @@ Mainly three schools: 主要是三个流派
 
 
 
-![AStar.gif](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Astar_progress_animation.gif)
+![AStar.gif](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Astar_progress_animation.gif)
 $$
 {\displaystyle
 {\begin{aligned}
@@ -366,6 +366,8 @@ The **minimax value** of a player is the smallest value that the other players c
 
 demo: Nim: informal description: We begin with a number of piles of matches. In one’s turn one may remove any number of matches from one pile.每一轮玩家可以移除一堆中的任意数量个火柴。 The last person to remove a match loses.最后一个移除火柴的人输掉比较。
 
+> 这下面应该有张图 但是好像被我删掉了
+
 ![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/1540482033(1).jpg)
 
 In zero-sum games, the minimax solution is the same as the Nash equilibrium. 零和游戏中，minimax结果和纳什均衡的结果一样
@@ -437,7 +439,7 @@ At a Max node n: (方形表示Max node, 圆形表示Min node)
 - Let α be the highest value of n’s children examined so far (changes as children examined). α设为n的子节点的最高值。
 - While at a Max node n, if α becomes ≥ β we can stop expanding the children of n. 在Max node时，搜索过程中当α  ≥ β时停止展开n的子节点。Min will never choose to move from n’s parent to n since it would choose one of n’s lower valued siblings first. Min不会从n的父节点移动到n，因为相比n，n有兄弟节点的取值小于等于移动到n后，Max的最佳取值(即移动到n后Min的收益)。
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/1540489095(1).jpg)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_alpha_cutting.jpg)
 
 
 
@@ -754,7 +756,7 @@ $$
 
 > 单层感知机
 
-![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/Single%20Layer%20Perceptron%20formula.png)
+![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/AI_Single Layer Perceptron formula.png)
 
 
 

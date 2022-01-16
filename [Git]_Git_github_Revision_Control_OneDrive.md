@@ -417,6 +417,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2LFS0Myajvaqj00aRt6+E1HPrPhGO14nwEf/wrZFG
 
 ```python
 $ git remote add origin git@github.com:pureteap/repo-name.git # 第一次添加时使用 #把本地仓库与远程仓库关联，关联错了没有关系，因为SSH Key公钥不在账户列表中时，无法推送
+git remote set-url origin git@github.com:xxxxxx　# 如果一开始配置成https的 可以用这种指令改成使用ssh
 ```
 
 
@@ -544,6 +545,8 @@ git remote add origin https://github.com/pureteap/Ali.git
 git push -u origin main
 
 ```
+
+
 
 
 
