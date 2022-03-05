@@ -488,6 +488,39 @@ free -m # 显示系统内存状态（单位MB）
 
 
 
+### Memory
+
+#### oom: Out-Of-Memory
+
+Out of Memory Killer
+
+开启/关闭的两种方式：
+
+- `vm.oom-kill`
+
+```bash
+sudo -s sysctl -w vm.oom-kill = 0 # NOT passed in ubuntu 20.04
+```
+
+- `panic_on_oom`: 控制是否在oom发生时惩罚(kill)进程
+  - 0: the kernel will not panic when oom error occurred. 
+  - 1: the kernel will panic on oom error.
+
+```bash
+sudo bash -c "echo 0 > /proc/sys/vm/panic_on_oom" # 临时的 oom error发生时不kill进程
+```
+
+- `vm_overcommit_memory`: 
+  - 0(default): the kernel will decide whether to overcommit or not
+  - 1: kernel will always overcommit.  This is a risky setting because the kernel will always overcommit the memory to processes. 内核允许分配所有的物理内存，而不管当前的内存状态如何
+  - 2: not supposed to overcommit memory greater than the `overcommit_ratio`. 内核允许分配超过所有物理内存和交换空间总和的内存
+
+```bash
+sudo bash -c "echo 1 > /proc/sys/vm/overcommit_memory" # 临时，重启后重置回0
+```
+
+
+
 ### Disk Related
 
 ```python
