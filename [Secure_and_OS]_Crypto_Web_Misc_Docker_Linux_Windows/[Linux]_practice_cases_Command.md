@@ -494,12 +494,13 @@ free -m # 显示系统内存状态（单位MB）
 
 Out of Memory Killer
 
-开启/关闭的两种方式：
+`panic_on_oom=0, overcommit_memory=1`时，实际上仍然会被oom kill，
 
-- `vm.oom-kill`
+- `vm.oom-kill`: 疑似在较新ubuntu上已经弃用
 
 ```bash
 sudo -s sysctl -w vm.oom-kill = 0 # NOT passed in ubuntu 20.04
+# it doesn't work anymore, perhaps it did for Ubuntu 14.04
 ```
 
 - `panic_on_oom`: 控制是否在oom发生时惩罚(kill)进程
@@ -517,7 +518,35 @@ sudo bash -c "echo 0 > /proc/sys/vm/panic_on_oom" # 临时的 oom error发生时
 
 ```bash
 sudo bash -c "echo 1 > /proc/sys/vm/overcommit_memory" # 临时，重启后重置回0
+sysctl -w vm.overcommit_memory=2
 ```
+
+> 以上方法在ubuntu20.04上仍会因oom被kill。实测可行的方法为`overcommit_memory=2`并增大swap空间
+
+#### Swap
+
+swappiness表示物理内存还剩多大比例才开始使用内存交换
+
+```bash
+swapon -s # 查看swap文件名 大小
+cat /proc/sys/vm/swappiness # 查看Swap利用率 default 60
+```
+
+- 当Out of Memory Error出现时，在无法增大物理内存时，除配置和oom相关的选项外，还需配置swap空间，以保证物理内存空间足够(memory+swap)
+
+```bash
+# 在ubuntu 20.04上增加60GB的swap空间 (需root权限，重启后失效)
+sudo dd if=/dev/zero of=/var/blockd.swap bs=1M count=65536 # 共60GB
+sudo chmod 0600 /var/blockd.swap # swap 要求的权限为0600
+sudo mkswap /var/blockd.swap
+sudo swapon /var/blockd.swap
+sudo vim /etc/fstab
+# 然后把 /var/blockd.swap swap swap default 0 0 # 追加进/etc/fstab
+sysctl vm.swappiness=60 # 越小越倾向于利用memory
+sudo mount -a # 挂载生效  然后top htop等就可以看到swap空间增大了
+```
+
+> 后续想要加更多swap空间时，仅需再创建多一个`/var/xxx.swap`，按以上流程走一遍即可
 
 
 
@@ -830,9 +859,9 @@ fuser -k 80/tcp #
 
 
 
-### service / systemctl
+### service / systemctl / sysctl
 
-> systemctl命令是 service和 chkconfig命令的组合体，可用于管理系统。
+> systemctl 是系统服务管理器命令，实际上将 service 和 chkconfig 这两个命令组合到一起
 
 ```cmd
 service nginx status # 查看nginx运行情况
@@ -848,6 +877,13 @@ systemctl enable firewalld # 设置服务开机自启动
 
 systemctl list-units --type=service # 输出系统中各个服务的状态
 ```
+
+sysctl命令被用于在内核运行时动态地修改内核的运行参数，可用的内核参数在目录/proc/sys中
+```bash
+sysctl -p # 可以在修改/etc/sysctl.conf后不reboot让sysctl.conf生效
+```
+
+
 
 
 

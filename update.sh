@@ -17,7 +17,6 @@ echo
 echo "[Step-2] Local changes add and commit:"
 git checkout master;
 git add . -v;
-var=`date "+%Y-%m-%d_%H:%M:%S"`
 # echo $var
 git commit -v -am "$var";
 
