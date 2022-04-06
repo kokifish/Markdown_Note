@@ -2,22 +2,77 @@
 
 
 
-Python是一种解释型、面向对象、动态数据类型的高级程序设计语言
+Python是一种解释型、面向对象、动态数据类型的高级程序设计语言。GPL(GNU General Public License)协议
 
-像Perl语言一样, Python 源代码同样遵循 GPL(GNU General Public License)协议
+```python
+	df.at[start_date.hour, road] = \ #换行
+		np.append(df.at[start_date.hour, road], [travel_time])
+```
 
-Python的3.0版本，常被称为Python 3000，或简称Py3k。相对于Python的早期版本，这是一个较大的升级。为了不带入过多的累赘，Python 3.0在设计的时候没有考虑向下兼容
 
-Python就为我们提供了非常完善的基础代码库，覆盖了网络、文件、GUI、数据库、文本等大量内容，被形象地称作"内置电池"batteries included
+
+
+
+---
+
+# Warning List
+
+- 运算优先级：python的逻辑运算优先级有部分与c不同，尤其注意位操作，除非逻辑简单，否则尽量分拆、加括号
+- `__init__ __default__`：把类似`list()`这种放在init para list时，会存储历史信息，与c相比反直觉
 
 
 
 
 
 ```python
-	df.at[start_date.hour, road] = \ #换行
-		np.append(df.at[start_date.hour, road], [travel_time])
+from collections import defaultdict
+
+
+class inner():
+    def __init__(self, aset=set(), num=0):
+        self.aset = aset # 改成 self.aset = set() 输出就不同
+        self.num = num
+
+    def __str__(self):
+        s = str(self.aset) + " num=" + str(self.num) + " ; "
+        return s
+
+
+d_feat = defaultdict(inner)
+d_feat[1].aset.add(1)
+d_feat[1].num += 1
+d_feat[2].aset.add(2)
+d_feat[2].aset.add(3)
+d_feat[2].num += 1
+for k, v in d_feat.items():
+    print("k:", k, "v:", id(v), v)
+print(inner.__init__.__defaults__) # ({1, 2, 3}, 0)
+
 ```
+
+
+
+| 运算符说明 | Python运算符             | 优先级 | 结合性 |
+| ---------- | ------------------------ | ------ | ------ |
+| 小括号     | `( )`                    | 19     | 无     |
+| 索引运算符 | `x[i], x[i1: i2 [:i3]]`  | 18     | 左     |
+| 属性访问   | `x.attribute`            | 17     | 左     |
+| 乘方       | `**`                     | 16     | 右     |
+| 按位取反   | `~`                      | 15     | 右     |
+| 符号运算符 | `+`（正号）、`-`（负号） | 14     | 右     |
+| 乘除       | `*, /, //, %`            | 13     | 左     |
+| 加减       | `+, -`                   | 12     | 左     |
+| 位移       | `>>, <<`                 | 11     | 左     |
+| 按位与     | `&`                      | 10     | 右     |
+| 按位异或   | `^`                      | 9      | 左     |
+| 按位或     | `|`                      | 8      | 左     |
+| 比较运算符 | `==, !=, >, >=, <, <= `  | 7      | 左     |
+| is 运算符  | `is, is not`             | 6      | 左     |
+| in 运算符  | `in, not in`             | 5      | 左     |
+| 逻辑非     | `not`                    | 4      | 右     |
+| 逻辑与     | `and`                    | 3      | 左     |
+| 逻辑或     | `or`                     | 2      | 左     |
+| 逗号运算符 | `exp1, exp2`             | 1      | 左     |
 
 
 

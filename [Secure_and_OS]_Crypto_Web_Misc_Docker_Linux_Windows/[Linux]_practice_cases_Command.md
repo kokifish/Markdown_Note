@@ -1168,6 +1168,7 @@ sudo aptitude install nvidia-cuda-toolkit
 prime-select query # 查看有什么可选的
 prime-select nvidia # 从上面输出里选nvidia
 nvcc --version
+watch -n 1 nvidia-smi # 每隔一秒显示nvidia-smi的内容 实现实时监视
 ```
 
 - uninstall
