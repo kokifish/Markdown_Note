@@ -3,6 +3,7 @@
 > # Diary
 >
 > - 20220406 烦躁，觉得研究生读亏了，觉得技术退步了，做了很多自己不喜欢做的事。重拾回一些东西吧，温故完第一章，第二章P49。
+> - 20220407 干饭。从前有个人，想学会用剪子修建花草，便师从园丁。后来园丁让他用电锯修剪灌木，他没有怨言，照做了，每周汇报着修剪的进度。园林局验收前两周，园丁：“我觉得用电锯修建灌木不太合理，你应该用更大一点的电锯，把花园里的那几棵树锯了”。P74。一两页一个错误，校对扣钱！
 
 
 
@@ -196,9 +197,108 @@ as a.s -o a.o     gcc -c a.s -o a.o     gcc -c a.c -o a.o
 
 ## 链接
 
-
+链接：解决模块间符号引用的问题，函数符号、变量符号。
 
 
 
 ### 静态链接
+
+链接过程主要包括：地址和空间分配 Address and Storage Allocation、符号决议 Symbol Resolution、重定位 Relocation
+
+符号决议有时也被叫做符号绑定 Symbol Binding、名称绑定 Name Binding、名称决议 Name Resolution、地址绑定 Address Binding、指令绑定 Instruction Binding。大体意思一样，但决议倾向于静态链接，绑定倾向于动态链接。静态链接统一称为符号决议。
+
+基本的静态链接过程：每个模块的源代码`.c .cpp .h`文件经过编译器编译成目标文件**Object File** `.o .obj`，目标文件和库 Library 一起链接成最终的可执行文件。最常见的库是运行时库 Runtime Library，是支持程序运行的基本函数的集合。库其实是一组目标文件的包，将常用代码编译成目标文件后打包存放
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/compile_linking/source2executable.png)
+
+重定位 Relocation：给程序中地址留空的引用位置填上真实的绝对地址。
+
+重定位入口 Relocation Entry：需要重定位的地方。需要把留空地址改为正确的绝对地址的地方。
+
+
+
+
+
+# Object File 目标文件
+
+
+
+Windows: PE, Portable Executable
+
+Linux: ELF, Executable Linkable Format
+
+均为COFF Common File Format格式的变种
+
+| ELF Format                      | Description                                                  | Example          |
+| ------------------------------- | ------------------------------------------------------------ | ---------------- |
+| 可重定位文件 Relocatable File   | 包含代码和数据，可以被用来链接成可执行文件或共享目标文件，静态链接库也可以归为这一类 | `.o .obj`        |
+| 可执行文件 Executable File      | 包含可直接执行的程序，如ELF可执行文件                        | `/bin/bash .exe` |
+| 共享目标文件 Shared Object File | 包含代码和数据。1. 连接器用这种文件和其他的可重定位文件和共享目标文件链接，产生新目标文件 2. 动态链接器可以将几个共享目标文件和可执行文件结合，作为进程映像的一部分运行 | `.so .dll`       |
+| 核心转储文件 Core Dump File     | 进程意外终止，OS将进程地址空间内容及终止时的其他信息转储到核心转储文件 | `core dump`      |
+
+
+
+ELF文件头有一个段表 Section Table，是描述文件中各个段的数组，描述各个段在文件中的偏移和段属性。
+
+```bash
+objdump -s -d a.o # -s 所有段以16进制打印  -d 将所有包含指令的段反汇编 -x 输出更多信息
+```
+
+```cpp
+static int x1 = 0; // .bss 未初始化即为0 被优化掉了
+static int x2 = 1; // .data 有非0初始值
+```
+
+将二进制文件如图片音乐作为目标文件的一个段：
+
+```bash
+objcopy -I binary -O elf32-i386 -B i386 image.jpg image.o
+objdump -ht image.o # 查看image.o
+```
+
+GCC有扩展机制能将变量或某部分代码放到指定的段中：
+
+```cpp
+__attribute__((section("FOO"))) int global = 42; // 放到名字为FOO的段中去
+__attribute__((section("BAR"))) void foo(){}
+```
+
+
+
+```bash
+readelf -h a.o # 查看ELF文件
+```
+
+
+
+
+
+
+
+```cpp
+#define EI_NIDENT   16 // 32bit ELF文件头结构
+
+typedef struct {
+    unsigned char   e_ident[EI_NIDENT]; // Magic Class Data Version OS/ABI ABI_Version
+    ELF32_Half      e_type; // Type ELF文件类型
+    ELF32_Half      e_machine; // ELF 文件的CPU平台属性 相关常量以 EM_ 开头
+    ELF32_Word      e_version; // ELF 版本号 一般为1
+    ELF32_Addr      e_entry; // Entry point address 人口地址 规定ELF程序的入口虚拟地址 可重定位文件一般没有入口地址，为0
+    ELF32_Off       e_phoff; // Start of program headers
+    ELF32_Off       e_shoff; // Start of section headers 段表在文件中的偏移
+    ELF32_Word      e_flags; // 标志位 表示一些ELF文件平台相关的属性
+    ELF32_Half      e_ehsize; // ELF文件头本身的大小
+    ELF32_Half      e_phentsize; // Size of program headers
+    ELF32_Half      e_phnum; // Number of program headers
+    ELF32_Half      e_shentsize; // Size of section headers 段表描述符的大小 一般等于sizeof(ELF32_Shdr)
+    ELF32_Half      e_shnum; // Number of section headers 段表描述符数量 等于ELF文件中拥有的段的数量
+    ELF32_Half      e_shstrndx; // section header string table index 段表字符串表所在的段在段表中的下标
+} Elf32_Ehdr; // 32bit ELF header
+```
+
+
+
+
+
+
 
