@@ -374,7 +374,7 @@ sudo apt-get install software-properties-common
 
 > 用这里列出的方法会导致dpkg: warning: files list file for package \*\*\* missing错误，这个错误可以用脚本 批量aptitude reinstall解决
 
-#### dpkg: warning: files list file for package \*\*\* missing
+#### dpkg: warning: files list file for package xxx missing
 
 > dpkg: warning: files list file for package '...' missing; assuming package has no files currently installed    错误的解决方案
 
