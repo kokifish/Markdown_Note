@@ -9,11 +9,28 @@
 > - 20220408 冷静。“如果你觉得不合理，为什么之前报告的时候不说，非得等到验收将至才说？之前项目验收也是，验收前两周说要验收了，要达到什么效果，要录怎么样的视频”。P92
 > - 20220414 蝴蝶效应现在进行时。实际上他并没有说出口，照旧argue方案不合理之处，似乎园丁意识到了什么，时不时问起周围人 他的现况。一边是朝思暮想的安全实验室，一边是愿意等到12月，还有一边是努力争取8月毕业但是又心力交瘁的fw。 P104
 > - 20220415 持续后悔当初为什么不找方国老师搞密码学去，密码学是没那么喜欢，但仍属于喜欢的，计算机网络是喜欢的，但结果来搞GNN这类我不喜欢的了，南辕北辙了属于是。P117
-> - 20220421 怪事，有监督学习和无监督学习的损失函数怎么会是同一个呢？为什么质疑我的交叉熵函数会写错？每条公式我都理论推导完还代码实践完的，我的内心缓缓打出一个 ？。P126 发现了多处复制粘贴没有修改导致的编辑错误
+> - 20220421 怪事，有监督学习和无监督学习的损失函数怎么会是同一个呢？为什么质疑我的交叉熵函数会写错？每条公式我都理论推导完还代码实践完的，我的内心缓缓打出一个 ？。发现了多处复制粘贴没有修改导致的编辑错误 P126 
+> - 20220425 怪事plus，花半小时复习了线性代数，证明了半个月前老师给的一个建议是错的，或者更准确地说，与更改之前的最终效果是一样的，如果优化到最优解的话。P132
+> - 20220510 模型改了又改，又一次深刻体会到得数据者得天下，盲审中的顶会论文用了我找不到的数据集，所以他们可以用多路由器流量做毫秒级预测，而我，只能面对贫瘠的旧数据集想适应的模型。P139
 
 
 
+# gcc ld Lookup Table
 
+
+
+> # GCC
+
+- `-fno-builtin` GCC提供了很多内置函数 Built-in Function 把常用C库函数替换成编译器的内置函数以优化。e.g. `puts exit`
+
+
+
+> # ld
+
+- `-static` 使用静态链接，而不是默认的动态链接
+- `-e nomain` 程序入口函数为nomain，将ELF头文件的`e_entry`成员赋值成nomain函数的地址
+- `-o TinyHello` 指定输出可执行文件名为TinyHello
+- `-s ` 禁止链接器产生符号表，也可以用`strip`去除程序中的符号表
 
 # Basis
 
@@ -798,11 +815,74 @@ Linux默认ld链接脚本放在`/usr/lib/ldscripts/`下，不同机器平台、�
 
 
 
-
-
 ```bash
 ./some_program
 echo $? # 获得上一条bash命令执行的程序的退出码
 ```
 
-> 
+P125给出了TinyHelloWorld.c的源代码（疑似有误），其中print用`int 0x80`调用WRITE系统调用往stdout写入str。exit用`int 0x80`使用调用号为1的EXIT系统调用退出程序。普通程序main函数结束后控制权返回给系统库，由系统库调用EXIT退出程序。若不手动调用EXIT退出，TinyHello的nomain结束后系统控制权不会返回，可能会执行到nomain后面不正常的指令导致系统异常退出。
+
+```bash
+# TinyHelloworld.lds ld链接脚本
+ENTRY(nomain) # 指定程序的入口
+
+SECTIONS  # 链接脚本的主体
+{
+	. = 0x08048000 + SIZEOF_HEADERS; # 赋值语句 # .表示当前虚拟地址
+	tinytext : { *(.text) *(.data) *(.rodata) } # 段转换规则 # 所有文件的.text .data .rodata 段会被合并到输出文件的 tinytext 中
+	/DISCARD/ : { *(.comment) } # 段转换规则 # .comment 会丢弃，不保存到输出文件中
+}
+```
+
+- `tinytext`的地址会被设置成`0x08048000 + SIZEOF_HEADERS`
+- `.text .data .rodata`段会被合并到输出文件的`tinytext`中
+
+```bash
+gcc -c -fno-builtin TinyHelloWorld.c # -fno-builtin不使用内置函数
+ld -static -T TinyHelloworld.lds -o TinyHelloWorld TinyHelloWorld.o # 使用连接脚本 静态链接生成elf
+```
+
+- 上述命令生成的ELF可执行文件中用readelf查看可以发现有.shstrtab段名字符串表   .symtab符号表    .strtab字符串表。ld默认产生这三个表
+- `ld -s`  禁止链接器产生符号表，或使用`strip`去除程序中的符号表
+
+> P129写了部分linker script的语法，更详细的内容可以看:
+>
+> https://sourceware.org/binutils/docs/ld/Scripts.html
+>
+> https://users.informatik.haw-hamburg.de/~krabat/FH-Labor/gnupro/5_GNUPro_Utilities/c_Using_LD/ldLinker_scripts.html
+
+
+
+## BFD Library
+
+> Binary File Descriptor library      GNU项目  binutils项目
+
+BFD把目标文件抽象成统一的模型，通过一种统一的接口处理不同的目标文件格式。
+
+现在GCC（GNU汇编器GAS，GNU Assembler）、链接器ld、调试器GDB及binutils的其他工具都通过BFD库来处理目标文件，而不是直接操作目标文件。将编译器和链接器同具体的目标文件格式隔离开来，需要支持新的目标文件格式时只需在BFD库里添加一种格式即可，不需要修改编译器和链接器。
+
+```cpp
+// 输出BFD库支持的目标文件格式 // ubuntu中安装 binutils-dev
+#include <stdio.h> // gcc -o target target.c -lbfd  // ./target
+#include "bfd.h"
+int main(){
+    const char** t = bfd_target_list();
+    while(*t) {
+        printf("%s\n", *t); t++;
+    }
+}
+```
+
+
+
+# Windows PE/COFF
+
+32bit Win引入PE（Portable Executable）的可执行文件格式，由COFF（Common Object File Format）格式发展而来。
+
+Visual C++编译器产生的目标文件仍然使用COFF格式，PE是COFF的一种扩展，产生的可执行文件格式为PE格式。
+
+64bit Win上的PE文件格式为PE32+，新的PE32+没有添加任何结构，最大的变化就是把原来32bit的字段变成了64bit，绝大部分情况下PE32+和PE格式一致。
+
+PE/COFF格式中，至少包含一个代码段，代码段一般为`.code`，数据段为`.data`，跟ELF一样，段名只有提示性作用，没有实际意义。使用链接脚本来控制链接时，段名可能起到一定作用。
+
+> 映像Image：因为PE文件在装载时直接映射到进程的虚拟空间中运行，是进程虚拟空间的映像。所以PE可执行文件很多时候被叫做映像文件。

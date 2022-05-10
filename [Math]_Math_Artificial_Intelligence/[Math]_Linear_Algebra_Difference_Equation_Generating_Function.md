@@ -10,9 +10,32 @@
 
 
 
+## Matrix Multiplication
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Math_Matrix_multiplication.svg)
+
+![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Math_Matrix_multiplication2.svg)
 
 
-### Special Matrix
+$$
+{\displaystyle \mathbf {A} ={\begin{pmatrix}a_{11}&a_{12}&\cdots &a_{1n}\\a_{21}&a_{22}&\cdots &a_{2n}\\\vdots &\vdots &\ddots &\vdots \\a_{m1}&a_{m2}&\cdots &a_{mn}\\\end{pmatrix}},\quad \mathbf {B} ={\begin{pmatrix}b_{11}&b_{12}&\cdots &b_{1p}\\b_{21}&b_{22}&\cdots &b_{2p}\\\vdots &\vdots &\ddots &\vdots \\b_{n1}&b_{n2}&\cdots &b_{np}\\\end{pmatrix}}}\\
+C = AB\\
+{\displaystyle \mathbf {C} ={\begin{pmatrix}c_{11}&c_{12}&\cdots &c_{1p}\\c_{21}&c_{22}&\cdots &c_{2p}\\\vdots &\vdots &\ddots &\vdots \\c_{m1}&c_{m2}&\cdots &c_{mp}\\\end{pmatrix}}}\\
+{\displaystyle c_{ij}=a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots +a_{in}b_{nj}=\sum _{k=1}^{n}a_{ik}b_{kj},}
+$$
+
+- an example:
+
+$$
+{\displaystyle {\overset {4\times 2{\text{ matrix}}}{\begin{bmatrix}{a_{11}}&{a_{12}}\\\cdot &\cdot \\{a_{31}}&{a_{32}}\\\cdot &\cdot \\\end{bmatrix}}}{\overset {2\times 3{\text{ matrix}}}{\begin{bmatrix}\cdot &{b_{12}}&{b_{13}}\\\cdot &{b_{22}}&{b_{23}}\\\end{bmatrix}}}={\overset {4\times 3{\text{ matrix}}}{\begin{bmatrix}\cdot &c_{12}&c_{13}\\\cdot &\cdot &\cdot \\\cdot &c_{32}&c_{33}\\\cdot &\cdot &\cdot \\\end{bmatrix}}}}\\
+{\displaystyle {\begin{aligned}c_{12}&={a_{11}}{b_{12}}+{a_{12}}{b_{22}}\\c_{33}&={a_{31}}{b_{13}}+{a_{32}}{b_{23}}\end{aligned}}}
+$$
+
+
+
+
+
+## Special Matrix
 
 
 
@@ -43,7 +66,7 @@ $$
 
 ---
 
-### terminology
+## terminology
 
 
 
@@ -116,7 +139,7 @@ $$
 
 ---
 
-### Determinants
+## Determinants
 
 >   行列式
 
@@ -154,7 +177,7 @@ $$
 
 
 
-### Eigenvalues and Eigenvectors
+## Eigenvalues and Eigenvectors
 
 >   特征值 特征向量
 
@@ -200,13 +223,13 @@ $$
 
 ---
 
-### Matrix Factorications
+## Matrix Factorications
 
 -   矩阵分解
 
 
 
-#### LU
+### LU
 
 
 
