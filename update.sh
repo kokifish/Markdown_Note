@@ -7,6 +7,7 @@ fi
 var=$1
 
 echo "[Step-1] git pull origin main:"
+git remote show origin;
 git pull origin master -v;
 echo 
 echo "==== [WARNING] If conflict occured, related files will show below: ========="

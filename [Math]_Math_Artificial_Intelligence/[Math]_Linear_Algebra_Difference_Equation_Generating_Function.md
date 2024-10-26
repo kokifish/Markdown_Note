@@ -12,9 +12,9 @@
 
 ## Matrix Multiplication
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Math_Matrix_multiplication.svg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Math_Matrix_multiplication.svg)
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Math_Matrix_multiplication2.svg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Math_Matrix_multiplication2.svg)
 
 
 $$

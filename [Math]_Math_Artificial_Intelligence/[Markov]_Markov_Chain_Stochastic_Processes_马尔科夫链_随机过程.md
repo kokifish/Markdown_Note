@@ -467,7 +467,7 @@ $$P\{X(t) - X(0) = n\} =e^{-\lambda t} \frac{(\lambda t)^n}{n!}$$
 
 HMM的状态变迁示意图：
 
-![HMM状态变迁](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/HMM_xt_to_xtplus1_yt_and_ytplus1.png)
+![HMM状态变迁](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/HMM_xt_to_xtplus1_yt_and_ytplus1.png)
 
 `x(t+1)`和`x(t)`有关，`x(t)`和`x(t-1)`有关，而每个`y(t)`只和`x(t)`有关
 
@@ -540,7 +540,7 @@ $$
 \text{(3) Termination: } P(O| \lambda) = \sum_{i=1}^{N} \alpha_{T}(i).
 $$
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/HMM_forward_variable.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/HMM_forward_variable.png)
 
 
 

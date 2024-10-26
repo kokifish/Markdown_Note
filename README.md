@@ -17,15 +17,15 @@ My markdown notes. Just for backup and self-learning. You can view as you like, 
 - Penetration
 - AI: EA, MOEA, Pytorch, GNN...
 
-> For more notes related to CTF, click https://github.com/hex-16/CTF-detailed-writeups
+> For more notes related to CTF, click https://github.com/kokifish/CTF-detailed-writeups
 
 # Contacts
 
 If you have any questions or anything related to my research areas, feel free to contact me.
 
-new an issue or email: hexhex16@outlook.com
+new an issue or email: <a href="mailto:k0kifish@outlook.com" target="_blank">k0kifish@outlook.com </a>
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/ACG_pic/reading_book_ori.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/ACG_pic/reading_book_ori.png)
 
 
 

@@ -536,7 +536,7 @@ cat /proc/sys/vm/swappiness # 查看Swap利用率 default 60
 
 ```bash
 # 在ubuntu 20.04上增加60GB的swap空间 (需root权限，重启后失效)
-sudo dd if=/dev/zero of=/var/blockd.swap bs=1M count=65536 # 共60GB
+sudo dd if=/dev/zero of=/var/blockd.swap bs=1M count=65536 # 共64GB
 sudo chmod 0600 /var/blockd.swap # swap 要求的权限为0600
 sudo mkswap /var/blockd.swap
 sudo swapon /var/blockd.swap
@@ -940,9 +940,58 @@ crontab [-u username]　　　　# 省略用户表表示操作当前用户的cro
 
 ## Network
 
+- quic: udp上封装 tcp + ssl/tls + http，需要应用层面支持
+
+```bash
+ifconfig # mtu:最小传输单元，1400以上 # pmtu: 路径上最小mtu
+ip
+telnet
+tcpdump
+nmap # 端口扫描器
+sar -n DEV 1 # -n: network # 每一秒传输的包 # yum install sysstat # man sar 找DEV可以看看-n可以带的keyword
+sar -n EDEV 1 # 每一秒传输错误数量
+route -n # 路由表
+netstat -antp # all n:ip解析成yuming t:tcp p:PID/Program
+netstat -s # 内核连接事件计数器 # cat /proc/net/netstat
+netstat -st # 只看tcp的指标，会省略为0的值 # netstat -su # UDP
+sar -n TCP 1 # 每一秒TCP的主动/被动打开 in/out segment
+sat -n ETCP 1 # 每一秒TCP传输错误计数
+sar -n UDP 1
+
+ss -antp # 新版netstat? # Send-Q listen状态的队列长度
+ss -antpi # info 更详细
+ss -antpim # 加上缓存信息
+ss -antpo # 定时器信息
+tc # traffic control # 可以实现爆发限速 # 可以参考网络资源隔离 # 如果对端包接收能力差，则可能需要对己端做发包速率限制
+tc qd ls #
+/proc/sys/net/core/rmem_default # 调整接收缓存 rmem_max有时要一起调
+# wireshark I/O Graphs 可以看一毫秒发了多少包，压测在毫秒级是锯齿状
+/proc/sys/net/ipv4/tcp_wmem /proc/sys/net/ipv4/tcp_rmem # cwnd # tcp发送窗口由两端协商
+SO_REUSEPORT # 可以用作多个相同程序监听同一个端口
+
+# 缓解TCP慢启动
+ip ro change 1.1.1.1/24 dev enps5 proto kernel scope src 1.1.1.2 metric 100 initcwnd 1000 # 更改与一个链路的初始tcp窗口
+cat /proc/sys/net/ipv4/tcp_congestion_control # 目前在用的tcp拥塞控制算法
+echo bbr > /proc/sys/net/ipv4/tcp_congestion_control # 高版本可以用bbr(from google)，丢包敏感环境速度更快
+
+cat /proc/sys/fs/file-max # kernel全局能打开的文件数
+cat /proc/sys/fs/file-nr # 目前打开 正在打开 全局可开
+cat /proc/sys/net/ipv4/tcp_tw_reuse # time wait # 可以修改这个数值，避免被一段时间内可以创建的连接数量限制，加快端口回收
+/proc/sys/net/ipv4/tcp_max_tw_buckets # 最大time wait数量 #
+mpstat -P ALL 1
+
+perf top
+lspci -vvv # 网卡中断队列数查看# MSI-X Enable+ Count=3支持三个中断队列
+ethtool -l enpxx
+cat /proc/interrupts # 查看不同CPU上的中断队列
+echo 1 > /proc/irq/xx/smp_affinity_list # 指定某个中断到 cpu-1 上 # 如果做了绑定，可以关闭rps_ （一个做软负载均衡的？）
+ethtool -k enp # 查看
+ethtool -K enp tx off # -K 修改
+```
 
 
-### Network Info: netstat ifconfig
+
+### Network&Port Info: netstat ifconfig lsof
 
 ```cmd
 lspci | grep -i 'eth' #查看网卡硬件信息
@@ -967,11 +1016,7 @@ sudo apt-get install nload
 nload # 回车键换显卡接口 ASCII 显示网速大小 显示几个统计数值 适合简单监控
 ```
 
-
-
-
-
-### port info: lsof
+- port info: lsof
 
 ```shell
 lsof -i:port_num # 查看某个端口的占用情况
@@ -1158,7 +1203,7 @@ export ALL_PROXY=socks5://172.18.216.103:10808 # 全部都走 socks5 代理  代
 > https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html  NVIDIA CUDA Toolkit Release Notes  可查看显卡驱动与CUDA版本对应关系
 
 ```bash
-# 以下指令适用于ubuntu
+# 以下指令适用于ubuntu  但是这种方法无法安装一些特定的版本，只是安装方便一些。需要特定版本的仍然要看nvidia官网
 ubuntu-drivers devices # 获取有关图形卡和可用驱动程序的信息
 sudo aptitude install nvidia-driver-465 # 在 ubuntu-drivers devices 输出里面挑了个最新的driver
 sudo reboot # 这样安装了的驱动才会起效
@@ -1228,6 +1273,7 @@ Linux用户分为超级用户(Superuser)和普通用户，超级用户可以做�
 ### groupadd / useradd
 
 ```bash
+# 与系统相关，建议使用时再现场查
 groupadd -g 501 robert
 useradd -g 501 -u 501 -c 'Robert Lee' robert
 groups hex # 查看hex所在的用户组
@@ -1391,7 +1437,7 @@ Autotools 工作步骤：
 
 
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/autotools_autotools_work_flow.jpg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/autotools_autotools_work_flow.jpg)
 
 
 
@@ -1680,6 +1726,49 @@ target_compile_definitions(cmake_examples_compile_flags
 ```
 
 
+
+## Related CMD
+
+```python
+readelf # 查看elf信息
+readelf -h Fname # head
+readelf -a Fname # all
+objdump -s Fname # 各个段的信息
+strings -f Fname | grep -E " .{16}$" # 获取长度为16的字符串常量
+nm # 获取二进制里包含的符号
+nm Fname
+nm -C Fname.o
+strip # 去除二进制文件里面包含的符号，减小目标文件大小，去除调试信息
+ldd Fname # 显示程序需要使用的动态库和实际使用的动态库 # shell 脚本
+pmap pid
+gdb # gcc -g 
+gcb Fname /corefile/core_Fname
+ulimit -c # coredump 查看开关和大小
+/proc/sys/kernel/core_uses_pid
+/proc/sys/kernel/core_pattern # core的路径和格式
+strace # 进程纬度显示程序调用的系统调用
+ltrace
+gprof # 显示各个函数的执行时间 # gcc -pg -g # 不能strip，必须通过正常途径退出，不能kill -9 ，只管用户态时间消耗，没有管内核态，可对c库函数进行性能分析 gcc -lc_p gprof-b
+prof top -p pid # 新版linux内核自带 # 原理：采样，看在哪个函数里面执行 # 对程序本身性能影响小
+perf record -F 99 -ag -p pid -o perf.data --sleep 10 # -F 调用频率
+# 数据解析 https://github.com/brendangregg/FlameGraph # 生成火焰图的工具
+perf script -i perf.data > out.perf ./stackcollapse-perf.pl out.perf > out.folded ./flamegraph.pl out folded > perf.svg
+# 系统纬度 vmstat iostat netstat sar top free lsof  # 瓶颈: CPU memory IO net
+vmstat # 显示系统整体负载情况
+# 网络 显示udp/tcp socket状态，接收发送队列大小，udp接收丢包，
+netstat -su 
+netstat -lpn # 注意高危端口
+/proc/sys/net/core/rmem_default # UDP 使用的 # 过小可能导致本机UDP丢包
+/proc/sys/net/core/wmem_default
+sar # 性能监视
+lsof # 查看进程打开的所有文件信息
+lsof -i pid
+lsof -i:port # 使用某个端口的进程
+```
+
+> strace lstrace perf可以看一个没有响应的进程
+>
+> 判断瓶颈，宏观 vmstat iostat netstat，内核态/用户态 time/top/strace，更细节 perf/gprof/lsof/netstat/pidstat/ltrace
 
 ## conan
 

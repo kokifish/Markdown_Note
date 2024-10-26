@@ -269,7 +269,7 @@ public class Fish {
     }
 
     public void setWife(String name) { // 被声明为 public 的类、方法、构造方法和接口能够被任何其他类访问
-        if(this.name == "hex-16"){
+        if(this.name == "kokifish"){
             String valid_wife = "sherry";
             if (name == valid_wife) {
                 wife = name;
@@ -291,7 +291,7 @@ public class Fish {
     }
 
     public static void main(String[] args) { // main()方法必须为public，否则，Java 解释器将不能运行该类
-        Fish fish_a = new Fish("hex-16");
+        Fish fish_a = new Fish("kokifish");
         System.out.println("name:" + fish_a.name);
         System.out.println("wife:" + fish_a.getWife());
         fish_a.setWife("sherry");
@@ -306,7 +306,7 @@ public class Fish {
 
 public class FishTest {
     public static void main(String[] args) {
-        Fish fish_a = new Fish("hex-16");
+        Fish fish_a = new Fish("kokifish");
         System.out.println("name:" + fish_a.name);
         System.out.println("wife:" + fish_a.getWife());
         fish_a.setWife("sherry");
@@ -502,7 +502,7 @@ Exception 类是 Throwable 类的子类。除了Exception类外，Throwable还�
 
 Error 用来指示运行时环境发生的错误: 如JVM内存溢出，程序不会从错误中恢复
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/java_exception_hierarchy.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/java_exception_hierarchy.png)
 
 ```java
 import java.io.*;// file name: ExcepTest.java

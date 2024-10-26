@@ -15,7 +15,7 @@
 
 
 
-![license](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/license_choose_a_free_software_license.png)
+![license](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/license_choose_a_free_software_license.png)
 
 
 
@@ -153,7 +153,7 @@ Initialized empty Git repository in /Users/test/learngit/.git/
 - commit将暂存区的所有修改提交到当前分支
 - 每次修改，如果不用`git add`到stage，那就不会加入到`commit`中
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/git_lifecycle.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/git_lifecycle.png)
 
 ```python
 $ git add readme.txt   #add file to repository
@@ -257,7 +257,7 @@ index d39cda9..ca48dab 100644 # 两个版本的git哈希值 # 最后六个数字
 
 
 
-![wiki git](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/git_state_and_process.png)
+![wiki git](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/git_state_and_process.png)
 
 撤销修改的几种场景：
 
@@ -518,7 +518,7 @@ git add .  #将当前目录的所有文件添加至仓库中
 git commit -m "test commit node"  #将文件提交到仓库，-m后问提交说明
 git push origin main #push files to online repository #推送至远程main分支
 
-git clone git@github.com:hex-16/pictures.git #将远程仓库clone到本地
+git clone git@github.com:kokifish/pictures.git #将远程仓库clone到本地
 git status  #查看仓库当前状态
 git remote -v #列出所有远程仓库
 git checkout -- file #撤销工作区文件的修改至上次add/commit

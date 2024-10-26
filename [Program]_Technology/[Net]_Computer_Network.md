@@ -56,7 +56,7 @@
 
 -   TCP/IP协议簇并不定义数据链路层和物理层，所以可以把它们合并在一起看成物理网络
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_TCP_IP_Protocol_Suite.gif)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_TCP_IP_Protocol_Suite.gif)
 
 -   第一层为物理层
 -   每一抽象层建立在低一层提供的服务上，并且为高一层提供服务
@@ -132,7 +132,7 @@
 
 
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_OSI_7_layers.gif)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_OSI_7_layers.gif)
 
 ---
 
@@ -697,7 +697,7 @@ address size（地址字段长） 48比特
 
 ### MPLS 协议格式
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_MPLS_packet_MPLS_Label.jpg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_MPLS_packet_MPLS_Label.jpg)
 
 - Label：20bit的整数，容量是百万级的
 - TC：之前的EXP，改名成TC，由[RFC5462](https://link.zhihu.com/?target=https%3A//tools.ietf.org/html/rfc5462)定义。
@@ -706,7 +706,7 @@ address size（地址字段长） 48比特
 
 
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_MPLS_Multi_Label.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_MPLS_Multi_Label.png)
 
 
 
@@ -775,7 +775,7 @@ address size（地址字段长） 48比特
 
 - IPv4报头长度: **[20, 60]** Bytes
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_ipv4_datagram.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_ipv4_datagram.png)
 
 
 | 字段           | bit  | 说明                                                         |
@@ -1467,7 +1467,7 @@ e.g. 多播地址224.192.16.1可以映射为01-00-5E-40-10-01(Ethernet)。用低
 3. 如果ARP没有被解析，那么ARP将首先被解析
 4. **MAC地址不跨越它的广播域**
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_Packet_flow_in_different_Network.jpg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_Packet_flow_in_different_Network.jpg)
 
 - A: 10.0.0.10/24
 - B: 20.0.0.10/24 : 与A不同网段，是图上右下角的Host，图中标错了
@@ -1671,7 +1671,7 @@ IPv6 路由表
 3. 清除定时器 Flush Timer(default = 240s): 到期时将从路由表中删除(更新该路由时复位)
 4. 抑制定时器 Hold-down Timer：在路由的距离变为无穷大(包括收到毒化路由)时启动并在其到期之前不允许修改该路由的距离。抑制超时器超时后可重新接受对**端**发送的路由更新报文
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_RIP_Timer.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_RIP_Timer.png)
 
 #### 防止网络环路等问题
 
@@ -1841,7 +1841,7 @@ DD: Database Description Packet
 
 - Transport layer protocol (e.g. TCP) sends segments across network and performs end-to-end error checking & retransmission
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_Error_control_in_Data_Link_Layer.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_Error_control_in_Data_Link_Layer.png)
 
 
 
@@ -1887,7 +1887,7 @@ TCP协议的运行阶段:
 
 字节流中的每个字节均被编号。初始序号采用基于时间的方案，一般采用随机数。数据部分的第一个字节的编号为初始序号加1
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_TCP_header_format.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_TCP_header_format.png)
 
 > 伪IP头用于计算Check Sum
 >
@@ -2135,7 +2135,7 @@ Reno：如果收到三次重复确认，Reno算法则进入快速重传，只将
 2. SYN-ACK: Server 为合法 SYN 回送 SYN-ACK。ack值: **a+1**，seq = **b** (一般为随机数) 称为Server ISN, **SYN=1, ACK=1**
 3. ACK: Client 再发送一个ack = **b+1**, seq = **a+1**, **ACK=1** . 完成三次握手
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_TCP_Establishment_3times.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_TCP_Establishment_3times.png)
 
 每一步均采用超时重传，多次重发后将放弃。重发次数与间隔时间依系统不同而不同。头两个数据段确定的选项：Scale，MSS ，SACK-Permited
 
@@ -2166,7 +2166,7 @@ Reno：如果收到三次重复确认，Reno算法则进入快速重传，只将
 3. B 发送连接释放报文，`FIN=1, ACK=1, ack=u+1, seq=w`. 注意`ack`与前相同，因为不再有A向B的报文了
 4. A 收到后发出确认,`ACK=1, ack=w+1, seq=u+1`(注意这里`seq`比之前+1). 进入 TIME-WAIT 状态，等待 2 MSL（最大报文存活时间）后释放连接。B 收到 A 的确认后释放连接。
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_Termination_4_wave_handshake.jpg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_Termination_4_wave_handshake.jpg)
 
 - 连接可以工作在**TCP半开**状态。即一侧关闭了连接，**不再发送数据**；但另一侧没有关闭连接，仍可以发送数据。已关闭的一侧仍然应**接收数据**，直至对侧也关闭了连接
 - 先发送FIN报文的一方在ACK发送完毕后需要等待 2MSL(**Maximum Segment Lifetime**, 最大报文存活时间) 才完全关闭连接。TCP标准中MSL采用60秒，Unix采用30秒
@@ -2198,7 +2198,7 @@ A在TIME-WAIT状态等待2MSL的理由：
 -   不可靠，无连接。可能丢失、错序
 -   接收进程每次接收一个完整的数据报，如果进程设置的接收缓冲区不够大，收到的数据报将被截断
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_TCP_UDP_diff_animate.jpg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_TCP_UDP_diff_animate.jpg)
 
 
 
@@ -2376,7 +2376,7 @@ HTTP/1.1是原始HTTP (HTTP/1.0)的修订版。在HTTP/1.0中，对每个资源�
 
 **客户端发送一个HTTP请求到服务器的请求消息包括以下格式：请求行（request line）、请求头部（header）、空行和请求数据四个部分组成**
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/Network/Net_HTTP_Client_packet_content.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/Network/Net_HTTP_Client_packet_content.png)
 
 
 

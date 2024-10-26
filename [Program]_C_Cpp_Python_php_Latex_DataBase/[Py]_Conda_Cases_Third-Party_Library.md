@@ -823,7 +823,7 @@ sp.integrate(f, (x,-float("inf"),float("inf")) #求无穷限广义积分 3.14159
 
 选择机器学习方法的流程:
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Machine_Learning_map.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/AI_Machine_Learning_map.png)
 
 
 

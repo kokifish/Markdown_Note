@@ -508,15 +508,15 @@ DES是16轮的Feistel型密码，分组长度为64，用一个56bit的密钥来�
 
 1. SubBytes: 使用S Box对每一个字节都进行一个独立的代换(非线性变换)。State为4x4个Byte，即分组大小为128bits
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_AES_SubBytes.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/crypt_AES_SubBytes.png)
 
 2. ShiftRows:
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_AES_ShiftRows.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/crypt_AES_ShiftRows.png)
 
 3. MixColumns: 
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_AES_MixColumns.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/crypt_AES_MixColumns.png)
 
 ![](https://raw.githubusercontent.com/pureteap/pictures/master/Code_pic/crypt_AES_AddRoundKey.png)
 
@@ -541,7 +541,7 @@ $$
 y_i = e_{K}(y_{i-1}\oplus x_i)
 $$
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_CBC_mode.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/crypt_CBC_mode.png)
 
 ### OFB
 
@@ -675,7 +675,7 @@ $$
 
 
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/crypt_SHA1_process.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/crypt_SHA1_process.png)
 
 
 

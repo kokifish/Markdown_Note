@@ -53,7 +53,7 @@ What Is A.I. ?
   - Deep learning, artificial neural networks
 - 2010s : heavy industry investment in deep learning
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_develop_process.jpg)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/AI_develop_process.jpg)
 
 
 
@@ -139,7 +139,7 @@ Mainly three schools: 主要是三个流派
 
 
 
-![AStar.gif](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Astar_progress_animation.gif)
+![AStar.gif](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/AI_Astar_progress_animation.gif)
 $$
 {\displaystyle
 {\begin{aligned}
@@ -930,7 +930,7 @@ $h_t=\tanh(w_{ih}x_t+b_{ih}+w_{hh}h_{(t−1)}+b_{hh})$
 
 经过展开的RNN单元，unfolded(unrolled) basic recurrent neural network
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_Unfolded_basic_recurrent_neural_network.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/AI_Unfolded_basic_recurrent_neural_network.png)
 
 ```python
 # 使用numpy对RNN工作流程做总结
@@ -1056,9 +1056,9 @@ RNN梯度爆炸的问题我们可以通过gradient clipping的方法来进行优
 - 门（gates）是动态变化的，计算出来的
 - 遗忘门 输出门 输入门 都有各自的(U, W, b)
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_LSTM_cell_color.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/AI_LSTM_cell_color.png)
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/AI_LSTM_cell_black_white.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/AI_LSTM_cell_black_white.png)
 
 
 

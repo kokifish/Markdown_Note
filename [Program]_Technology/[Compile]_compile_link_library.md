@@ -233,7 +233,7 @@ as a.s -o a.o     gcc -c a.s -o a.o     gcc -c a.c -o a.o
 
 基本的静态链接过程：每个模块的源代码`.c .cpp .h`文件经过编译器编译成目标文件**Object File** `.o .obj`，目标文件和库 Library 一起链接成最终的可执行文件。最常见的库是运行时库 Runtime Library，是支持程序运行的基本函数的集合。库其实是一组目标文件的包，将常用代码编译成目标文件后打包存放
 
-![](https://raw.githubusercontent.com/hex-16/pictures/master/Code_pic/compile_linking/source2executable.png)
+![](https://raw.githubusercontent.com/kokifish/pictures/master/Code_pic/compile_linking/source2executable.png)
 
 重定位 Relocation：给程序中地址留空的引用位置填上真实的绝对地址。
 
@@ -900,7 +900,64 @@ PE数据目录：为了快速找到一些装载所需的数据结构，比如导
 
 # Executable Loading and Processing
 
+进程拥有自己独立的虚拟地址空间（Virtual Address Space），大小由CPU的位数决定，32bit虚拟地址空间地址为0 \~ 2^32^ -1，即4GB虚拟空间大小，64bit具有64bit寻址能力，虚拟空间达到2^64^字节。
 
+PAE：Physical Address Extension，将原先32bit地址线扩展至36bit地址线，新的映射方式可以访问到更多物理内存。
+
+AWE：Address Windowing Extensions，Windows下把额外的内存（大于4G的）映射到进程地址空间来。Linux用mmap系统调用来实现
+
+装载方式：覆盖装入Overlay，页映射Paging
+
+覆盖装入Overlay：没有虚拟存储前广泛应用，现在几乎淘汰。由程序员控制，程序员将模块按照它们之间的调用依赖关系组织成树状结构，树状结构中任何一个模块到树的根（main）叫调用路径，禁止跨树间调用。模块不在内存中（例如被别的模块覆盖）时需要从磁盘读取，速度很慢，利用时间换空间。
+
+**页映射 Paging**：内存和所有磁盘中的数据和指令按照 页（Page） 为单位划分为若干页，所有装载和操作的单位就是页。硬件规定的页的大小有4096B，8192B，2MB，4MB... Intel IA32处理器一般使用4096B的页。主流OS采用的装载可执行文件的方式。操作系统课程学过相关知识了，不做额外拓展。
+
+
+
+虚拟存储中，硬件MMU提供地址转换功能。
+
+对于OS，建立进程的步骤：
+
+1. 创建一个独立的虚拟地址空间：创建页映射函数所需的数据结构，i386的Linux只分配一个页目录 Page Directory，不需要设置页映射关系，等到发生页错误时再设置。**虚拟空间**到**物理内存**的映射关系
+2. 读取可执行文件头，建立虚拟空间与可执行文件的映射关系：**虚拟空间**和**可执行文件**的映射关系。OS捕捉到页错误时应知道当前所需的页在可执行文件的具体位置。
+3. 将CPU指令寄存器设置成可执行文件的入口地址，启动运行：OS设置CPU的指令寄存器将控制权转交给进程，由此进程开始执行。OS层面上涉及内核堆栈和用户堆栈的切换，CPU运行权限的切换。进程角度看可以简单认为OS执行跳转指令，跳转到ELF文件头中保存的入口地址
+
+> 可执行文件再装载时实际上时被映射的虚拟空间，所以可执行文件很多时候被叫做映像文件 Image
+>
+> 虚拟空间和可执行文件之间的映射关系：Linux将进程虚拟空间中的一个段叫**虚拟内存区域** （**VMA, VIrtual Memory Area**），windows中叫虚拟段 Virtual Section。e.g. OS创建进程后会在进程相应的数据结构中设置一个.text段的VMA，在虚拟空间中的地址为`0x08048000~0x08049000`，对应ELF文件中的偏移为0的.text，属性为只读，以及其他属性
+
+页错误Page Fault以及相应的OS虚拟存储管理的知识在操作系统课程中已经学过了，不做展开，此书也没有讲的很详细。总结的来说，页错误发生时，OS负责
+
+## Process Virtual Space Layout: Page, VMA, PHT
+
+ELF文件中，段的权限往往只有为数不多的几种组合，基本上是：
+
+- 可读可执行：代码段
+- 可读可写：数据段，bss
+- 只读：只读数据段rodata
+
+对于相同权限的段，把它们合并在一起当作一个段进行映射，可以避免ELF中多个段映射到互斥的page中导致的内存空间浪费。ELF可执行文件引入Segment，一个Segment包含一个或多个属性类似的Section，装载时以Segment为单位进行映射，映射后一个Segment对应一个VMA，减少页面内部碎片
+
+> 链接的角度看，ELF按Section存储，装载的角度看，ELF以Segment划分。这两个单词都可以翻译成段
+
+```bash
+readelf -S a.elf # 查看elf文件的section
+readelf -l a.elf # 查看elf文件的segment
+```
+
+装载的角度看，elf文件中LOAD类型的Segment需要被映射，其他的如`NOTE, TLS, GNU_STACK`都是在装载时起辅助作用。例如`.init .finit rodata `
+
+Segment和Section是从不同的角度来划分同一个ELF文件，在ELF中称为不同的视图 View。
+
+- 链接视图 Linking View：从Section的角度来看ELF文件，以链接器链接ELF文件的角度看
+
+- 执行视图 Execution View：从Segment的角度看，以OS装载可执行文件的角度看
+
+ **程序头表** **Program Header Table** ：ELF可执行文件中有一个专门的数据结构 **程序头表** **Program Header Table** 来存储Segment信息。ELF目标文件不需要被装载（只用于链接），所以没有程序头表，ELF可执行文件和共享库文件都有程序头表。
+
+
+
+# Dynamic Linking
 
 
 
